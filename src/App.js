@@ -6,6 +6,7 @@ import NoMatch from './pages/NoMatch'
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom'
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import '../src/style.css'
 
 function App() {
   return (

@@ -1,10 +1,11 @@
 import {Nav, Navbar} from 'react-bootstrap'
+import Logo from "../assets/Logo.png"
 
 function Navigation() {
   return (
     <Navbar expand="lg" >
             <Navbar.Brand href="/">
-                Logo
+                <img src={Logo}/>
             </Navbar.Brand>
             <Navbar.Toggle aria-controls="basic-navbar-nav"/>
             <Navbar.Collapse id="basic-navbar-nav">
