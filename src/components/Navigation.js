@@ -16,6 +16,12 @@ function Navigation() {
                     <Nav.Item>
                         <Nav.Link href="/CarListing">Car Listing</Nav.Link>
                     </Nav.Item>
+                    <Nav.Item>
+                        <Nav.Link href="/Login">Login</Nav.Link>
+                    </Nav.Item>
+                    <Nav.Item>
+                        <Nav.Link href="/Register">Register</Nav.Link>
+                    </Nav.Item>
                 </Nav> 
             </Navbar.Collapse>
 
