@@ -5,6 +5,12 @@ const cors = require("cors");
 const expressSession = require("express-session");
 const cookieParser = require("cookie-parser");
 const bcrypt = require("bcrypt");
+const passport = require("passport");
+
+const initializePasspoer = require("./passport");
+initializePasspoer(passport, (email) =>
+  users.find((user) => user.email === email)
+);
 
 const app = express();
 const port = 5000;
@@ -23,9 +29,11 @@ connection.connect((error) => {
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cors({
-  origin: "http://localhost:3000"
-}));
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+  })
+);
 app.use(
   expressSession({
     secret: "secretCode",
@@ -34,10 +42,14 @@ app.use(
   })
 );
 
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use(cookieParser("secretCode"));
 
-app.post("/login", (req, res) => {
-  console.log(req.body);
+
+app.post("/login", async (req, res) => {
+  
 });
 
 app.post("/register", async (req, res) => {
@@ -47,7 +59,7 @@ app.post("/register", async (req, res) => {
     const sql = "INSERT INTO user(email, password) VALUES (?,?)";
     connection.query(sql, [email, hashPassword], function (err, result) {
       if (err) throw err;
-      console.log("1 record inserted");
+      console.log(email + " inserted");
     });
     console.log(req.body);
   } catch {}

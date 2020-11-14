@@ -6,12 +6,14 @@ import Register from './pages/Register'
 import NoMatch from './pages/NoMatch'
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom'
 import React from 'react';
+import {AuthProvider} from './AuthContext'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../src/style.css'
 
 function App() {
   return (
     <React.Fragment>
+      <AuthProvider>
       <Navigation/>
       
         <Router>
@@ -23,6 +25,7 @@ function App() {
             <Route component={NoMatch} />
           </Switch>
         </Router>
+        </AuthProvider>
     </React.Fragment>
   );
 }

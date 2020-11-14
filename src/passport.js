@@ -18,13 +18,14 @@ function initialize(passport){
         }
 
         try{
-            if (await bcryp.compare(password, user.password)){
+            if (await bcrypt.compare(password, user.password)){
                 return done(null, user)
-            }else{
+            }
+            else{
                 return done(null, false, {message: "Password Incorrect"})
             }
-        }catch{
-
+        }catch(e){
+            return donr(e)
         }
     }
 
@@ -34,3 +35,5 @@ function initialize(passport){
     passport.serializeUser((user, done) => {})
     passport.deserializeUser((id, done) => {})
 }
+
+module.exports = initialize
