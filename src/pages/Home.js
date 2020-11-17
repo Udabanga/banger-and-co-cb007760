@@ -1,21 +1,37 @@
-import React, { Component } from 'react'
-import { Container, Button } from 'react-bootstrap'
-// import { CarouselSlider } from './components/CarouselSlider'
-import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
+import React, { useState, useEffect } from "react";
 import Banner from "../assets/Banner.jpg"
+import {Container} from "react-bootstrap"
 
-export default class Home extends Component {
-  render() {
-    return (
-      
-      <>
-        <img src={Banner} className="banner-image"/>
+import UserService from "../services/user.service";
+
+
+const Home = () => {
+  const [content, setContent] = useState("");
+
+  useEffect(() => {
+    UserService.getPublicContent().then(
+      (response) => {
+        setContent(response.data);
+      },
+      (error) => {
+        const _content =
+          (error.response && error.response.data) ||
+          error.message ||
+          error.toString();
+
+        setContent(_content);
+      }
+    );
+  }, []);
+
+  return (
+    <>
+      <img src={Banner} className="banner-image"/>
       <Container className="book-now-button-container">
         <button className="book-now-button">Book now</button>
       </Container>
-      </>
-    );
-  }
-}
+    </>
+  );
+};
+
+export default Home;
