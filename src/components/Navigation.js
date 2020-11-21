@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "../App";
-import { Nav, Navbar } from "react-bootstrap";
+import { Nav, Navbar, NavDropdown } from "react-bootstrap";
 import Logo from "../assets/Logo.png";
 
 import AuthService from "../services/auth.service";
 
 function Navigation() {
-  const [showModeratorBoard, setShowModeratorBoard] = useState(false);
-  const [showAdminBoard, setShowAdminBoard] = useState(false);
+  const [showModerator, setShowModerator] = useState(false);
+  const [showAdmin, setShowAdmin] = useState(false);
   const [currentUser, setCurrentUser] = useState(undefined);
 
   useEffect(() => {
@@ -16,8 +16,8 @@ function Navigation() {
 
     if (user) {
       setCurrentUser(user);
-      setShowModeratorBoard(user.roles.includes("ROLE_MODERATOR"));
-      setShowAdminBoard(user.roles.includes("ROLE_ADMIN"));
+      setShowModerator(user.roles.includes("ROLE_MODERATOR"));
+      setShowAdmin(user.roles.includes("ROLE_ADMIN"));
     }
   }, []);
 
@@ -57,18 +57,18 @@ function Navigation() {
             </Link>
           </Nav.Item>
 
-          {showModeratorBoard && (
+          {showModerator && (
             <Nav.Item>
               <Link to={"/mod"} className="nav-link">
-                Moderator Board
+                Moderator Page
               </Link>
             </Nav.Item>
           )}
 
-          {showAdminBoard && (
+          {showAdmin && (
             <Nav.Item>
               <Link to={"/admin"} className="nav-link">
-                Admin Board
+                Admin Page
               </Link>
             </Nav.Item>
           )}
@@ -83,11 +83,17 @@ function Navigation() {
         </Nav>
         {currentUser ? (
           <div className="navbar-nav ml-auto">
-            <Nav.Item>
+            {/* <Nav.Item>
               <Link to={"/profile"} className="nav-link">
                 {currentUser.email}
               </Link>
-            </Nav.Item>
+            </Nav.Item> */}
+            <NavDropdown title={currentUser.email} id="basic-nav-dropdown">
+              <NavDropdown.Item href="/profile">Profile</NavDropdown.Item>
+              {showAdmin && (
+                <NavDropdown.Item href="/admin">Admin Page</NavDropdown.Item>
+              )}
+            </NavDropdown>
             <Nav.Item>
               <a href="/login" className="nav-link" onClick={logOut}>
                 LogOut

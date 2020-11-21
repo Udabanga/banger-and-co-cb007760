@@ -10,16 +10,19 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Home from "./pages/Home";
 import Profile from "./pages/Profile";
-import BoardUser from "./pages/BoardUser";
-import BoardModerator from "./pages/BoardModerator";
-import BoardAdmin from "./pages/BoardAdmin";
+import UserPage from "./pages/UserPage";
+import ModeratorPage from "./pages/ModeratorPage";
+import AdminPage from "./pages/AdminPage";
 import NoMatch from "./pages/NoMatch";
 
 import Navigation from "./components/Navigation";
 
+import AdminRoute from "./route/AdminRoute";
+import PublicRoute from "./route/PublicRoute";
+
 const App = () => {
-  // const [showModeratorBoard, setShowModeratorBoard] = useState(false);
-  // const [showAdminBoard, setShowAdminBoard] = useState(false);
+  // const [showModerator, setShowModerator] = useState(false);
+  // const [showAdmin, setShowAdmin] = useState(false);
   // const [currentUser, setCurrentUser] = useState(undefined);
 
   // useEffect(() => {
@@ -27,8 +30,8 @@ const App = () => {
 
   //   if (user) {
   //     setCurrentUser(user);
-  //     setShowModeratorBoard(user.roles.includes("ROLE_MODERATOR"));
-  //     setShowAdminBoard(user.roles.includes("ROLE_ADMIN"));
+  //     setShowModerator(user.roles.includes("ROLE_MODERATOR"));
+  //     setShowAdmin(user.roles.includes("ROLE_ADMIN"));
   //   }
   // }, []);
 
@@ -38,17 +41,19 @@ const App = () => {
 
   return (
     <div>
-      <Navigation />
-        <Switch>
-          <Route exact path={["/", "/home"]} component={Home} />
-          <Route exact path="/login" component={Login} />
-          <Route exact path="/register" component={Register} />
-          <Route exact path="/profile" component={Profile} />
-          <Route path="/user" component={BoardUser} />
-          <Route path="/mod" component={BoardModerator} />
-          <Route path="/admin" component={BoardAdmin} />
-          <Route component={NoMatch} />
-        </Switch>
+      <Switch>
+
+        <PublicRoute exact path={["/", "/home"]} component={Home} />
+        <PublicRoute exact path="/login" component={Login} />
+        <PublicRoute exact path="/register" component={Register} />
+        <PublicRoute exact path="/profile" component={Profile} />
+        <PublicRoute exact path="/user" component={UserPage} />
+        <PublicRoute exact path="/mod" component={ModeratorPage} />
+
+        <AdminRoute path="/admin" component={AdminPage} />
+
+        <PublicRoute component={NoMatch} />
+      </Switch>
     </div>
   );
 };

@@ -8,6 +8,9 @@ var corsOptions = {
   origin: "http://localhost:3000"
 };
 
+
+
+
 app.use(cors(corsOptions));
 
 // parse requests of content-type - application/json
@@ -19,6 +22,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // database
 const db = require("./app/models");
 const Role = db.role;
+const User = db.user;
+
+
 
 db.sequelize.sync();
 // force: true will drop the table if it already exists
@@ -58,3 +64,4 @@ function initial() {
     name: "admin"
   });
 }
+

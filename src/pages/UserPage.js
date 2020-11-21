@@ -2,11 +2,11 @@ import React, { useState, useEffect } from "react";
 
 import UserService from "../services/user.service";
 
-const BoardModerator = () => {
+const UserPage = () => {
   const [content, setContent] = useState("");
 
   useEffect(() => {
-    UserService.getModeratorBoard().then(
+    UserService.getUserPage().then(
       (response) => {
         setContent(response.data);
       },
@@ -32,4 +32,4 @@ const BoardModerator = () => {
   );
 };
 
-export default BoardModerator;
+export default UserPage;
