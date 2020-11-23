@@ -81,7 +81,7 @@ const Sidebar = () => {
           style={{ color: "#fff" }}
           className="mt-4"
         ></Button>
-        <h3>react-bootstrap sidebar</h3>
+        <h3>Admin Page</h3>
       </div>
 
       <Nav className="flex-column pt-2">

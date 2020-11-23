@@ -28,14 +28,33 @@
 
 // export default NavBar;
 
-import React , { useContext } from 'react';
+import React , { useContext, useState, useEffect } from 'react';
 import { Navbar, Button, Nav } from "react-bootstrap";
 import { GlobalAppContext } from "../../context";
+import AuthService from "../../services/auth.service";
 
 const NavBar = () => {
   const { toggled, setToggled  } = useContext(
     GlobalAppContext
   );
+
+  const [showModerator, setShowModerator] = useState(false);
+  const [showAdmin, setShowAdmin] = useState(false);
+  const [currentUser, setCurrentUser] = useState(undefined);
+
+  useEffect(() => {
+    const user = AuthService.getCurrentUser();
+
+    if (user) {
+      setCurrentUser(user);
+      setShowModerator(user.roles.includes("ROLE_MODERATOR"));
+      setShowAdmin(user.roles.includes("ROLE_ADMIN"));
+    }
+  }, []);
+
+  const logOut = () => {
+    AuthService.logout();
+  };
 
   return (
     <Navbar
@@ -53,7 +72,11 @@ const NavBar = () => {
           <Nav.Link href="#">page</Nav.Link>
           <Nav.Link href="#">page</Nav.Link>
           <Nav.Link href="#">page</Nav.Link>
-          <Nav.Link href="#">page</Nav.Link>
+          <Nav.Item>
+              <a href="/login" className="nav-link" onClick={logOut}>
+                LogOut
+              </a>
+            </Nav.Item>
         </Nav>
       </Navbar.Collapse>
     </Navbar>
