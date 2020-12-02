@@ -30,8 +30,8 @@
 
 import React , { useContext, useState, useEffect } from 'react';
 import { Navbar, Button, Nav } from "react-bootstrap";
-import { GlobalAppContext } from "../../context";
-import AuthService from "../../services/auth.service";
+import { GlobalAppContext } from "./context";
+import AuthService from "../services/auth.service";
 
 const NavBar = () => {
   const { toggled, setToggled  } = useContext(

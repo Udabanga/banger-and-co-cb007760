@@ -29,4 +29,13 @@ module.exports = function(app) {
     [authJwt.verifyToken, authJwt.isAdmin],
     controller.adminPage
   );
+
+  // Retrieve all Users
+  app.get("/api/users/", controller.findAll);
+
+  // Retrieve a Users
+  app.post("/api/users/find", controller.findOne);
+
+  // Edit User
+  app.put("/api/users/update", controller.update);
 };

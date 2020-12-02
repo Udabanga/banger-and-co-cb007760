@@ -50,15 +50,21 @@ const Register = (props) => {
   const form = useRef();
   const checkBtn = useRef();
 
-  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [successful, setSuccessful] = useState(false);
   const [message, setMessage] = useState("");
+  const [fName, setFName] = useState("");
+  const [lName, setLName] = useState("");
 
-  const onChangeUsername = (e) => {
-    const username = e.target.value;
-    setUsername(username);
+  const onChangeFName = (e) => {
+    const fName = e.target.value;
+    setFName(fName);
+  };
+
+  const onChangeLName = (e) => {
+    const lName = e.target.value;
+    setLName(lName);
   };
 
   const onChangeEmail = (e) => {
@@ -80,7 +86,7 @@ const Register = (props) => {
     form.current.validateAll();
 
     if (checkBtn.current.context._errors.length === 0) {
-      AuthService.register(username, email, password).then(
+      AuthService.register(email, password, fName, lName).then(
         (response) => {
           setMessage(response.data.message);
           setSuccessful(true);
@@ -133,6 +139,30 @@ const Register = (props) => {
                   value={password}
                   onChange={onChangePassword}
                   validations={[required, vpassword]}
+                />
+              </div>
+              
+              <div className="form-group">
+                <label htmlFor="fName">First Name</label>
+                <Input
+                  type="text"
+                  className="form-control"
+                  name="fName"
+                  value={fName}
+                  onChange={onChangeFName}
+                  validations={[required]}
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="lName">Last Name</label>
+                <Input
+                  type="text"
+                  className="form-control"
+                  name="lName"
+                  value={lName}
+                  onChange={onChangeLName}
+                  validations={[required]}
                 />
               </div>
 

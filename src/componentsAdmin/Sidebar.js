@@ -66,9 +66,10 @@
 
 import React, { useContext } from "react";
 import SubMenu from "./SubMenu";
+import { NavLink } from "react-router-dom";
 import { Nav, Button } from "react-bootstrap";
 import classNames from "classnames";
-import { GlobalAppContext } from "../context";
+import { GlobalAppContext } from "./context";
 
 const Sidebar = () => {
   const { toggled, setToggled } = useContext(GlobalAppContext);
@@ -85,29 +86,27 @@ const Sidebar = () => {
       </div>
 
       <Nav className="flex-column pt-2">
-        <p className="ml-3">Heading</p>
-
-        <Nav.Item className="active">
-          <Nav.Link href="/">Home</Nav.Link>
-        </Nav.Item>
-
-        <SubMenu title="Pages" items={["Link", "Link2", "Active"]} />
-
-        <Nav.Item>
-          <Nav.Link href="/">About</Nav.Link>
+        {/* <Nav.Item>
+          <Nav.Link href="/admin">Home</Nav.Link>
         </Nav.Item>
 
         <Nav.Item>
-          <Nav.Link href="/">Portfolio</Nav.Link>
+          <Nav.Link href="/admin/users">Users</Nav.Link>
+        </Nav.Item> */}
+
+        <Nav.Item>
+          <NavLink to={"/admin"}>Home</NavLink>
         </Nav.Item>
 
         <Nav.Item>
-          <Nav.Link href="/">FAQ</Nav.Link>
+          <NavLink to={"/admin/users"}>Users</NavLink>
         </Nav.Item>
 
         <Nav.Item>
-          <Nav.Link href="/">Contact</Nav.Link>
+          <NavLink to={"/admin/vehicles"}>Vechiles</NavLink>
         </Nav.Item>
+
+        {/* <SubMenu title="Pages" items={["Link", "Link2", "Active"]} /> */}
       </Nav>
     </div>
   );

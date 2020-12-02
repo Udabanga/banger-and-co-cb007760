@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import "../App";
-import { Nav, Navbar, NavDropdown } from "react-bootstrap";
+import { Nav, Navbar, NavDropdown, } from "react-bootstrap";
 import Logo from "../assets/Logo.png";
 
 import AuthService from "../services/auth.service";
@@ -32,52 +32,40 @@ function Navigation() {
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
       <Navbar.Collapse id="basic-navbar-nav">
         <Nav className="m-auto nav-center">
-          {/* <Nav.Item>
-            <Nav.Link href="/">Home</Nav.Link>
-          </Nav.Item>
-          <Nav.Item>
-            <Nav.Link href="/CarListing">Car Listing</Nav.Link>
-          </Nav.Item>
-          <Nav.Item>
-            <Nav.Link href="/Login">Login</Nav.Link>
-          </Nav.Item>
-          <Nav.Item>
-            <Nav.Link href="/Register">Register</Nav.Link>
-          </Nav.Item> */}
 
           <Nav.Item>
-            <Link to={"/home"} className="nav-link">
+            <NavLink to={"/home"} className="nav-link">
               Home
-            </Link>
+            </NavLink>
           </Nav.Item>
 
           <Nav.Item>
-            <Link to={"/CarListing"} className="nav-link">
+            <NavLink to={"/CarListing"} className="nav-link">
               Car Listing
-            </Link>
+            </NavLink>
           </Nav.Item>
 
           {showModerator && (
             <Nav.Item>
-              <Link to={"/mod"} className="nav-link">
+              <NavLink to={"/mod"} className="nav-link">
                 Moderator Page
-              </Link>
+              </NavLink>
             </Nav.Item>
           )}
 
           {showAdmin && (
             <Nav.Item>
-              <Link to={"/admin"} className="nav-link">
+              <NavLink to={"/admin"} className="nav-link">
                 Admin Page
-              </Link>
+              </NavLink>
             </Nav.Item>
           )}
 
           {currentUser && (
             <Nav.Item>
-              <Link to={"/user"} className="nav-link">
+              <NavLink to={"/user"} className="nav-link">
                 User
-              </Link>
+              </NavLink>
             </Nav.Item>
           )}
         </Nav>
@@ -103,15 +91,15 @@ function Navigation() {
         ) : (
           <div className="navbar-nav ml-auto">
             <Nav.Item>
-              <Link to={"/login"} className="nav-link">
+              <NavLink to={"/login"} className="nav-link">
                 Login
-              </Link>
+              </NavLink>
             </Nav.Item>
 
             <Nav.Item>
-              <Link to={"/register"} className="nav-link">
+              <NavLink to={"/register"} className="nav-link">
                 Sign Up
-              </Link>
+              </NavLink>
             </Nav.Item>
           </div>
         )}

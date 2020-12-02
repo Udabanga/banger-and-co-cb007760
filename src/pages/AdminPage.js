@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 
 import UserService from "../services/user.service";
-import Sidebar from "../components/Sidebar";
-import Content from "../components/content/Content";
+import Sidebar from "../componentsAdmin/Sidebar";
+import Content from "../componentsAdmin/Content";
 import {  BrowserRouter as Router } from 'react-router-dom';
-import { GlobalAppContext } from "../context";
+import { GlobalAppContext } from "../componentsAdmin/context";
+import "../styleAdmin.css";
 
 const AdminPage = () => {
   const [content, setContent] = useState("");
@@ -36,9 +37,6 @@ const AdminPage = () => {
       <>
       <Router>
         <GlobalAppContext.Provider value={{toggled, setToggled}}>
-          <header className="jumbotron">
-            <h3>{content}</h3>
-          </header>
           <div className="App wrapper">
             <Sidebar isOpen={isOpen} className={style}/>
             <Content isOpen={isOpen} className={style}/>
