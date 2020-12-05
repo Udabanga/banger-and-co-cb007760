@@ -20,6 +20,8 @@ const Vehicles = () => {
   const [editColour, setEditColour] = useState("");
   const [editFuelType, setEditFuelType] = useState("");
 
+  const [modalTitle, setModalTitle] = useState("");
+
   useEffect(() => {
     getVehicleList();
   }, []);
@@ -31,10 +33,18 @@ const Vehicles = () => {
     setVehicles(result.data);
   };
 
-  const handleClose = () => setShow(false);
+  const handleClose = () => {
+    setShow(false);
+    setEditID("");
+    setEditType("");
+    setEditManufacturer("");
+    setEditModel("");
+    setEditColour("");
+    setEditFuelType("");
+  };
   const handleShow = () => setShow(true);
 
-  const handleEdit = (id) => {
+  const handleEditModal = (id) => {
     axios
       .post("http://localhost:5000/api/vehicles/find", { id: id })
       .then(function (response) {
@@ -49,10 +59,36 @@ const Vehicles = () => {
       .catch(function (error) {
         console.log(error);
       });
-
+    setModalTitle("Edit Vehicle");
     handleShow();
   };
 
+  const handleAddModal = () => {
+    setModalTitle("Add Vehicle");
+    handleShow();
+  };
+
+  const handleAdd = () => {
+    if (checkBtn.current.context._errors.length === 0) {
+      axios
+        .post("http://localhost:5000/api/vehicels/create", {
+          type: editType,
+          manufacturer: editManufacturer,
+          model: editModel,
+          colour: editColour,
+          fuelType: editFuelType,
+        })
+        .then(function (response) {
+          console.log(response);
+          getVehicleList();
+          handleClose();
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    }
+  };
+  // http://localhost:5000/api/vehicles/create
   const handleDelete = (id, email) => {};
 
   const handleUpdate = () => {
@@ -102,50 +138,20 @@ const Vehicles = () => {
     setEditFuelType(fuelType);
   };
 
-  const handleUpdate1 = (e) => {
-    e.preventDefault();
 
-    // setMessage("");
-    // setLoading(true);
-
-    form.current.validateAll();
-
-    // if (checkBtn.current.context._errors.length === 0) {
-    //   AuthService.login(email, password).then(
-    //     () => {
-    //       props.history.push("/profile");
-    //       window.location.reload();
-    //     },
-    //     (error) => {
-    //       const resMessage =
-    //         (error.response &&
-    //           error.response.data &&
-    //           error.response.data.message) ||
-    //         error.message ||
-    //         error.toString();
-
-    //       setLoading(false);
-    //       setMessage(resMessage);
-    //     }
-    //   );
-    // } else {
-    //   setLoading(false);
-    // }
-
-    // if (checkBtn.current.context._errors.length === 0) {
-    //   UserService.getVehicleList()
-    //   .then(
-    //     UserSer
-    //   );
-    // } else {
-    //   setLoading(false);
-    // }
-  };
 
   return (
     <div className="shadow-sm p-3 mb-5 bg-white rounded">
-      <h1>Vehicels</h1>
-
+      <div className="row">
+        <div className="col">
+          <h1>Vehicels</h1>
+        </div>
+        <div className="col">
+          <Button className="admin-add-button" onClick={handleAddModal}>
+            Add Vehicle
+          </Button>
+        </div>
+      </div>
       <Table className="border thead-dark">
         <thead className="thead-dark">
           <tr>
@@ -170,11 +176,7 @@ const Vehicles = () => {
               <td>
                 <Button
                   variant="warning"
-                  onClick={() =>
-                    handleEdit(
-                      vehicle.id,
-                    )
-                  }
+                  onClick={() => handleEditModal(vehicle.id)}
                 >
                   Edit
                 </Button>
@@ -186,9 +188,16 @@ const Vehicles = () => {
       </Table>
 
       <Modal show={show} onHide={handleClose}>
+        {/* <FormValidate
+          onSubmit={
+            (modalTitle === "Edit Vehicle" && { handleUpdate }) ||
+            (modalTitle === "Add Vehicle" && { handleAdd })
+          }
+          ref={form}
+        > */}
         <FormValidate onSubmit={handleUpdate} ref={form}>
           <Modal.Header closeButton>
-            <Modal.Title>Edit Vehicle</Modal.Title>
+            <Modal.Title>{modalTitle}</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Form.Group controlId="formType">
@@ -232,7 +241,7 @@ const Vehicles = () => {
             </Form.Group>
 
             <Form.Group controlId="formFuelType">
-              <Form.Label>Colour:</Form.Label>
+              <Form.Label>Fuel Type:</Form.Label>
               <Input
                 class="form-control"
                 type="text"
@@ -247,9 +256,19 @@ const Vehicles = () => {
             <Button variant="secondary" onClick={handleClose}>
               Close
             </Button>
-            <Button variant="primary" onClick={handleUpdate}>
+            {/* <Button variant="primary" onClick={handleUpdate}>
               Save Changes
-            </Button>
+            </Button> */}
+            {modalTitle == "Edit Vehicle" && (
+              <Button variant="primary" onClick={handleUpdate}>
+                Save Changes
+              </Button>
+            )}
+            {modalTitle == "Add Vehicle" && (
+              <Button variant="primary" onClick={handleAdd}>
+                Add Vehicle
+              </Button>
+            )}
           </Modal.Footer>
         </FormValidate>
       </Modal>

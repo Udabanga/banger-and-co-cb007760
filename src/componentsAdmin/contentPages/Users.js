@@ -32,7 +32,7 @@ const Users = () => {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  const handleEdit = (id) => {
+  const handleEditModal = (id) => {
     axios
       .post("http://localhost:5000/api/users/find", { id: id })
       .then(function (response) {
@@ -115,7 +115,7 @@ const Users = () => {
               <td>{user.lName}</td>
               <td>{user.roles[0].name}</td>
               <td>
-                <Button variant="warning" onClick={() => handleEdit(user.id)}>
+                <Button variant="warning" onClick={() => handleEditModal(user.id)}>
                   Edit
                 </Button>
                 <Button variant="danger">Delete</Button>

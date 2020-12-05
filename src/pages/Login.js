@@ -2,6 +2,7 @@ import React, { useState, useRef } from "react";
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
+import {Container, Col, Card} from "react-bootstrap";
 
 import AuthService from "../services/auth.service";
 
@@ -66,8 +67,8 @@ const Login = (props) => {
   };
 
   return (
-    <div className="col-md-12">
-      <div className="card card-container">
+    <Col md={12}>
+      <Card className="card-container">
         <img
           src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
           alt="profile-img"
@@ -117,8 +118,8 @@ const Login = (props) => {
           )}
           <CheckButton style={{ display: "none" }} ref={checkBtn} />
         </Form>
-      </div>
-    </div>
+      </Card>
+    </Col>
   );
 };
 

@@ -6,10 +6,13 @@ module.exports = function (app) {
   app.get("/api/vehicels/", controller.findAll);
 
   // Create a Vehicle
-  app.get("/api/vehicels/create", controller.create);
+  app.post("/api/vehicels/create", controller.create);
 
   // Retrieve a Vehicle
   app.post("/api/vehicles/find", controller.findOne);
+
+  // Delete a Vehicle
+  app.delete("/api/vehicles/delete", controller.delete);
 
   // Edit Vehicle
   app.put("/api/vehicles/update", controller.update);

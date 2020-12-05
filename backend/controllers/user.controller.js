@@ -38,13 +38,35 @@ exports.findOne = (req, res) => {
     })
     .catch((err) => {
       res.status(500).send({
-        message: "Error retrieving Tutorial with id=" + id,
+        message: "Error retrieving User with id=" + id,
       });
     });
 };
 
 // Delete a User with the specified id in the request
-exports.delete = (req, res) => {};
+exports.delete = (req, res) => {
+  const id = req.body.id;
+
+  User.destroy({
+    where: { id: id }
+  })
+    .then(num => {
+      if (num == 1) {
+        res.send({
+          message: "User was deleted successfully!"
+        });
+      } else {
+        res.send({
+          message: `Cannot delete User with id=${id}. Maybe User was not found!`
+        });
+      }
+    })
+    .catch(err => {
+      res.status(500).send({
+        message: "Could not delete User with id=" + id
+      });
+    });
+};
 
 // Update a Update by the id in the request
 exports.update = (req, res) => {

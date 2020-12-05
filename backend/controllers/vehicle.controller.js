@@ -4,7 +4,7 @@ const Vehicle = db.vehicle;
 
 const Op = db.Sequelize.Op;
 
-// Retrieve all Users from the database.
+// Retrieve all Vehicles from the database.
 exports.findAll = (req, res) => {
   Vehicle.findAll()
     .then((data) => {
@@ -12,7 +12,7 @@ exports.findAll = (req, res) => {
     })
     .catch((err) => {
       res.status(500).send({
-        message: err.message || "Some error occurred while retrieving User.",
+        message: err.message || "Some error occurred while retrieving Vehicle.",
       });
     });
 };
@@ -35,7 +35,7 @@ exports.create = (req, res) => {
     });
 };
 
-// Find a single User with an id
+// Find a single Vehicle with an id
 exports.findOne = (req, res) => {
   const id = req.body.id;
 
@@ -50,17 +50,35 @@ exports.findOne = (req, res) => {
     });
 };
 
-// Delete a User with the specified id in the request
-exports.delete = (req, res) => {};
+// Delete a Vehicle with the specified id in the request
+// Delete a Vehicle with the specified id in the request
+exports.delete = (req, res) => {
+  const id = req.body.id;
+
+  Vehicle.destroy({
+    where: { id: id }
+  })
+    .then(num => {
+      if (num == 1) {
+        res.send({
+          message: "Vehicle was deleted successfully!"
+        });
+      } else {
+        res.send({
+          message: `Cannot delete Vehicle with id=${id}. Maybe Vehicle was not found!`
+        });
+      }
+    })
+    .catch(err => {
+      res.status(500).send({
+        message: "Could not delete Vehicle with id=" + id
+      });
+    });
+};
 
 // Update a Update by the id in the request
 exports.update = (req, res) => {
   const id = req.body.id;
-  const type = req.body.type;
-  const manufacturer= req.body.manufacturer;
-  const model= req.body.model;
-  const colour=req.body.colour;
-  const fuelType= req.body.fuelType;
 
   // const id = req.params.id
 

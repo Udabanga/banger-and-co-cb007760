@@ -1,13 +1,23 @@
 .banner-image {
-    height: 100vh;
+    height: 100vh; 
+    /* Fallback for browsers that do not support Custom Properties */
+    
+    height: calc(var(--vh, 1vh) * 100);
     width: 100%;
     object-fit: cover;
     object-position: top;
     margin-top: -148px;
 }
+
+.banner-image-outer{
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+}
 .book-now-button-container {
     height: 0px;
     margin-top: -80px;
+    padding-bottom: 80px;
 }
 
 .book-now-button {
@@ -65,6 +75,24 @@
 
 #wrapper.toggled #sidebar-wrapper {
   margin-left: 0;
+}
+
+.booking-container{
+  margin-top: 50px;
+  margin-bottom: 50px;
+}
+
+.book-card{
+  width: 474px;
+  text-align: left;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  padding: 50px;
+  border-radius: 10px;
+  background-color: #fff;
+  -webkit-box-shadow: 0 13px 30px -3px rgba(16,66,97,.08);
+  box-shadow: 0 13px 30px -3px rgba(16,66,97,.08);
+  position: relative;
 }
 
 @media (min-width: 768px) {

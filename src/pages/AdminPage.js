@@ -34,7 +34,7 @@ const AdminPage = () => {
 
   if (content === "Admin Content.") {
     return (
-      <>
+      <body class="admin-page">
       <Router>
         <GlobalAppContext.Provider value={{toggled, setToggled}}>
           <div className="App wrapper">
@@ -43,7 +43,7 @@ const AdminPage = () => {
           </div>
         </GlobalAppContext.Provider>
         </Router>
-      </>
+      </body>
     );
   } else {
     return (

@@ -36,6 +36,9 @@ module.exports = function(app) {
   // Retrieve a Users
   app.post("/api/users/find", controller.findOne);
 
+  // Delete a User
+  app.delete("/api/users/delete", controller.delete);
+
   // Edit User
   app.put("/api/users/update", controller.update);
 };
