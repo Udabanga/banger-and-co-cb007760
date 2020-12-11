@@ -82,6 +82,12 @@
   margin-bottom: 50px;
 }
 
+
+
+.imagePreview img{
+  width:100%
+}
+
 .book-card{
   width: 474px;
   text-align: left;

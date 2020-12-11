@@ -20,6 +20,10 @@ const Vehicles = () => {
   const [editColour, setEditColour] = useState("");
   const [editFuelType, setEditFuelType] = useState("");
 
+  const [image, setImage] = useState(null);
+  const [previewImage, setPreviewImage] = useState(null);
+  const [imageName, setImageName] = useState("");
+
   const [modalTitle, setModalTitle] = useState("");
 
   useEffect(() => {
@@ -41,6 +45,8 @@ const Vehicles = () => {
     setEditModel("");
     setEditColour("");
     setEditFuelType("");
+    setImage(null);
+    setPreviewImage(null);
   };
   const handleShow = () => setShow(true);
 
@@ -69,15 +75,16 @@ const Vehicles = () => {
   };
 
   const handleAdd = () => {
+    let formData = new FormData();
+    formData.append("file", image);
+    formData.append("type", editType);
+    formData.append("manufacturer", editManufacturer);
+    formData.append("model", editModel);
+    formData.append("colour", editColour);
+    formData.append("fuelType", editFuelType);
     if (checkBtn.current.context._errors.length === 0) {
       axios
-        .post("http://localhost:5000/api/vehicels/create", {
-          type: editType,
-          manufacturer: editManufacturer,
-          model: editModel,
-          colour: editColour,
-          fuelType: editFuelType,
-        })
+        .post("http://localhost:5000/api/vehicels/create", formData)
         .then(function (response) {
           console.log(response);
           getVehicleList();
@@ -138,7 +145,12 @@ const Vehicles = () => {
     setEditFuelType(fuelType);
   };
 
-
+  const onChangeImage = (e) => {
+    console.log("image: ", image);
+    setPreviewImage(URL.createObjectURL(e.target.files[0]));
+    setImage(e.target.files[0]);
+    setImageName(e.target.files[0].name);
+  };
 
   return (
     <div className="shadow-sm p-3 mb-5 bg-white rounded">
@@ -248,6 +260,19 @@ const Vehicles = () => {
                 value={editFuelType}
                 onChange={onChangeFuelType}
               ></Input>
+            </Form.Group>
+
+            <Form.Group controlId="formImage">
+              <Form.Label>Image:</Form.Label>
+              <Input
+                type="file"
+                accept="image/*"
+                onChange={onChangeImage}
+              ></Input>
+
+              <div className="imagePreview">
+                <img src={previewImage}></img>
+              </div>
             </Form.Group>
 
             <CheckButton style={{ display: "none" }} ref={checkBtn} />

@@ -10,6 +10,7 @@ import AuthService from "./services/auth.service";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Home from "./pages/Home";
+import CarListing from "./pages/CarListing"
 import Profile from "./pages/Profile";
 import UserPage from "./pages/UserPage";
 import ModeratorPage from "./pages/ModeratorPage";
@@ -50,6 +51,7 @@ const App = () => {
         <PublicRoute exact path="/profile" component={Profile} />
         <PublicRoute exact path="/user" component={UserPage} />
         <PublicRoute exact path="/mod" component={ModeratorPage} />
+        <PublicRoute exact path="/carListing" component={CarListing} />
 
         <AdminRoute path="/admin" component={AdminPage} />
 

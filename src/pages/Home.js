@@ -11,7 +11,14 @@ import "react-datepicker/dist/react-datepicker.css";
 // import differenceInDays from 'date-fns/differenceInDays'
 
 import UserService from "../services/user.service";
-import { setHours, setMinutes, addHours, differenceInDays, addDays } from "date-fns";
+import {
+  setHours,
+  setMinutes,
+  addHours,
+  differenceInDays,
+  addDays,
+  getTime,
+} from "date-fns";
 
 window.addEventListener("resize", () => {
   let vh = window.innerHeight * 0.01;
@@ -20,16 +27,21 @@ window.addEventListener("resize", () => {
 
 const Home = () => {
   const [content, setContent] = useState("");
-  const [pickUpDate, setPickUpDate] = useState(setHours(setMinutes(new Date(), 0), 8));
-  const [dropOffDate, setDropOffDate] = useState(setHours(setMinutes(new Date(), 0), 18));
+  const [pickUpDate, setPickUpDate] = useState(
+    setHours(setMinutes(new Date(), 0), 8)
+  );
+  const [dropOffDate, setDropOffDate] = useState(
+    setHours(setMinutes(new Date(), 0), 18)
+  );
 
-  const [startTime, setStartTime] = useState(setHours(setMinutes(new Date(), 0), 8));
-  const [endTime, setEndTime] = useState(setHours(setMinutes(new Date(), 0), 18));
+  const [startTime, setStartTime] = useState(
+    setHours(setMinutes(new Date(), 0), 8)
+  );
+  const [endTime, setEndTime] = useState(
+    setHours(setMinutes(new Date(), 0), 18)
+  );
 
-  const [minDropOffTime, setMinDropOffTime] = useState(addHours(startTime,5));
-  const [tempPickUpDate, setTempPickUpDate] = useState(new Date())
-
-  
+  const [minDropOffTime, setMinDropOffTime] = useState(addHours(startTime, 5));
 
   useEffect(() => {
     UserService.getPublicContent().then(
@@ -49,15 +61,13 @@ const Home = () => {
     // checkIfOneDay();
   }, []);
 
-  const checkIfOneDay = (dropOffDate) => {
-    if(differenceInDays(pickUpDate,dropOffDate)=== 0){
-      setMinDropOffTime(addHours(startTime,5))
-    }
-    else{
-      setMinDropOffTime(startTime)
+  const checkIfOneDay = (date) => {
+    if (differenceInDays(pickUpDate, date) === 0) {
+      setMinDropOffTime(addHours(getTime(date), 5));
+    } else {
+      setMinDropOffTime(startTime);
     }
   };
-
 
   return (
     <>
@@ -73,19 +83,15 @@ const Home = () => {
             <div className="book-card">
               <Form>
                 <h2>Bookings</h2>
-                <Form.Group controlId="dateRange">
-                  <Form.Label>Booking Period</Form.Label>
-                  <DateRangePicker
-                    initialSettings={{
-                      // startDate: "01/01/2020",
-                      // endDate: "01/15/2020",
-                      timePicker: true,
-                    }}
-                  >
-                    <input type="text" className="form-control" />
-                  </DateRangePicker>
+
+                <Form.Group controlId="exampleForm.ControlSelect1">
+                  <Form.Label>Vehicle Type</Form.Label>
+                  <Form.Control as="select">
+                    <option>SUV</option>
+                    <option>Sedan</option>
+                  </Form.Control>
                 </Form.Group>
-                
+
                 {/* Pick-Up */}
                 <Form.Group controlId="dateRange">
                   <Form.Label>Pick-Up Date</Form.Label>
@@ -96,15 +102,16 @@ const Home = () => {
                     startDate={pickUpDate}
                     endDate={dropOffDate}
                     onChange={(date) => {
-                      setDropOffDate(date)
-                      setPickUpDate(date)
-                      checkIfOneDay(date)
+                      setDropOffDate(date);
+                      setPickUpDate(date);
+                      checkIfOneDay(date);
                     }}
                   />
                   <DatePicker
                     selected={pickUpDate}
                     onChange={(date) => {
-                      setPickUpDate(date)
+                      setPickUpDate(date);
+                      checkIfOneDay(date);
                     }}
                     showTimeSelect
                     showTimeSelectOnly
@@ -115,7 +122,7 @@ const Home = () => {
                     dateFormat="h:mm aa"
                   />
                 </Form.Group>
-                
+
                 {/* Dop-Off */}
                 <Form.Group controlId="dateRange">
                   <Form.Label>Drop-Off Date</Form.Label>
@@ -125,10 +132,10 @@ const Home = () => {
                     startDate={pickUpDate}
                     endDate={dropOffDate}
                     minDate={pickUpDate}
-                    maxDate={addDays(pickUpDate,14)}
+                    maxDate={addDays(pickUpDate, 14)}
                     onChange={(date) => {
-                      setDropOffDate(date)
-                      checkIfOneDay(date)
+                      setDropOffDate(date);
+                      checkIfOneDay(date);
                     }}
                   />
                   <DatePicker
@@ -142,14 +149,6 @@ const Home = () => {
                     timeCaption="Time"
                     dateFormat="h:mm aa"
                   />
-                </Form.Group>
-
-                <Form.Group controlId="exampleForm.ControlSelect1">
-                  <Form.Label>Vehicle Type</Form.Label>
-                  <Form.Control as="select">
-                    <option>SUV</option>
-                    <option>Sedan</option>
-                  </Form.Control>
                 </Form.Group>
 
                 <Button variant="primary" type="submit">
