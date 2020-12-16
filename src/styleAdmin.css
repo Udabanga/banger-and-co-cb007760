@@ -125,3 +125,8 @@ li a.dropdown-toggle::after {
 .admin-add-button {
   float: right;
 }
+
+.table-image{
+  max-height:100px;
+  max-width: 100px;
+}

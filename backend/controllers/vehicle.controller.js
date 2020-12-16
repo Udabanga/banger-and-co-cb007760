@@ -23,12 +23,21 @@ exports.create = async (req, res) => {
   try {
     await uploadFile(req, res);
 
+    if (req.file == undefined) {
+      return res.status(400).send({ message: "Please upload a file!" });
+    }
+
+    res.status(200).send({
+      message: "Uploaded the file successfully: " + req.file.filename,
+    });
+
     Vehicle.create({
       type: req.body.type,
       manufacturer: req.body.manufacturer,
       model: req.body.model,
       colour: req.body.colour,
       fuelType: req.body.fuelType,
+      imageName: req.file.filename.replace(/\s/g, '')
     })
       .then((data) => {
         res.send(data);
@@ -39,13 +48,6 @@ exports.create = async (req, res) => {
         });
       });
 
-    if (req.file == undefined) {
-      return res.status(400).send({ message: "Please upload a file!" });
-    }
-
-    res.status(200).send({
-      message: "Uploaded the file successfully: " + req.file.originalname,
-    });
   } catch (err) {
     if (err.code == "LIMIT_FILE_SIZE") {
       return res.status(500).send({
@@ -54,7 +56,7 @@ exports.create = async (req, res) => {
     }
 
     res.status(500).send({
-      message: `Could not upload the file: ${req.file.originalname}. ${err}`,
+      message: `Could not upload the file: ${req.file.filename}. ${err}`,
     });
   }
 

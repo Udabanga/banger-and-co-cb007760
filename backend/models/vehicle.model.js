@@ -14,6 +14,9 @@ module.exports = (sequelize, Sequelize) => {
       },
       fuelType: {
         type: Sequelize.STRING
+      },
+      imageName: {
+        type: Sequelize.STRING
       }
     });
   

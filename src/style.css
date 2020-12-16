@@ -40,6 +40,10 @@
     transform: translateX(-50%);
 }   
 
+.vehicle-card img{
+  object-fit: cover;
+  height: 200px;
+}
 .book-now-button:hover {
     background-color: #C43B3B;
     box-shadow: 0px 15px 20px rgba(229, 89, 46, 0.4);

@@ -1,4 +1,5 @@
 const uploadFile = require("../middleware/upload");
+const fs = require("fs");
 
 const upload = async (req, res) => {
   try {
@@ -11,6 +12,16 @@ const upload = async (req, res) => {
     res.status(200).send({
       message: "Uploaded the file successfully: " + req.file.originalname,
     });
+
+    if (req.file.mimetype.startsWith("image")) {
+      res.status(200).send({
+        message: "Uploaded the file successfully: " + req.file.originalname,
+      });
+    } else {
+      return res.status(400).send({ message: "Please upload an image file!" });
+    }
+
+   
   } catch (err) {
     if (err.code == "LIMIT_FILE_SIZE") {
       return res.status(500).send({
@@ -39,7 +50,7 @@ const getListFiles = (req, res) => {
     files.forEach((file) => {
       fileInfos.push({
         name: file,
-        url: baseUrl + file,
+        url: "http://localhost:5000/files/" + file,
       });
     });
 
@@ -51,7 +62,7 @@ const download = (req, res) => {
   const fileName = req.params.name;
   const directoryPath = __basedir + "/src/assets/uploads/";
 
-  res.download(directoryPath + fileName, fileName, (err) => {
+  res.sendFile(directoryPath + fileName, fileName, (err) => {
     if (err) {
       res.status(500).send({
         message: "Could not download the file. " + err,

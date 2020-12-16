@@ -61,6 +61,7 @@ const Vehicles = () => {
         setEditModel(response.data.model);
         setEditColour(response.data.colour);
         setEditFuelType(response.data.fuelType);
+        setPreviewImage("http://localhost:5000/files/"+response.data.imageName)
       })
       .catch(function (error) {
         console.log(error);
@@ -173,6 +174,7 @@ const Vehicles = () => {
             <th>Model</th>
             <th>Colour</th>
             <th>Fuel Type</th>
+            <th>Image</th>
             <th>Action</th>
           </tr>
         </thead>
@@ -185,6 +187,9 @@ const Vehicles = () => {
               <td>{vehicle.model}</td>
               <td>{vehicle.colour}</td>
               <td>{vehicle.fuelType}</td>
+              <td><img className="table-image"src={"http://localhost:5000/files/" + vehicle.imageName} />
+                
+              </td>
               <td>
                 <Button
                   variant="warning"
