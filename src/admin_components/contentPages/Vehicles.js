@@ -49,6 +49,7 @@ const Vehicles = () => {
     setEditFuelType("");
     setEditDailyCost("");
     setEditSeatNumber("");
+    setEditDailyCost("");
     setImage(null);
     setPreviewImage(null);
   };
@@ -67,6 +68,7 @@ const Vehicles = () => {
         setEditFuelType(response.data.fuelType);
         setEditDailyCost(response.data.dailyCost);
         setEditSeatNumber(response.data.seatNumber);
+        setEditDailyCost(response.data.dailyCost);
         setPreviewImage(
           "http://localhost:5000/files/" + response.data.imageName
         );
@@ -93,6 +95,7 @@ const Vehicles = () => {
     formData.append("fuelType", editFuelType);
     formData.append("dailyCost", editDailyCost);
     formData.append("seatNumber", editSeatNumber);
+    formData.append("dailyCost", editDailyCost);
     if (checkBtn.current.context._errors.length === 0) {
       axios
         .post("http://localhost:5000/api/vehicels/create", formData)
@@ -121,6 +124,7 @@ const Vehicles = () => {
           fuelType: editFuelType,
           dailyCost: editDailyCost,
           seatNumber: editSeatNumber,
+          dailyCost: editDailyCost,
         })
         .then(function (response) {
           console.log(response);
@@ -158,6 +162,11 @@ const Vehicles = () => {
     setEditFuelType(fuelType);
   };
 
+  const onChangeDailyCost = (e) => {
+    const dailyCost = e.target.value;
+    setEditDailyCost(dailyCost);
+  }
+
   const onChangeImage = (e) => {
     console.log("image: ", image);
     setPreviewImage(URL.createObjectURL(e.target.files[0]));
@@ -186,12 +195,13 @@ const Vehicles = () => {
         <thead className="thead-dark">
           <tr>
             <th>#</th>
+            <th>Image</th>
             <th>Type</th>
             <th>Manufacturer</th>
             <th>Model</th>
             <th>Transmission</th>
             <th>Fuel Type</th>
-            <th>Image</th>
+            <th>Daily Cost</th>
             <th>Action</th>
           </tr>
         </thead>
@@ -199,17 +209,18 @@ const Vehicles = () => {
           {vehicles.map((vehicle) => (
             <tr>
               <td>{vehicle.id}</td>
-              <td>{vehicle.type}</td>
-              <td>{vehicle.manufacturer}</td>
-              <td>{vehicle.model}</td>
-              <td>{vehicle.transmission}</td>
-              <td>{vehicle.fuelType}</td>
               <td>
                 <img
                   className="table-image"
                   src={"http://localhost:5000/files/" + vehicle.imageName}
                 />
               </td>
+              <td>{vehicle.type}</td>
+              <td>{vehicle.manufacturer}</td>
+              <td>{vehicle.model}</td>
+              <td>{vehicle.transmission}</td>
+              <td>{vehicle.fuelType}</td>
+              <td>{vehicle.dailyCost}</td>
               <td>
                 <Button
                   variant="warning"
@@ -284,6 +295,16 @@ const Vehicles = () => {
                 type="text"
                 value={editFuelType}
                 onChange={onChangeFuelType}
+              ></Input>
+            </Form.Group>
+
+            <Form.Group controlId="formDailyCost">
+              <Form.Label>Daily Cost:</Form.Label>
+              <Input
+                class="form-control"
+                type="text"
+                value={editDailyCost}
+                onChange={onChangeDailyCost}
               ></Input>
             </Form.Group>
 

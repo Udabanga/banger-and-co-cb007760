@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 
 import UserService from "../services/user.service";
-import Sidebar from "../componentsAdmin/Sidebar";
-import Content from "../componentsAdmin/Content";
+import Sidebar from "../admin_components/Sidebar";
+import Content from "../admin_components/Content";
 import {  BrowserRouter as Router } from 'react-router-dom';
-import { GlobalAppContext } from "../componentsAdmin/context";
+import { GlobalAppContext } from "../admin_components/context";
 import "../styleAdmin.css";
 
 const AdminPage = () => {
