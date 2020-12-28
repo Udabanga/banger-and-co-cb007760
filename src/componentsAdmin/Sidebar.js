@@ -20,27 +20,20 @@ const Sidebar = () => {
       </div>
 
       <Nav className="flex-column pt-2">
-        {/* <Nav.Item>
-          <Nav.Link href="/admin">Home</Nav.Link>
+
+        <Nav.Item>
+          <NavLink className="nav-link" to={"/admin"}>Home</NavLink>
         </Nav.Item>
 
         <Nav.Item>
-          <Nav.Link href="/admin/users">Users</Nav.Link>
-        </Nav.Item> */}
-
-        <Nav.Item>
-          <NavLink to={"/admin"}>Home</NavLink>
+          <NavLink className="nav-link" to={"/admin/users"}>Users</NavLink>
         </Nav.Item>
 
         <Nav.Item>
-          <NavLink to={"/admin/users"}>Users</NavLink>
+          <NavLink className="nav-link" to={"/admin/vehicles"}>Vehicles</NavLink>
         </Nav.Item>
 
-        <Nav.Item>
-          <NavLink to={"/admin/vehicles"}>Vehicles</NavLink>
-        </Nav.Item>
-
-        {/* <SubMenu title="Pages" items={["Link", "Link2", "Active"]} /> */}
+        <SubMenu title="Item" items={["Link", "Link2", "Active"]} />
       </Nav>
     </div>
   );

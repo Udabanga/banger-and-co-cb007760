@@ -11,6 +11,9 @@ module.exports = (sequelize, Sequelize) => {
     },
     lName: {
       type: Sequelize.STRING
+    },
+    status: {
+      type: Sequelize.STRING,
     }
   });
 

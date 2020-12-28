@@ -32,12 +32,16 @@ exports.create = async (req, res) => {
     });
 
     Vehicle.create({
+
       type: req.body.type,
       manufacturer: req.body.manufacturer,
       model: req.body.model,
-      colour: req.body.colour,
+      transmission: req.body.transmission,
       fuelType: req.body.fuelType,
-      imageName: req.file.filename.replace(/\s/g, '')
+      dailyCost: req.body.dailyCost,
+      seatNumber: req.body.seatNumber,
+      imageName: req.file.filename.replace(/\s/g, ''),
+      status: req.body.status
     })
       .then((data) => {
         res.send(data);

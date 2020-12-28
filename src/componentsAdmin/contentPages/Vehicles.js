@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
-import { Table, Button, Modal, Form } from "react-bootstrap";
+import { Table, Button, ButtonGroup, Modal, Form } from "react-bootstrap";
 import FormValidate from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
@@ -17,8 +17,10 @@ const Vehicles = () => {
   const [editType, setEditType] = useState("");
   const [editManufacturer, setEditManufacturer] = useState("");
   const [editModel, setEditModel] = useState("");
-  const [editColour, setEditColour] = useState("");
+  const [editTransmission, setEditTransmission] = useState("");
   const [editFuelType, setEditFuelType] = useState("");
+  const [editDailyCost, setEditDailyCost] = useState("");
+  const [editSeatNumber, setEditSeatNumber] = useState("");
 
   const [image, setImage] = useState(null);
   const [previewImage, setPreviewImage] = useState(null);
@@ -43,8 +45,10 @@ const Vehicles = () => {
     setEditType("");
     setEditManufacturer("");
     setEditModel("");
-    setEditColour("");
+    setEditTransmission("");
     setEditFuelType("");
+    setEditDailyCost("");
+    setEditSeatNumber("");
     setImage(null);
     setPreviewImage(null);
   };
@@ -59,9 +63,13 @@ const Vehicles = () => {
         setEditType(response.data.type);
         setEditManufacturer(response.data.manufacturer);
         setEditModel(response.data.model);
-        setEditColour(response.data.colour);
+        setEditTransmission(response.data.transmission);
         setEditFuelType(response.data.fuelType);
-        setPreviewImage("http://localhost:5000/files/"+response.data.imageName)
+        setEditDailyCost(response.data.dailyCost);
+        setEditSeatNumber(response.data.seatNumber);
+        setPreviewImage(
+          "http://localhost:5000/files/" + response.data.imageName
+        );
       })
       .catch(function (error) {
         console.log(error);
@@ -81,8 +89,10 @@ const Vehicles = () => {
     formData.append("type", editType);
     formData.append("manufacturer", editManufacturer);
     formData.append("model", editModel);
-    formData.append("colour", editColour);
+    formData.append("transmission", editTransmission);
     formData.append("fuelType", editFuelType);
+    formData.append("dailyCost", editDailyCost);
+    formData.append("seatNumber", editSeatNumber);
     if (checkBtn.current.context._errors.length === 0) {
       axios
         .post("http://localhost:5000/api/vehicels/create", formData)
@@ -107,8 +117,10 @@ const Vehicles = () => {
           type: editType,
           manufacturer: editManufacturer,
           model: editModel,
-          colour: editColour,
+          transmission: editTransmission,
           fuelType: editFuelType,
+          dailyCost: editDailyCost,
+          seatNumber: editSeatNumber,
         })
         .then(function (response) {
           console.log(response);
@@ -136,9 +148,9 @@ const Vehicles = () => {
     setEditModel(model);
   };
 
-  const onChangeColour = (e) => {
-    const colour = e.target.value;
-    setEditColour(colour);
+  const onChangeTransmission = (e) => {
+    const transmission = e.target.value;
+    setEditTransmission(transmission);
   };
 
   const onChangeFuelType = (e) => {
@@ -165,6 +177,11 @@ const Vehicles = () => {
           </Button>
         </div>
       </div>
+      <ButtonGroup aria-label="Basic example">
+        <Button variant="secondary">Active</Button>
+        <Button variant="secondary">Drafted</Button>
+        <Button variant="secondary">Deleted</Button>
+      </ButtonGroup>
       <Table className="border thead-dark">
         <thead className="thead-dark">
           <tr>
@@ -172,7 +189,7 @@ const Vehicles = () => {
             <th>Type</th>
             <th>Manufacturer</th>
             <th>Model</th>
-            <th>Colour</th>
+            <th>Transmission</th>
             <th>Fuel Type</th>
             <th>Image</th>
             <th>Action</th>
@@ -185,10 +202,13 @@ const Vehicles = () => {
               <td>{vehicle.type}</td>
               <td>{vehicle.manufacturer}</td>
               <td>{vehicle.model}</td>
-              <td>{vehicle.colour}</td>
+              <td>{vehicle.transmission}</td>
               <td>{vehicle.fuelType}</td>
-              <td><img className="table-image"src={"http://localhost:5000/files/" + vehicle.imageName} />
-                
+              <td>
+                <img
+                  className="table-image"
+                  src={"http://localhost:5000/files/" + vehicle.imageName}
+                />
               </td>
               <td>
                 <Button
@@ -247,13 +267,13 @@ const Vehicles = () => {
               ></Input>
             </Form.Group>
 
-            <Form.Group controlId="formColour">
-              <Form.Label>Colour:</Form.Label>
+            <Form.Group controlId="formTransmission">
+              <Form.Label>Transmission:</Form.Label>
               <Input
                 class="form-control"
                 type="text"
-                value={editColour}
-                onChange={onChangeColour}
+                value={editTransmission}
+                onChange={onChangeTransmission}
               ></Input>
             </Form.Group>
 

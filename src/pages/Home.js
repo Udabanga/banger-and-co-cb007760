@@ -16,6 +16,8 @@ import {
   setMinutes,
   addHours,
   differenceInDays,
+  differenceInHours,
+  differenceInCalendarDays,
   addDays,
   getTime,
 } from "date-fns";
@@ -42,6 +44,7 @@ const Home = () => {
   );
 
   const [minDropOffTime, setMinDropOffTime] = useState(addHours(startTime, 5));
+  const [minPickUpDate, setMinPickUpDate] = useState(dropOffDate);
 
   useEffect(() => {
     UserService.getPublicContent().then(
@@ -61,13 +64,43 @@ const Home = () => {
     // checkIfOneDay();
   }, []);
 
-  const checkIfOneDay = (date) => {
-    if (differenceInDays(pickUpDate, date) === 0) {
-      setMinDropOffTime(addHours(getTime(date), 5));
+  const checkIfOneDayPickup = (date) => {
+    if (differenceInCalendarDays(dropOffDate, date) === 0) {
+
+      if (differenceInHours(endTime, getTime(date)) >= 5) {
+        setMinDropOffTime(addHours(getTime(date), 5));
+        setMinPickUpDate(pickUpDate);
+
+        if(differenceInHours(dropOffDate, minPickUpDate) >= 0){
+          setDropOffDate(addHours(getTime(date), 5));
+        }
+        
+      } else {
+        // setDropOffDate(addDays(dropOffDate, 1));
+        setDropOffDate(addDays(setHours(setMinutes(dropOffDate, 0), 8), 1));
+        setMinPickUpDate(addDays(pickUpDate, 1));
+        setMinDropOffTime(startTime);
+      }
+
+      
+    } else if (differenceInCalendarDays(dropOffDate, date) === 1) {
+      if (differenceInHours(endTime, getTime(date)) >= 5) {
+        setMinPickUpDate(pickUpDate);
+      } 
     } else {
       setMinDropOffTime(startTime);
     }
+
+    
   };
+
+
+  const checkIfOneDayDropoff = (date) => {
+    if (differenceInCalendarDays(date, pickUpDate) === 0){
+      setDropOffDate(setHours(setMinutes(new Date(), 0), 8));
+      setPickUpDate(setHours(setMinutes(new Date(), 0), 18));
+    }
+  }
 
   return (
     <>
@@ -102,16 +135,16 @@ const Home = () => {
                     startDate={pickUpDate}
                     endDate={dropOffDate}
                     onChange={(date) => {
-                      setDropOffDate(date);
                       setPickUpDate(date);
-                      checkIfOneDay(date);
+                      checkIfOneDayPickup(date);
                     }}
                   />
+                  {/* Pick-Up Time*/}
                   <DatePicker
                     selected={pickUpDate}
                     onChange={(date) => {
                       setPickUpDate(date);
-                      checkIfOneDay(date);
+                      checkIfOneDayPickup(date);
                     }}
                     showTimeSelect
                     showTimeSelectOnly
@@ -131,16 +164,19 @@ const Home = () => {
                     selectsEnd
                     startDate={pickUpDate}
                     endDate={dropOffDate}
-                    minDate={pickUpDate}
+                    minDate={minPickUpDate}
                     maxDate={addDays(pickUpDate, 14)}
                     onChange={(date) => {
                       setDropOffDate(date);
-                      checkIfOneDay(date);
+                      checkIfOneDayDropoff(date);
                     }}
                   />
+                  {/* Dop-Off Time*/}
                   <DatePicker
                     selected={dropOffDate}
-                    onChange={(date) => setDropOffDate(date)}
+                    onChange={(date) => {
+                      setDropOffDate(date);
+                    }}
                     showTimeSelect
                     showTimeSelectOnly
                     minTime={minDropOffTime}

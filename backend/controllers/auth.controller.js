@@ -15,6 +15,7 @@ exports.register = (req, res) => {
     password: bcrypt.hashSync(req.body.password, 8),
     fName: req.body.fName,
     lName: req.body.lName,
+    status: "Pending"
   })
     .then(user => {
       if (req.body.roles) {
