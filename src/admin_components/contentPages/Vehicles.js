@@ -4,6 +4,8 @@ import { Table, Button, ButtonGroup, Modal, Form } from "react-bootstrap";
 import FormValidate from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons'
 
 import UserService from "../../services/user.service";
 
@@ -25,6 +27,7 @@ const Vehicles = () => {
   const [image, setImage] = useState(null);
   const [previewImage, setPreviewImage] = useState(null);
   const [imageName, setImageName] = useState("");
+  const [tableView, setTableView] = useState("Active");
 
   const [modalTitle, setModalTitle] = useState("");
 
@@ -165,7 +168,7 @@ const Vehicles = () => {
   const onChangeDailyCost = (e) => {
     const dailyCost = e.target.value;
     setEditDailyCost(dailyCost);
-  }
+  };
 
   const onChangeImage = (e) => {
     console.log("image: ", image);
@@ -187,9 +190,9 @@ const Vehicles = () => {
         </div>
       </div>
       <ButtonGroup aria-label="Basic example">
-        <Button variant="secondary">Active</Button>
-        <Button variant="secondary">Drafted</Button>
-        <Button variant="secondary">Deleted</Button>
+        <Button onClick={() => setTableView("Active")} active={tableView == "Active"} variant="secondary">Active </Button>
+        <Button onClick={() => setTableView("Drafted")} active={tableView == "Drafted"} variant="secondary">Drafted</Button>
+        <Button onClick={() => setTableView("Deleted")} active={tableView == "Deleted"} variant="secondary">Deleted</Button>
       </ButtonGroup>
       <Table className="border thead-dark">
         <thead className="thead-dark">
@@ -226,9 +229,9 @@ const Vehicles = () => {
                   variant="warning"
                   onClick={() => handleEditModal(vehicle.id)}
                 >
-                  Edit
+                  <FontAwesomeIcon icon={faEdit} />
                 </Button>
-                <Button variant="danger">Delete</Button>
+                <Button variant="danger"><FontAwesomeIcon icon={faTrash} /></Button>
               </td>
             </tr>
           ))}

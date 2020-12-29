@@ -2,6 +2,8 @@ import React , { useContext, useState, useEffect } from 'react';
 import { Navbar, Button, Nav } from "react-bootstrap";
 import { GlobalAppContext } from "./context";
 import AuthService from "../services/auth.service";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faBars } from '@fortawesome/free-solid-svg-icons'
 
 const NavBar = () => {
   const { toggled, setToggled  } = useContext(
@@ -35,13 +37,11 @@ const NavBar = () => {
       <Button
         variant="outline-info"
         onClick={() => setToggled(!toggled)}
-      ></Button>
+      ><FontAwesomeIcon icon={faBars} /></Button>
       <Navbar.Toggle aria-controls="responsive-navbar-nav" />
       <Navbar.Collapse id="responsive-navbar-nav">
         <Nav className="ml-auto" navbar>
-          <Nav.Link href="#">page</Nav.Link>
-          <Nav.Link href="#">page</Nav.Link>
-          <Nav.Link href="#">page</Nav.Link>
+          <Nav.Link href="/">Home</Nav.Link>
           <Nav.Item>
               <a href="/login" className="nav-link" onClick={logOut}>
                 LogOut

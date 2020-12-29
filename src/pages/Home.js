@@ -20,6 +20,8 @@ import {
   differenceInCalendarDays,
   addDays,
   getTime,
+  isWithinInterval,
+  roundToNearestMinutes
 } from "date-fns";
 
 window.addEventListener("resize", () => {
@@ -42,9 +44,9 @@ const Home = () => {
   const [endTime, setEndTime] = useState(
     setHours(setMinutes(new Date(), 0), 18)
   );
+  const [currentTime, setCurrentTime] = useState(roundToNearestMinutes(new Date(), { nearestTo: 30 }));
 
   const [minDropOffTime, setMinDropOffTime] = useState(addHours(startTime, 5));
-  const [minPickUpDate, setMinPickUpDate] = useState(dropOffDate);
 
   useEffect(() => {
     UserService.getPublicContent().then(
@@ -60,45 +62,48 @@ const Home = () => {
         setContent(_content);
       }
     );
-
-    // checkIfOneDay();
+    checkIfOneDayPickup(currentTime)
   }, []);
 
   const checkIfOneDayPickup = (date) => {
     if (differenceInCalendarDays(dropOffDate, date) === 0) {
+      if (
+        isWithinInterval(currentTime, {
+          start: startTime,
+          end: endTime,
+        })
+      ) {
+        
+        setStartTime(currentTime);
+        setPickUpDate(currentTime);
+      }
 
       if (differenceInHours(endTime, getTime(date)) >= 5) {
         setMinDropOffTime(addHours(getTime(date), 5));
-        setMinPickUpDate(pickUpDate);
 
-        if(differenceInHours(dropOffDate, minPickUpDate) >= 0){
+        if (differenceInHours(dropOffDate, pickUpDate) >= 0) {
           setDropOffDate(addHours(getTime(date), 5));
         }
-        
       } else {
-        // setDropOffDate(addDays(dropOffDate, 1));
         setDropOffDate(addDays(setHours(setMinutes(dropOffDate, 0), 8), 1));
-        setMinPickUpDate(addDays(pickUpDate, 1));
         setMinDropOffTime(startTime);
       }
-
-      
-    } else if (differenceInCalendarDays(dropOffDate, date) === 1) {
-      if (differenceInHours(endTime, getTime(date)) >= 5) {
-        setMinPickUpDate(pickUpDate);
-      } 
     } else {
       setMinDropOffTime(startTime);
+      setStartTime(setHours(setMinutes(new Date(), 0), 8));
     }
-
-    
   };
 
-
   const checkIfOneDayDropoff = (date) => {
-    if (differenceInCalendarDays(date, pickUpDate) === 0){
+    if (differenceInCalendarDays(date, pickUpDate) === 0) {
       setDropOffDate(setHours(setMinutes(new Date(), 0), 8));
       setPickUpDate(setHours(setMinutes(new Date(), 0), 18));
+    }
+  };
+
+  const checkDropOffDayBehind = (date) => {
+    if(differenceInCalendarDays(dropOffDate, date) < 0){
+      setDropOffDate(date);
     }
   }
 
@@ -136,6 +141,7 @@ const Home = () => {
                     endDate={dropOffDate}
                     onChange={(date) => {
                       setPickUpDate(date);
+                      checkDropOffDayBehind(date);
                       checkIfOneDayPickup(date);
                     }}
                   />
@@ -164,7 +170,7 @@ const Home = () => {
                     selectsEnd
                     startDate={pickUpDate}
                     endDate={dropOffDate}
-                    minDate={minPickUpDate}
+                    minDate={pickUpDate}
                     maxDate={addDays(pickUpDate, 14)}
                     onChange={(date) => {
                       setDropOffDate(date);

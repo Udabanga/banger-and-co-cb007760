@@ -4,6 +4,8 @@ import { Table, Button, ButtonGroup, Modal, Form } from "react-bootstrap";
 import FormValidate from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons'
 
 import UserService from "../../services/user.service";
 
@@ -18,6 +20,7 @@ const Users = () => {
   const [editFName, setEditFName] = useState("");
   const [editLName, setEditLName] = useState("");
   const [tableView, setTableView] = useState("Active");
+  
 
   useEffect(() => {
     getUserList();
@@ -92,15 +95,38 @@ const Users = () => {
     form.current.validateAll();
   };
 
-
   return (
     <div className="shadow-sm p-3 mb-5 bg-white rounded">
       <h1>Users</h1>
       <ButtonGroup aria-label="Basic example">
-        <Button onClick={() => setTableView("Active")} active={tableView=="Active"} variant="secondary">Active</Button>
-        <Button onClick={() => setTableView("Pending")} active={tableView=="Pending"} variant="secondary">Pending</Button>
-        <Button onClick={() => setTableView("Blacklist")} active={tableView=="Blacklist"} variant="secondary">Blacklist</Button>
-        <Button onClick={() => setTableView("Deleted")} active={tableView=="Deleted"}variant="secondary">Deleted</Button>
+        <Button
+          onClick={() => setTableView("Active")}
+          active={tableView == "Active"}
+          variant="secondary"
+        >
+          Active
+        </Button>
+        <Button
+          onClick={() => setTableView("Pending")}
+          active={tableView == "Pending"}
+          variant="secondary"
+        >
+          Pending
+        </Button>
+        <Button
+          onClick={() => setTableView("Blacklist")}
+          active={tableView == "Blacklist"}
+          variant="secondary"
+        >
+          Blacklist
+        </Button>
+        <Button
+          onClick={() => setTableView("Deleted")}
+          active={tableView == "Deleted"}
+          variant="secondary"
+        >
+          Deleted
+        </Button>
       </ButtonGroup>
       <Table className="border thead-dark">
         <thead className="thead-dark">
@@ -122,10 +148,13 @@ const Users = () => {
               <td>{user.lName}</td>
               <td>{user.roles[0].name}</td>
               <td>
-                <Button variant="warning" onClick={() => handleEditModal(user.id)}>
-                  Edit
+                <Button
+                  variant="warning"
+                  onClick={() => handleEditModal(user.id)}
+                >
+                  <FontAwesomeIcon icon={faEdit} />
                 </Button>
-                <Button variant="danger">Delete</Button>
+                <Button variant="danger"><FontAwesomeIcon icon={faTrash} /></Button>
               </td>
             </tr>
           ))}
