@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Banner from "../assets/Banner.jpg";
 import { Container, Row, Col, Button, Form, Card } from "react-bootstrap";
 import DateRangePicker from "react-bootstrap-daterangepicker";
 
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import CarImage from "../assets/car.png";
+import SearchImage from "../assets/search.png";
 // import setHours from 'date-fns/setHours'
 // import setMinutes from 'date-fns/setMinutes'
 // import addHours from 'date-fns/addHours'
@@ -21,7 +23,7 @@ import {
   addDays,
   getTime,
   isWithinInterval,
-  roundToNearestMinutes
+  roundToNearestMinutes,
 } from "date-fns";
 
 window.addEventListener("resize", () => {
@@ -44,9 +46,13 @@ const Home = () => {
   const [endTime, setEndTime] = useState(
     setHours(setMinutes(new Date(), 0), 18)
   );
-  const [currentTime, setCurrentTime] = useState(roundToNearestMinutes(new Date(), { nearestTo: 30 }));
+  const [currentTime, setCurrentTime] = useState(
+    roundToNearestMinutes(new Date(), { nearestTo: 30 })
+  );
 
   const [minDropOffTime, setMinDropOffTime] = useState(addHours(startTime, 5));
+
+  const booking = useRef(null)
 
   useEffect(() => {
     UserService.getPublicContent().then(
@@ -62,7 +68,7 @@ const Home = () => {
         setContent(_content);
       }
     );
-    checkIfOneDayPickup(currentTime)
+    checkIfOneDayPickup(currentTime);
   }, []);
 
   const checkIfOneDayPickup = (date) => {
@@ -73,7 +79,6 @@ const Home = () => {
           end: endTime,
         })
       ) {
-        
         setStartTime(currentTime);
         setPickUpDate(currentTime);
       }
@@ -102,10 +107,12 @@ const Home = () => {
   };
 
   const checkDropOffDayBehind = (date) => {
-    if(differenceInCalendarDays(dropOffDate, date) < 0){
+    if (differenceInCalendarDays(dropOffDate, date) < 0) {
       setDropOffDate(date);
     }
-  }
+  };
+
+  const scrollToBooking = () => booking.current.scrollIntoView()
 
   return (
     <>
@@ -113,11 +120,11 @@ const Home = () => {
 
       <img src={Banner} className="banner-image" />
       <Container className="book-now-button-container">
-        <button className="book-now-button">Book now</button>
+        <button onClick={scrollToBooking} className="book-now-button">Book now</button>
       </Container>
-      <Container className="booking-container">
+      <Container ref={booking} className="booking-container">
         <Row>
-          <Col>
+          <Col lg={6} sm={12}>
             <div className="book-card">
               <Form>
                 <h2>Bookings</h2>
@@ -199,7 +206,29 @@ const Home = () => {
               </Form>
             </div>
           </Col>
-          <Col></Col>
+          <Col lg={6} sm={12}>
+            <div className="book-card">
+              <h2>How Banga & Co Works</h2>
+              <Row>
+                <Col sm={4}>
+                  <img src={SearchImage} />
+                </Col>
+                <Col sm={8}>
+                  <p>
+                    Search by select type of vehcicle set a pickup and dropoff date/time
+                  </p>
+                </Col>
+              </Row>
+              <Row>
+                <Col sm={4}>
+                  <img src={CarImage} />
+                </Col>
+                <Col sm={8}>
+                  <p>Choose available vehicles and set a booking</p>
+                </Col>
+              </Row>
+            </div>
+          </Col>
         </Row>
       </Container>
     </>

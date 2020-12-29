@@ -41,7 +41,7 @@ exports.create = async (req, res) => {
       dailyCost: req.body.dailyCost,
       seatNumber: req.body.seatNumber,
       imageName: req.file.filename.replace(/\s/g, ''),
-      status: req.body.status
+      status: "Available"
     })
       .then((data) => {
         res.send(data);

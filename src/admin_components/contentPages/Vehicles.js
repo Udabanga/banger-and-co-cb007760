@@ -98,7 +98,6 @@ const Vehicles = () => {
     formData.append("fuelType", editFuelType);
     formData.append("dailyCost", editDailyCost);
     formData.append("seatNumber", editSeatNumber);
-    formData.append("dailyCost", editDailyCost);
     if (checkBtn.current.context._errors.length === 0) {
       axios
         .post("http://localhost:5000/api/vehicels/create", formData)
@@ -163,6 +162,11 @@ const Vehicles = () => {
   const onChangeFuelType = (e) => {
     const fuelType = e.target.value;
     setEditFuelType(fuelType);
+  };
+
+  const onChangeSeatNumber = (e) => {
+    const seatNumber = e.target.value;
+    setEditSeatNumber(seatNumber)
   };
 
   const onChangeDailyCost = (e) => {
@@ -298,6 +302,16 @@ const Vehicles = () => {
                 type="text"
                 value={editFuelType}
                 onChange={onChangeFuelType}
+              ></Input>
+            </Form.Group>
+
+            <Form.Group controlId="formSeatNumber">
+              <Form.Label>SeatNumber:</Form.Label>
+              <Input
+                class="form-control"
+                type="text"
+                value={editSeatNumber}
+                onChange={onChangeSeatNumber}
               ></Input>
             </Form.Group>
 
