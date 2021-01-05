@@ -7,6 +7,7 @@ import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
 import Users from "./contentPages/Users";
 import Vehicles from "./contentPages/Vehicles";
 import Dasboard from "./contentPages/Dashboard";
+import Bookings from "./contentPages/Bookings";
 
 const Content = () => {
   const { toggled, setToggled } = useContext(GlobalAppContext);
@@ -14,6 +15,9 @@ const Content = () => {
     <Container fluid className={classNames("content", { "is-open": toggled })}>
       <NavBar />
       <Switch>
+      <Route path="/admin/bookings">
+          <Bookings />
+        </Route>
         <Route path="/admin/users">
           <Users />
         </Route>

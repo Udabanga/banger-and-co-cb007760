@@ -5,7 +5,7 @@ import { Nav, Button } from "react-bootstrap";
 import classNames from "classnames";
 import { GlobalAppContext } from "./context";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCar, faColumns, faUsers } from '@fortawesome/free-solid-svg-icons'
+import { faCar, faColumns, faUsers, faCalendar } from '@fortawesome/free-solid-svg-icons'
 
 const Sidebar = () => {
   const { toggled, setToggled } = useContext(GlobalAppContext);
@@ -40,6 +40,13 @@ const Sidebar = () => {
           <NavLink className="nav-link" to={"/admin/vehicles"}>
           <FontAwesomeIcon icon={faCar} />
             Vehicles
+          </NavLink>
+        </Nav.Item>
+
+        <Nav.Item>
+          <NavLink className="nav-link" to={"/admin/bookings"}>
+          <FontAwesomeIcon icon={faCalendar} />
+            Bookings
           </NavLink>
         </Nav.Item>
 

@@ -1,10 +1,30 @@
 const db = require("../models");
 const config = require("../config/auth.config");
 const Vehicle = db.vehicle;
+const Booking =db.Booking;
 
 const Op = db.Sequelize.Op;
 
 const uploadFile = require("../middleware/upload");
+
+const Sequelize = require("sequelize");
+const sequelize = new Sequelize(
+  config.DB,
+  config.USER,
+  config.PASSWORD,
+  {
+    host: config.HOST,
+    dialect: config.dialect,
+    operatorsAliases: false,
+
+    pool: {
+      max: config.pool.max,
+      min: config.pool.min,
+      acquire: config.pool.acquire,
+      idle: config.pool.idle
+    }
+  }
+);
 
 // Retrieve all Vehicles from the database.
 exports.findAll = (req, res) => {
@@ -81,6 +101,32 @@ exports.findOne = (req, res) => {
       });
     });
 };
+
+// Find Vehicles with type
+exports.findAllWithType = (req, res) => {
+  const type = req.body.type;
+
+  Vehicle.findAll({
+    where: {
+      type: type,
+      where: sequelize.literal("vehicle.id IS NULL"),
+    },
+    include: [{
+      model: Booking,
+      Where: "vehicle.id IS NULL"
+    }]
+  })
+    .then((data) => {
+      res.send(data);
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message: err.message || "Some error occurred while retrieving Vehicle.",
+      });
+    });
+};
+
+
 
 // Delete a Vehicle with the specified id in the request
 // Delete a Vehicle with the specified id in the request

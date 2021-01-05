@@ -1,14 +1,13 @@
-import React, { useState, useEffect } from "react";
-import { Container, Card, CardColumns, Row, Col, Button } from "react-bootstrap";
+import React, { useEffect, useState } from "react";
+import { Container, CardColumns, Card, Row, Col, Button } from "react-bootstrap";
+import axios from "axios";
 import AutomaticTransmissionIcon from "../assets/icons/automatic-transmission.png";
 import ManualTransmissionIcon from "../assets/icons/manual-transmission.png";
 import SeatIcon from "../assets/icons/seat.png";
 import DollarIcon from "../assets/icons/dollar.png";
-import axios from "axios";
 
-const CarListing = () => {
+const SearchedVehicles = () => {
   const [vehicles, setVehicles] = useState([]);
-
 
   useEffect(() => {
     getVehicleList();
@@ -20,10 +19,9 @@ const CarListing = () => {
     console.log(result);
     setVehicles(result.data);
   };
-
   return (
     <Container>
-      <h2 style={{textAlign: "center"}}>Car Listing</h2>
+      <h2 style={{ textAlign: "center" }}>Car Listing</h2>
       <CardColumns>
         {vehicles.map((vehicle) => (
           <Card className="book-card">
@@ -33,12 +31,14 @@ const CarListing = () => {
               src={"http://localhost:5000/files/" + vehicle.imageName}
             />
             <Card.Body>
-              <Card.Title>{vehicle.manufacturer} {vehicle.model}</Card.Title>
-              <Card.Text >{vehicle.type}</Card.Text>
+              <Card.Title>
+                {vehicle.manufacturer} {vehicle.model}
+              </Card.Title>
+              <Card.Text>{vehicle.type}</Card.Text>
               {/* <Card.Text>Fuel Type: {vehicle.fuelType}</Card.Text> */}
               <Card.Text>
                 <Row>
-                  <Col style={{textAlign: "center"}}>
+                  <Col style={{ textAlign: "center" }}>
                     <img
                       className="vehicle-card-icon"
                       src={AutomaticTransmissionIcon}
@@ -46,7 +46,7 @@ const CarListing = () => {
                     />
                     <p>{vehicle.transmission}</p>
                   </Col>
-                  <Col style={{textAlign: "center"}}>
+                  <Col style={{ textAlign: "center" }}>
                     <img
                       className="vehicle-card-icon"
                       src={SeatIcon}
@@ -54,7 +54,7 @@ const CarListing = () => {
                     />
                     <p>{vehicle.seatNumber}</p>
                   </Col>
-                  <Col style={{textAlign: "center"}}>
+                  <Col style={{ textAlign: "center" }}>
                     <img
                       className="vehicle-card-icon"
                       src={DollarIcon}
@@ -64,7 +64,7 @@ const CarListing = () => {
                   </Col>
                 </Row>
                 <Row>
-                  <Button style={{width: "100%"}}>Book</Button>
+                  <Button style={{ width: "100%" }}>Book</Button>
                 </Row>
               </Card.Text>
               {/* <Card.Text>Transmission: {vehicle.transmission}</Card.Text>
@@ -78,4 +78,4 @@ const CarListing = () => {
   );
 };
 
-export default CarListing;
+export default SearchedVehicles;

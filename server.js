@@ -11,7 +11,7 @@ var corsOptions = {
 };
 
 
-
+console.log(__dirname);
 
 app.use(cors(corsOptions));
 

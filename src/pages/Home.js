@@ -31,8 +31,11 @@ window.addEventListener("resize", () => {
   document.documentElement.style.setProperty("--vh", `${vh}px`);
 });
 
+
+
 const Home = () => {
   const [content, setContent] = useState("");
+  const [vehicleType, setVehicleType] = useState("Any")
   const [pickUpDate, setPickUpDate] = useState(
     setHours(setMinutes(new Date(), 0), 8)
   );
@@ -112,6 +115,17 @@ const Home = () => {
     }
   };
 
+  const onChangeVehicleType = (e) => {
+    const inputVehicleType = e.target.value;
+    setVehicleType(inputVehicleType);
+  }
+
+  const handleSearch = () => {
+    console.log(vehicleType);
+    console.log(pickUpDate);
+    console.log(dropOffDate);
+  }
+
   const scrollToBooking = () => booking.current.scrollIntoView()
 
   return (
@@ -131,7 +145,8 @@ const Home = () => {
 
                 <Form.Group controlId="exampleForm.ControlSelect1">
                   <Form.Label>Vehicle Type</Form.Label>
-                  <Form.Control as="select">
+                  <Form.Control value={vehicleType} onChange={onChangeVehicleType} as="select">
+                    <option>Any</option>
                     <option>SUV</option>
                     <option>Sedan</option>
                   </Form.Control>
@@ -200,7 +215,7 @@ const Home = () => {
                   />
                 </Form.Group>
 
-                <Button variant="primary" type="submit">
+                <Button onClick={handleSearch} variant="primary">
                   Search
                 </Button>
               </Form>

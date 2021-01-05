@@ -15,6 +15,7 @@ import Profile from "./pages/Profile";
 import UserPage from "./pages/UserPage";
 import ModeratorPage from "./pages/ModeratorPage";
 import AdminPage from "./pages/AdminPage";
+import Booking from './pages/SearchedVehicles'
 import NoMatch from "./pages/NoMatch";
 
 import Navigation from "./components/Navigation";
@@ -52,6 +53,7 @@ const App = () => {
         <PublicRoute exact path="/user" component={UserPage} />
         <PublicRoute exact path="/mod" component={ModeratorPage} />
         <PublicRoute exact path="/carListing" component={CarListing} />
+        <PublicRoute exact path="/booking" component={Booking} />
 
         <AdminRoute path="/admin" component={AdminPage} />
 
