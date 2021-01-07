@@ -6,10 +6,10 @@ module.exports = function (app) {
   app.get("/api/vehicels/", controller.findAll);
 
   // Retrieve all Vehicles with a Type
-  app.get("/api/vehicels/type", controller.findAllWithType);
+  app.get("/api/vehicles/type", controller.findAllWithType);
 
   // Create a Vehicle
-  app.post("/api/vehicels/create", controller.create);
+  app.post("/api/vehicles/create", controller.create);
 
   // Retrieve a Vehicle
   app.post("/api/vehicles/find", controller.findOne);

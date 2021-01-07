@@ -24,23 +24,6 @@ import AdminRoute from "./route/AdminRoute";
 import PublicRoute from "./route/PublicRoute";
 
 const App = () => {
-  // const [showModerator, setShowModerator] = useState(false);
-  // const [showAdmin, setShowAdmin] = useState(false);
-  // const [currentUser, setCurrentUser] = useState(undefined);
-
-  // useEffect(() => {
-  //   const user = AuthService.getCurrentUser();
-
-  //   if (user) {
-  //     setCurrentUser(user);
-  //     setShowModerator(user.roles.includes("ROLE_MODERATOR"));
-  //     setShowAdmin(user.roles.includes("ROLE_ADMIN"));
-  //   }
-  // }, []);
-
-  // const logOut = () => {
-  //   AuthService.logout();
-  // };
 
   return (
     <div>

@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import UserService from "../services/user.service";
 import Sidebar from "../admin_components/Sidebar";
 import Content from "../admin_components/Content";
-import {  BrowserRouter as Router } from 'react-router-dom';
+import { BrowserRouter as Router } from "react-router-dom";
 import { GlobalAppContext } from "../admin_components/context";
 import "../styleAdmin.css";
 
@@ -35,13 +35,13 @@ const AdminPage = () => {
   if (content === "Admin Content.") {
     return (
       <body class="admin-page">
-      <Router>
-        <GlobalAppContext.Provider value={{toggled, setToggled}}>
-          <div className="App wrapper">
-            <Sidebar isOpen={isOpen} className={style}/>
-            <Content isOpen={isOpen} className={style}/>
-          </div>
-        </GlobalAppContext.Provider>
+        <Router>
+          <GlobalAppContext.Provider value={{ toggled, setToggled }}>
+            <div className="App wrapper">
+              <Sidebar isOpen={isOpen} className={style} />
+              <Content isOpen={isOpen} className={style} />
+            </div>
+          </GlobalAppContext.Provider>
         </Router>
       </body>
     );

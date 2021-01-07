@@ -27,6 +27,7 @@ db.sequelize = sequelize;
 db.user = require("./user.model.js")(sequelize, Sequelize);
 db.role = require("./role.model.js")(sequelize, Sequelize);
 db.vehicle = require("./vehicle.model.js")(sequelize, Sequelize);
+db.booking = require("./booking.model")(sequelize, Sequelize);
 
 db.role.belongsToMany(db.user, {
   through: "user_roles",
@@ -40,5 +41,7 @@ db.user.belongsToMany(db.role, {
 });
 
 db.ROLES = ["user", "admin", "moderator"];
+
+db.user.hasMany(db.booking) 
 
 module.exports = db;

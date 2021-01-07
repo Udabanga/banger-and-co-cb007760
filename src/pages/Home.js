@@ -31,13 +31,13 @@ window.addEventListener("resize", () => {
   document.documentElement.style.setProperty("--vh", `${vh}px`);
 });
 
-
-
 const Home = () => {
   const [content, setContent] = useState("");
-  const [vehicleType, setVehicleType] = useState("Any")
+  const [vehicleType, setVehicleType] = useState("Any");
   const [pickUpDate, setPickUpDate] = useState(
-    setHours(setMinutes(new Date(), 0), 8)
+    // setHours(setMinutes(new Date(), 0), 8)
+    // FOR CURRENT TIME
+    roundToNearestMinutes(new Date(), { nearestTo: 30 })
   );
   const [dropOffDate, setDropOffDate] = useState(
     setHours(setMinutes(new Date(), 0), 18)
@@ -50,12 +50,19 @@ const Home = () => {
     setHours(setMinutes(new Date(), 0), 18)
   );
   const [currentTime, setCurrentTime] = useState(
+    // FOR CURRENT TIME
     roundToNearestMinutes(new Date(), { nearestTo: 30 })
+
+    // setHours(setMinutes(new Date(), 0), 11)
   );
 
   const [minDropOffTime, setMinDropOffTime] = useState(addHours(startTime, 5));
 
-  const booking = useRef(null)
+  const [minPickUpTime, setMinPickUpTime] = useState(
+    setHours(setMinutes(new Date(), 0), 8)
+  );
+
+  const booking = useRef(null);
 
   useEffect(() => {
     UserService.getPublicContent().then(
@@ -72,40 +79,55 @@ const Home = () => {
       }
     );
     checkIfOneDayPickup(currentTime);
+    setPickUpDate(currentTime);
   }, []);
 
   const checkIfOneDayPickup = (date) => {
-    if (differenceInCalendarDays(dropOffDate, date) === 0) {
+    // Checking if same day first
+    if (differenceInCalendarDays(date, dropOffDate) === 0) {
+      // Check if Current time in the set range
       if (
         isWithinInterval(currentTime, {
           start: startTime,
           end: endTime,
         })
       ) {
-        setStartTime(currentTime);
-        setPickUpDate(currentTime);
+        // TO-BE checked again
+        setMinPickUpTime(currentTime);
+        if (date < minPickUpTime) {
+          setPickUpDate(currentTime);
+        }
       }
-
+      // Set minimum drop off time on same day
       if (differenceInHours(endTime, getTime(date)) >= 5) {
         setMinDropOffTime(addHours(getTime(date), 5));
-
         if (differenceInHours(dropOffDate, pickUpDate) >= 0) {
           setDropOffDate(addHours(getTime(date), 5));
         }
-      } else {
+      } else { // Set drop off to the next day if it can't be booked same day
         setDropOffDate(addDays(setHours(setMinutes(dropOffDate, 0), 8), 1));
         setMinDropOffTime(startTime);
       }
-    } else {
+    }
+    else {
+      //Check if drop off day is automatically set over 2 week range
+      if(dropOffDate> addDays(date, 14)){
+        setDropOffDate(addDays(date, 14));
+      }
+      else{
       setMinDropOffTime(startTime);
-      setStartTime(setHours(setMinutes(new Date(), 0), 8));
+      }
     }
   };
 
   const checkIfOneDayDropoff = (date) => {
     if (differenceInCalendarDays(date, pickUpDate) === 0) {
-      setDropOffDate(setHours(setMinutes(new Date(), 0), 8));
-      setPickUpDate(setHours(setMinutes(new Date(), 0), 18));
+      // setDropOffDate(setHours(setMinutes(new Date(), 0), 18)); //To be Revised
+      setMinDropOffTime(addHours(getTime(pickUpDate), 5)); //Test
+      setPickUpDate(currentTime);
+    } else {
+      setMinDropOffTime(startTime);
+      // setStartTime(setHours(setMinutes(new Date(), 0), 8));
     }
   };
 
@@ -118,15 +140,15 @@ const Home = () => {
   const onChangeVehicleType = (e) => {
     const inputVehicleType = e.target.value;
     setVehicleType(inputVehicleType);
-  }
+  };
 
   const handleSearch = () => {
     console.log(vehicleType);
     console.log(pickUpDate);
     console.log(dropOffDate);
-  }
+  };
 
-  const scrollToBooking = () => booking.current.scrollIntoView()
+  const scrollToBooking = () => booking.current.scrollIntoView();
 
   return (
     <>
@@ -134,7 +156,9 @@ const Home = () => {
 
       <img src={Banner} className="banner-image" />
       <Container className="book-now-button-container">
-        <button onClick={scrollToBooking} className="book-now-button">Book now</button>
+        <button onClick={scrollToBooking} className="book-now-button">
+          Book now
+        </button>
       </Container>
       <Container ref={booking} className="booking-container">
         <Row>
@@ -145,7 +169,11 @@ const Home = () => {
 
                 <Form.Group controlId="exampleForm.ControlSelect1">
                   <Form.Label>Vehicle Type</Form.Label>
-                  <Form.Control value={vehicleType} onChange={onChangeVehicleType} as="select">
+                  <Form.Control
+                    value={vehicleType}
+                    onChange={onChangeVehicleType}
+                    as="select"
+                  >
                     <option>Any</option>
                     <option>SUV</option>
                     <option>Sedan</option>
@@ -176,7 +204,7 @@ const Home = () => {
                     }}
                     showTimeSelect
                     showTimeSelectOnly
-                    minTime={startTime}
+                    minTime={minPickUpTime}
                     maxTime={endTime}
                     timeIntervals={30}
                     timeCaption="Time"
@@ -230,7 +258,8 @@ const Home = () => {
                 </Col>
                 <Col sm={8}>
                   <p>
-                    Search by select type of vehcicle set a pickup and dropoff date/time
+                    Search by select type of vehcicle set a pickup and dropoff
+                    date/time
                   </p>
                 </Col>
               </Row>

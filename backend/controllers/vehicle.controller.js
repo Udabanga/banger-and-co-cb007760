@@ -7,24 +7,24 @@ const Op = db.Sequelize.Op;
 
 const uploadFile = require("../middleware/upload");
 
-const Sequelize = require("sequelize");
-const sequelize = new Sequelize(
-  config.DB,
-  config.USER,
-  config.PASSWORD,
-  {
-    host: config.HOST,
-    dialect: config.dialect,
-    operatorsAliases: false,
+// const Sequelize = require("sequelize");
+// const sequelize = new Sequelize(
+//   config.DB,
+//   config.USER,
+//   config.PASSWORD,
+//   {
+//     host: config.HOST,
+//     dialect: config.dialect,
+//     operatorsAliases: false,
 
-    pool: {
-      max: config.pool.max,
-      min: config.pool.min,
-      acquire: config.pool.acquire,
-      idle: config.pool.idle
-    }
-  }
-);
+//     pool: {
+//       max: config.pool.max,
+//       min: config.pool.min,
+//       acquire: config.pool.acquire,
+//       idle: config.pool.idle
+//     }
+//   }
+// );
 
 // Retrieve all Vehicles from the database.
 exports.findAll = (req, res) => {

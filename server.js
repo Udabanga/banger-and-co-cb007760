@@ -2,16 +2,16 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 
-global.__basedir = __dirname;
 
 const app = express();
+
+global.__basedir = __dirname;
 
 var corsOptions = {
   origin: ["http://localhost:3000", "http://192.168.8.100:3000"]
 };
 
 
-console.log(__dirname);
 
 app.use(cors(corsOptions));
 
@@ -45,6 +45,7 @@ require('./backend/routes/auth.routes')(app);
 require('./backend/routes/user.routes')(app);
 require('./backend/routes/vehicle.routes')(app);
 require('./backend/routes/upload.routes')(app);
+require('./backend/routes/booking.routes')(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 5000;
