@@ -97,13 +97,13 @@ const Home = () => {
         setMinPickUpDate(addDays(setHours(setMinutes(new Date(), 0), 8), 1));
         setPickUpDate(addDays(setHours(setMinutes(new Date(), 0), 8), 1));
         //
-        setMinDropOffTime(addDays(startTime,1));
-        setDropOffDate(addDays(startTime,1));
+        setMinDropOffTime(addDays(startTime, 1));
+        setDropOffDate(addDays(startTime, 1));
         // setCurrentTime(addHours(currentTime, 1));
-      } else if (isBefore(date, subMinutes(startTime,1))) {
+      } else if (isBefore(date, subMinutes(startTime, 1))) {
         setMinPickUpDate(startTime);
         setPickUpDate(startTime);
-        setCurrentTime(startTime)
+        setCurrentTime(startTime);
       } else {
         //Check if Pick-Up and Drop-Off same day
         if (isSameDay(dropOffDate, date)) {
@@ -118,7 +118,7 @@ const Home = () => {
           setDropOffDate(addHours(date, 5));
         }
 
-        if(isWithinInterval(currentTime, {start: startTime, end: endTime})){
+        if (isWithinInterval(currentTime, { start: startTime, end: endTime })) {
           setMinPickUpTime(currentTime);
         }
         setPickUpDate(date);
@@ -126,12 +126,19 @@ const Home = () => {
     } else {
       setMinPickUpTime(startTime);
       setPickUpDate(date);
-      if(isAfter(date, dropOffDate)){
-        setDropOffDate(addDays(setHours(setMinutes(dropOffDate, 0), 8), 1));
-        setMinDropOffTime(addDays(setHours(setMinutes(dropOffDate, 0), 8), 1));
+      if (isAfter(date, dropOffDate)) {
+        if (isAfter(pickUpDate, setHours(setMinutes(new Date(), 0), 13))) {
+          setDropOffDate(addDays(setHours(setMinutes(dropOffDate, 0), 8), 2));
+          setMinDropOffTime(
+            addDays(setHours(setMinutes(dropOffDate, 0), 8), 2)
+          );
+        } else {
+          setDropOffDate(addDays(setHours(setMinutes(dropOffDate, 0), 8), 1));
+          setMinDropOffTime(
+            addDays(setHours(setMinutes(dropOffDate, 0), 8), 1)
+          );
+        }
       }
-      // setDropOffDate(addDays(setHours(setMinutes(dropOffDate, 0), 8), 1));
-      // setMinDropOffTime(setHours(setMinutes(minDropOffTime, 0), 8));
     }
 
     // if(isSameDay(currentTime, date)){
