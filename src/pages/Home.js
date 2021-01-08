@@ -22,7 +22,12 @@ import {
   differenceInCalendarDays,
   addDays,
   getTime,
+  getHours,
+  isSameDay,
   isWithinInterval,
+  isAfter,
+  isBefore,
+  subMinutes,
   roundToNearestMinutes,
 } from "date-fns";
 
@@ -51,9 +56,9 @@ const Home = () => {
   );
   const [currentTime, setCurrentTime] = useState(
     // FOR CURRENT TIME
-    roundToNearestMinutes(new Date(), { nearestTo: 30 })
+    // roundToNearestMinutes(new Date(), { nearestTo: 30 })
 
-    // setHours(setMinutes(new Date(), 0), 11)
+    setHours(setMinutes(new Date(), 0), 6)
   );
 
   const [minDropOffTime, setMinDropOffTime] = useState(addHours(startTime, 5));
@@ -61,6 +66,8 @@ const Home = () => {
   const [minPickUpTime, setMinPickUpTime] = useState(
     setHours(setMinutes(new Date(), 0), 8)
   );
+
+  const [minPickUpDate, setMinPickUpDate] = useState(new Date());
 
   const booking = useRef(null);
 
@@ -78,46 +85,99 @@ const Home = () => {
         setContent(_content);
       }
     );
-    checkIfOneDayPickup(currentTime);
-    setPickUpDate(currentTime);
+    onChangePickUp(currentTime);
+    // setPickUpDate(currentTime);
   }, []);
 
-  const checkIfOneDayPickup = (date) => {
-    // Checking if same day first
-    if (differenceInCalendarDays(date, dropOffDate) === 0) {
-      // Check if Current time in the set range
-      if (
-        isWithinInterval(currentTime, {
-          start: startTime,
-          end: endTime,
-        })
-      ) {
-        // TO-BE checked again
-        setMinPickUpTime(currentTime);
-        if (date < minPickUpTime) {
-          setPickUpDate(currentTime);
+  const onChangePickUp = (date) => {
+    //Check Pick-Up day is current day
+    if (isSameDay(currentTime, date)) {
+      if (isAfter(date, endTime)) {
+        //Check current time after 6pm and set booking to next day
+        setMinPickUpDate(addDays(setHours(setMinutes(new Date(), 0), 8), 1));
+        setPickUpDate(addDays(setHours(setMinutes(new Date(), 0), 8), 1));
+        //
+        setMinDropOffTime(addDays(startTime,1));
+        setDropOffDate(addDays(startTime,1));
+        // setCurrentTime(addHours(currentTime, 1));
+      } else if (isBefore(date, subMinutes(startTime,1))) {
+        setMinPickUpDate(startTime);
+        setPickUpDate(startTime);
+      } else {
+        //Check if Pick-Up and Drop-Off same day
+        if (isSameDay(dropOffDate, date)) {
+          //Check Pick-Up set possible for sameday drop off
+          if (isAfter(date, setHours(setMinutes(new Date(), 0), 13))) {
+            //Check if pickup is after 1pm
+            setDropOffDate(addDays(setHours(setMinutes(dropOffDate, 0), 8), 1));
+            setMinDropOffTime(startTime);
+          }
+        } else {
+          setMinDropOffTime(addHours(date, 5));
+          setDropOffDate(addHours(date, 5));
         }
-      }
-      // Set minimum drop off time on same day
-      if (differenceInHours(endTime, getTime(date)) >= 5) {
-        setMinDropOffTime(addHours(getTime(date), 5));
-        if (differenceInHours(dropOffDate, pickUpDate) >= 0) {
-          setDropOffDate(addHours(getTime(date), 5));
+
+        if(isWithinInterval(currentTime, {start: startTime, end: endTime})){
+          setMinPickUpTime(currentTime);
         }
-      } else { // Set drop off to the next day if it can't be booked same day
-        setDropOffDate(addDays(setHours(setMinutes(dropOffDate, 0), 8), 1));
-        setMinDropOffTime(startTime);
+        setPickUpDate(date);
       }
+    } else {
+      setMinPickUpTime(startTime);
+      setPickUpDate(date);
+      // setMinDropOffTime(setHours(setMinutes(minDropOffTime, 0), 8));
     }
-    else {
-      //Check if drop off day is automatically set over 2 week range
-      if(dropOffDate> addDays(date, 14)){
-        setDropOffDate(addDays(date, 14));
-      }
-      else{
-      setMinDropOffTime(startTime);
-      }
-    }
+
+    // if(isSameDay(currentTime, date)){
+    //   setMinPickUpTime(currentTime);
+    //   setPickUpDate(currentTime);
+    // }
+    // else{
+    //   setMinPickUpTime(startTime);
+    //   setPickUpDate(startTime);
+    // }
+
+    // // Checking if same day first
+    // if (differenceInCalendarDays(date, dropOffDate) === 0) {
+
+    //   // Check if Current time in the set range
+    //   // if (
+    //   //   isWithinInterval(currentTime, {
+    //   //     start: startTime,
+    //   //     end: endTime,
+    //   //   })
+    //   // ) {
+    //   //   // TO-BE checked again
+    //   //   setMinPickUpTime(currentTime);
+    //   //   if (date < minPickUpTime) {
+    //   //     setPickUpDate(currentTime);
+    //   //   }
+    //   // }
+    //   // Set minimum drop off time on same day
+    //   if (differenceInHours(endTime, getTime(date)) >= 5) {
+    //     setMinDropOffTime(addHours(getTime(date), 5));
+    //     if (differenceInHours(dropOffDate, pickUpDate) >= 0) {
+    //       setDropOffDate(addHours(getTime(date), 5));
+    //     }
+    //   } else { // Set drop off to the next day if it can't be booked same day
+    //     setDropOffDate(addDays(setHours(setMinutes(dropOffDate, 0), 8), 1));
+    //     setMinDropOffTime(startTime);
+    //   }
+    // }
+    // else {
+    //   setMinPickUpTime(startTime);
+    //   //Check if drop off day is automatically set over 2 week range
+    //   if(dropOffDate> addDays(date, 14)){
+    //     setDropOffDate(addDays(date, 14));
+    //   }
+    //   else{
+    //   setMinDropOffTime(startTime);
+    //   }
+    // }
+  };
+
+  const onChangeDropOff = (date) => {
+    //Check if Drop Off is current day
   };
 
   const checkIfOneDayDropoff = (date) => {
@@ -186,21 +246,21 @@ const Home = () => {
                   <DatePicker
                     selected={pickUpDate}
                     selectsStart
-                    minDate={new Date()}
+                    minDate={minPickUpDate}
                     startDate={pickUpDate}
                     endDate={dropOffDate}
                     onChange={(date) => {
-                      setPickUpDate(date);
-                      checkDropOffDayBehind(date);
-                      checkIfOneDayPickup(date);
+                      // setPickUpDate(date);
+                      // checkDropOffDayBehind(date);
+                      onChangePickUp(date);
                     }}
                   />
                   {/* Pick-Up Time*/}
                   <DatePicker
                     selected={pickUpDate}
                     onChange={(date) => {
-                      setPickUpDate(date);
-                      checkIfOneDayPickup(date);
+                      // setPickUpDate(date);
+                      onChangePickUp(date);
                     }}
                     showTimeSelect
                     showTimeSelectOnly
@@ -223,15 +283,17 @@ const Home = () => {
                     minDate={pickUpDate}
                     maxDate={addDays(pickUpDate, 14)}
                     onChange={(date) => {
-                      setDropOffDate(date);
-                      checkIfOneDayDropoff(date);
+                      // setDropOffDate(date);
+                      // checkIfOneDayDropoff(date);
+                      onChangeDropOff(date);
                     }}
                   />
                   {/* Dop-Off Time*/}
                   <DatePicker
                     selected={dropOffDate}
                     onChange={(date) => {
-                      setDropOffDate(date);
+                      // setDropOffDate(date);
+                      onChangeDropOff(date);
                     }}
                     showTimeSelect
                     showTimeSelectOnly
