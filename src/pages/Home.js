@@ -58,7 +58,7 @@ const Home = () => {
     // FOR CURRENT TIME
     // roundToNearestMinutes(new Date(), { nearestTo: 30 })
 
-    setHours(setMinutes(new Date(), 0), 6)
+    setHours(setMinutes(new Date(), 0), 11)
   );
 
   const [minDropOffTime, setMinDropOffTime] = useState(addHours(startTime, 5));
@@ -103,6 +103,7 @@ const Home = () => {
       } else if (isBefore(date, subMinutes(startTime,1))) {
         setMinPickUpDate(startTime);
         setPickUpDate(startTime);
+        setCurrentTime(startTime)
       } else {
         //Check if Pick-Up and Drop-Off same day
         if (isSameDay(dropOffDate, date)) {
@@ -125,6 +126,11 @@ const Home = () => {
     } else {
       setMinPickUpTime(startTime);
       setPickUpDate(date);
+      if(isAfter(date, dropOffDate)){
+        setDropOffDate(addDays(setHours(setMinutes(dropOffDate, 0), 8), 1));
+        setMinDropOffTime(addDays(setHours(setMinutes(dropOffDate, 0), 8), 1));
+      }
+      // setDropOffDate(addDays(setHours(setMinutes(dropOffDate, 0), 8), 1));
       // setMinDropOffTime(setHours(setMinutes(minDropOffTime, 0), 8));
     }
 
