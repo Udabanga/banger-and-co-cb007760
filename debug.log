@@ -128,3 +128,5 @@
 [0108/215040.069:ERROR:process_reader_win.cc(151)] SuspendThread: Access is denied. (0x5)
 [0108/215040.069:ERROR:process_reader_win.cc(123)] NtOpenThread: {Access Denied} A process has requested access to an object, but has not been granted those access rights. (0xc0000022)
 [0108/215040.069:ERROR:exception_snapshot_win.cc(99)] thread ID 17048 not found in process
+[0123/231114.647:ERROR:directory_reader_win.cc(43)] FindFirstFile: The system cannot find the path specified. (0x3)
+[0123/233210.700:ERROR:directory_reader_win.cc(43)] FindFirstFile: The system cannot find the path specified. (0x3)

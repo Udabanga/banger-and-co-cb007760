@@ -58,7 +58,7 @@ const Home = () => {
     // FOR CURRENT TIME
     // roundToNearestMinutes(new Date(), { nearestTo: 30 })
 
-    setHours(setMinutes(new Date(), 0), 11)
+    setHours(setMinutes(new Date(), 0), 12)
   );
 
   const [minDropOffTime, setMinDropOffTime] = useState(addHours(startTime, 5));
@@ -112,12 +112,11 @@ const Home = () => {
             //Check if pickup is after 1pm
             setDropOffDate(addDays(setHours(setMinutes(dropOffDate, 0), 8), 1));
             setMinDropOffTime(startTime);
-          }
-          else {
+          } else {
             setMinDropOffTime(addHours(date, 5));
             setDropOffDate(addHours(date, 5));
           }
-        } 
+        }
 
         if (isWithinInterval(currentTime, { start: startTime, end: endTime })) {
           setMinPickUpTime(currentTime);
@@ -125,13 +124,34 @@ const Home = () => {
         setPickUpDate(date);
       }
     } else {
+      //Check if Pick-Up and Drop-Off Same day
+      if (isSameDay(dropOffDate, date)) {
+        if (isAfter(date, setHours(setMinutes(date, 0), 13))) {
+          setDropOffDate(addDays(setHours(setMinutes(date, 0), 8), 1));
+            setMinDropOffTime(startTime);
+        } else {
+          setDropOffDate(addHours(date, 5));
+          setMinDropOffTime(addHours(date, 5));
+        }
+      }
+
       setMinPickUpTime(startTime);
       setPickUpDate(date);
-      if (isAfter(setHours(setMinutes(date, 0), 0), setHours(setMinutes(dropOffDate, 0), 0))) {
-        setDropOffDate(date);
-        setMinDropOffTime(
-                addDays(setHours(setMinutes(dropOffDate, 0), 8), 1)
-              );
+      //WTF is this? //Checking if Pick-Up day is after Drop-Off day
+      if (
+        isAfter(
+          setHours(setMinutes(date, 0), 0),
+          setHours(setMinutes(dropOffDate, 0), 0)
+        )
+      ) {
+        // setDropOffDate(date);
+        // setMinDropOffTime(
+        //         addDays(setHours(setMinutes(dropOffDate, 0), 8), 1)
+        //       );
+        setPickUpDate(setHours(setMinutes(date, 0), 8));
+
+        setDropOffDate(addHours(date, 5));
+        setMinDropOffTime(addHours(date, 5));
       }
     }
   };
