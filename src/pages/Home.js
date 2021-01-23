@@ -113,10 +113,11 @@ const Home = () => {
             setDropOffDate(addDays(setHours(setMinutes(dropOffDate, 0), 8), 1));
             setMinDropOffTime(startTime);
           }
-        } else {
-          setMinDropOffTime(addHours(date, 5));
-          setDropOffDate(addHours(date, 5));
-        }
+          else {
+            setMinDropOffTime(addHours(date, 5));
+            setDropOffDate(addHours(date, 5));
+          }
+        } 
 
         if (isWithinInterval(currentTime, { start: startTime, end: endTime })) {
           setMinPickUpTime(currentTime);
@@ -126,67 +127,13 @@ const Home = () => {
     } else {
       setMinPickUpTime(startTime);
       setPickUpDate(date);
-      if (isAfter(date, dropOffDate)) {
-        if (isAfter(pickUpDate, setHours(setMinutes(new Date(), 0), 13))) {
-          setDropOffDate(addDays(setHours(setMinutes(dropOffDate, 0), 8), 2));
-          setMinDropOffTime(
-            addDays(setHours(setMinutes(dropOffDate, 0), 8), 2)
-          );
-        } else {
-          setDropOffDate(addDays(setHours(setMinutes(dropOffDate, 0), 8), 1));
-          setMinDropOffTime(
-            addDays(setHours(setMinutes(dropOffDate, 0), 8), 1)
-          );
-        }
+      if (isAfter(setHours(setMinutes(date, 0), 0), setHours(setMinutes(dropOffDate, 0), 0))) {
+        setDropOffDate(date);
+        setMinDropOffTime(
+                addDays(setHours(setMinutes(dropOffDate, 0), 8), 1)
+              );
       }
     }
-
-    // if(isSameDay(currentTime, date)){
-    //   setMinPickUpTime(currentTime);
-    //   setPickUpDate(currentTime);
-    // }
-    // else{
-    //   setMinPickUpTime(startTime);
-    //   setPickUpDate(startTime);
-    // }
-
-    // // Checking if same day first
-    // if (differenceInCalendarDays(date, dropOffDate) === 0) {
-
-    //   // Check if Current time in the set range
-    //   // if (
-    //   //   isWithinInterval(currentTime, {
-    //   //     start: startTime,
-    //   //     end: endTime,
-    //   //   })
-    //   // ) {
-    //   //   // TO-BE checked again
-    //   //   setMinPickUpTime(currentTime);
-    //   //   if (date < minPickUpTime) {
-    //   //     setPickUpDate(currentTime);
-    //   //   }
-    //   // }
-    //   // Set minimum drop off time on same day
-    //   if (differenceInHours(endTime, getTime(date)) >= 5) {
-    //     setMinDropOffTime(addHours(getTime(date), 5));
-    //     if (differenceInHours(dropOffDate, pickUpDate) >= 0) {
-    //       setDropOffDate(addHours(getTime(date), 5));
-    //     }
-    //   } else { // Set drop off to the next day if it can't be booked same day
-    //     setDropOffDate(addDays(setHours(setMinutes(dropOffDate, 0), 8), 1));
-    //     setMinDropOffTime(startTime);
-    //   }
-    // }
-    // else {
-    //   setMinPickUpTime(startTime);
-    //   //Check if drop off day is automatically set over 2 week range
-    //   if(dropOffDate> addDays(date, 14)){
-    //     setDropOffDate(addDays(date, 14));
-    //   }
-    //   else{
-    //   setMinDropOffTime(startTime);
-    //   }
-    // }
   };
 
   const onChangeDropOff = (date) => {
