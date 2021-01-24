@@ -128,7 +128,7 @@ const Home = () => {
       if (isSameDay(dropOffDate, date)) {
         if (isAfter(date, setHours(setMinutes(date, 0), 13))) {
           setDropOffDate(addDays(setHours(setMinutes(date, 0), 8), 1));
-            setMinDropOffTime(startTime);
+          setMinDropOffTime(startTime);
         } else {
           setDropOffDate(addHours(date, 5));
           setMinDropOffTime(addHours(date, 5));
@@ -144,10 +144,6 @@ const Home = () => {
           setHours(setMinutes(dropOffDate, 0), 0)
         )
       ) {
-        // setDropOffDate(date);
-        // setMinDropOffTime(
-        //         addDays(setHours(setMinutes(dropOffDate, 0), 8), 1)
-        //       );
         setPickUpDate(setHours(setMinutes(date, 0), 8));
 
         setDropOffDate(addHours(date, 5));
@@ -157,22 +153,12 @@ const Home = () => {
   };
 
   const onChangeDropOff = (date) => {
-    //Check if Drop Off is current day
-  };
-
-  const checkIfOneDayDropoff = (date) => {
-    if (differenceInCalendarDays(date, pickUpDate) === 0) {
-      // setDropOffDate(setHours(setMinutes(new Date(), 0), 18)); //To be Revised
-      setMinDropOffTime(addHours(getTime(pickUpDate), 5)); //Test
-      setPickUpDate(currentTime);
+    //Check if Drop Off and Pick Up day same
+    if (isSameDay(date, pickUpDate)) {
+      setDropOffDate(addHours(pickUpDate, 5));
+      setMinDropOffTime(addHours(pickUpDate, 5));
     } else {
       setMinDropOffTime(startTime);
-      // setStartTime(setHours(setMinutes(new Date(), 0), 8));
-    }
-  };
-
-  const checkDropOffDayBehind = (date) => {
-    if (differenceInCalendarDays(dropOffDate, date) < 0) {
       setDropOffDate(date);
     }
   };
