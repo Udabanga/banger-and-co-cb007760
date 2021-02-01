@@ -3,10 +3,10 @@ const controller = require("../controllers/vehicle.controller");
 
 module.exports = function (app) {
   // Retrieve all Vehicles
-  app.get("/api/vehicels/", controller.findAll);
+  app.get("/api/vehicles/", controller.findAll);
 
-  // Retrieve all Vehicles with a Type
-  app.get("/api/vehicles/type", controller.findAllWithType);
+  // Retrieve all Vehicles available of Type
+  app.post("/api/vehicles/available", controller.findAvailable);
 
   // Create a Vehicle
   app.post("/api/vehicles/create", controller.create);

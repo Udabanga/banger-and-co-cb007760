@@ -12,7 +12,7 @@ var corsOptions = {
 };
 
 
-
+app.use(express.static('public'))
 app.use(cors(corsOptions));
 
 // parse requests of content-type - application/json
@@ -25,15 +25,16 @@ app.use(bodyParser.urlencoded({ extended: true }));
 const db = require("./backend/models");
 const Role = db.role;
 const User = db.user;
+const Booking = db.booking;
 
 
 
-db.sequelize.sync();
+// db.sequelize.sync();
 // force: true will drop the table if it already exists
-// db.sequelize.sync({force: true}).then(() => {
-//   console.log('Drop and Resync Database with { force: true }');
-//   initial();
-// });
+db.sequelize.sync({force: false}).then(() => {
+  console.log('Drop and Resync Database with { force: true }');
+  // initial();
+});
 
 // simple route
 app.get("/", (req, res) => {

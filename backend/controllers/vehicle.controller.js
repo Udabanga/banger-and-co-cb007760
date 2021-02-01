@@ -1,7 +1,7 @@
 const db = require("../models");
 const config = require("../config/auth.config");
 const Vehicle = db.vehicle;
-const Booking =db.Booking;
+const Booking = db.booking;
 
 const Op = db.Sequelize.Op;
 
@@ -52,7 +52,6 @@ exports.create = async (req, res) => {
     });
 
     Vehicle.create({
-
       type: req.body.type,
       manufacturer: req.body.manufacturer,
       model: req.body.model,
@@ -60,18 +59,18 @@ exports.create = async (req, res) => {
       fuelType: req.body.fuelType,
       dailyCost: req.body.dailyCost,
       seatNumber: req.body.seatNumber,
-      imageName: req.file.filename.replace(/\s/g, ''),
-      status: "Available"
+      imageName: req.file.filename.replace(/\s/g, ""),
+      status: "Available",
     })
       .then((data) => {
         res.send(data);
       })
       .catch((err) => {
         res.status(500).send({
-          message: err.message || "Some error occurred while creating a Vehicle.",
+          message:
+            err.message || "Some error occurred while creating a Vehicle.",
         });
       });
-
   } catch (err) {
     if (err.code == "LIMIT_FILE_SIZE") {
       return res.status(500).send({
@@ -83,8 +82,6 @@ exports.create = async (req, res) => {
       message: `Could not upload the file: ${req.file.filename}. ${err}`,
     });
   }
-
-  
 };
 
 // Find a single Vehicle with an id
@@ -103,30 +100,78 @@ exports.findOne = (req, res) => {
 };
 
 // Find Vehicles with type
-exports.findAllWithType = (req, res) => {
-  const type = req.body.type;
+exports.findAvailable = (req, res) => {
+  const type = req.body.vehicleType;
+  const pickUpTime = req.body.pickUpDate;
+  const dropOffTime = req.body.dropOffDate;
 
-  Vehicle.findAll({
-    where: {
-      type: type,
-      where: sequelize.literal("vehicle.id IS NULL"),
-    },
-    include: [{
-      model: Booking,
-      Where: "vehicle.id IS NULL"
-    }]
-  })
-    .then((data) => {
-      res.send(data);
+  if (type === "Any") {
+    Vehicle.findAll({
+      where: {
+        // '$bookings.id$': null,
+        [Op.or]: [
+          {
+            [Op.and]: [
+              { "$bookings.pickUpTime$": { [Op.lt]: pickUpTime } },
+              { "$bookings.dropOffTime$": { [Op.lt]: dropOffTime } },
+            ],
+          },
+          {
+            [Op.and]: [
+              { "$bookings.pickUpTime$": { [Op.gt]: pickUpTime } },
+              { "$bookings.dropOffTime$": { [Op.gt]: dropOffTime } },
+            ],
+          },
+          {
+            [Op.and]: [
+              { "$bookings.pickUpTime$": null },
+              { "$bookings.dropOffTime$": null },
+            ],
+          },
+        ],
+      },
+      include: [
+        {
+          model: Booking,
+          required: false,
+        },
+      ],
     })
-    .catch((err) => {
-      res.status(500).send({
-        message: err.message || "Some error occurred while retrieving Vehicle.",
+      .then((data) => {
+        res.send(data);
+      })
+      .catch((err) => {
+        res.status(500).send({
+          message:
+            err.message || "Some error occurred while retrieving Vehicle.",
+        });
       });
-    });
+  } else {
+    Vehicle.findAll({
+      where: {
+        type: type,
+        // '$bookings.id$': null
+      },
+      include: [
+        {
+          model: Booking,
+          where: {
+            //Not booked time not in range
+          },
+        },
+      ],
+    })
+      .then((data) => {
+        res.send(data);
+      })
+      .catch((err) => {
+        res.status(500).send({
+          message:
+            err.message || "Some error occurred while retrieving Vehicle.",
+        });
+      });
+  }
 };
-
-
 
 // Delete a Vehicle with the specified id in the request
 // Delete a Vehicle with the specified id in the request
@@ -134,22 +179,22 @@ exports.delete = (req, res) => {
   const id = req.body.id;
 
   Vehicle.destroy({
-    where: { id: id }
+    where: { id: id },
   })
-    .then(num => {
+    .then((num) => {
       if (num == 1) {
         res.send({
-          message: "Vehicle was deleted successfully!"
+          message: "Vehicle was deleted successfully!",
         });
       } else {
         res.send({
-          message: `Cannot delete Vehicle with id=${id}. Maybe Vehicle was not found!`
+          message: `Cannot delete Vehicle with id=${id}. Maybe Vehicle was not found!`,
         });
       }
     })
-    .catch(err => {
+    .catch((err) => {
       res.status(500).send({
-        message: "Could not delete Vehicle with id=" + id
+        message: "Could not delete Vehicle with id=" + id,
       });
     });
 };

@@ -6,6 +6,6 @@ module.exports = function (app) {
   app.get("/api/bookings/", controller.findAll);
 
   // Create a Bookings
-  app.post("/api/bookings/create", controller.createBooking);
+  app.post("/api/bookings/create", controller.create);
 
 };

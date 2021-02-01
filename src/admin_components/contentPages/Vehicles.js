@@ -36,7 +36,7 @@ const Vehicles = () => {
   }, []);
 
   const getVehicleList = async () => {
-    const result = await axios.get("http://localhost:5000/api/vehicels");
+    const result = await axios.get("http://localhost:5000/api/vehicles");
     // const result = await UserService.getVehicleList();
     console.log(result);
     setVehicles(result.data);
@@ -73,7 +73,7 @@ const Vehicles = () => {
         setEditSeatNumber(response.data.seatNumber);
         setEditDailyCost(response.data.dailyCost);
         setPreviewImage(
-          "http://localhost:5000/files/" + response.data.imageName
+          "http://localhost:5000/images/" + response.data.imageName
         );
       })
       .catch(function (error) {
@@ -100,7 +100,7 @@ const Vehicles = () => {
     formData.append("seatNumber", editSeatNumber);
     if (checkBtn.current.context._errors.length === 0) {
       axios
-        .post("http://localhost:5000/api/vehicels/create", formData)
+        .post("http://localhost:5000/api/vehicles/create", formData)
         .then(function (response) {
           console.log(response);
           getVehicleList();
@@ -219,7 +219,7 @@ const Vehicles = () => {
               <td>
                 <img
                   className="table-image"
-                  src={"http://localhost:5000/files/" + vehicle.imageName}
+                  src={"http://localhost:5000/images/" + vehicle.imageName}
                 />
               </td>
               <td>{vehicle.type}</td>

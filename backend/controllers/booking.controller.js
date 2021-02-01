@@ -1,7 +1,7 @@
 const db = require("../models");
 const Vehicle = db.vehicle;
 const User = db.user;
-const Booking = db.Booking;
+const Booking = db.booking;
 
 const Op = db.Sequelize.Op;
 
@@ -18,9 +18,13 @@ exports.findAll = (req, res) => {
     });
 };
 
-exports.createBooking = (req, res) => {
+exports.create = (req, res) => {
   Booking.create({
-    // TODO
+    vehicleID: req.body.vehicleID,
+    userID: req.body.userID,
+    pickUpTime: req.body.pickUpTime,
+    dropOffTime: req.body.dropOffTime,
+    status: req.body.status,
   })
     .then((data) => {
       res.send(data);
@@ -30,4 +34,5 @@ exports.createBooking = (req, res) => {
         message: err.message || "Some error occurred while creating a Booking.",
       });
     });
+    
 };

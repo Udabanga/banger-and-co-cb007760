@@ -27,7 +27,7 @@ db.sequelize = sequelize;
 db.user = require("./user.model.js")(sequelize, Sequelize);
 db.role = require("./role.model.js")(sequelize, Sequelize);
 db.vehicle = require("./vehicle.model.js")(sequelize, Sequelize);
-db.booking = require("./booking.model")(sequelize, Sequelize);
+db.booking = require("./booking.model.js")(sequelize, Sequelize);
 
 db.role.belongsToMany(db.user, {
   through: "user_roles",
@@ -42,6 +42,40 @@ db.user.belongsToMany(db.role, {
 
 db.ROLES = ["user", "admin", "moderator"];
 
-db.user.hasMany(db.booking) 
+// db.user.hasMany(db.booking) 
+
+
+// db.vehicle.belongsToMany(db.user, {
+//   through: "bookings",
+//   foreignKey: "vehicleID",
+//   otherKey: "userID"
+// });
+// db.user.belongsToMany(db.vehicle, {
+//   through: "bookings",
+//   foreignKey: "userID",
+//   otherKey: "vehicleID"
+// });
+
+db.user.hasMany(db.booking,{
+  foreignKey: "userID",
+})
+
+db.vehicle.hasMany(db.booking,{
+  foreignKey: "vehicleID",
+})
+
+// db.vehicle.belongsToMany(db.booking, {
+//   foreignKey: "vehicleID",
+// });
+// db.user.belongsToMany(db.booking, {
+//   foreignKey: "userID",
+// });
+
+// db.booking.hasOne(db.user,{
+//   foreignKey: 'userID',
+// })
+// db.booking.hasOne(db.vehicle, {
+//   foreignKey: 'vehicleID',
+// })
 
 module.exports = db;

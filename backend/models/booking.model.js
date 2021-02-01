@@ -1,19 +1,27 @@
 module.exports = (sequelize, Sequelize) => {
     const Booking = sequelize.define("bookings", {
       vehicleID: {
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER
       },
       userID: {
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER
       },
-      startDate: {
-        type: Sequelize.STRING
+      pickUpTime: {
+        type: Sequelize.DATE
       },
-      endDate: {
-        type: Sequelize.STRING
+      dropOffTime: {
+        type: Sequelize.DATE
       },
+      status: {
+        type: Sequelize.STRING
+      }
     });
-  
+
+    // Association
+    // Booking.associate = function(models) {
+    //   Booking.hasOne(models.vehicleID, {foreignKey: 'id',sourceKey: 'vehicleID'});
+    // }
+    
     return Booking;
   };
   

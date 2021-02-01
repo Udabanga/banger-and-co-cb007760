@@ -1,28 +1,26 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useContext,
+  createContext,
+} from "react";
 import Banner from "../assets/Banner.jpg";
 import { Container, Row, Col, Button, Form, Card } from "react-bootstrap";
-import DateRangePicker from "react-bootstrap-daterangepicker";
+import axios from "axios";
+// import { useHistory } from "react-router-dom";
 
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import CarImage from "../assets/car.png";
 import SearchImage from "../assets/search.png";
-// import setHours from 'date-fns/setHours'
-// import setMinutes from 'date-fns/setMinutes'
-// import addHours from 'date-fns/addHours'
-// import differenceInDays from 'date-fns/differenceInDays'
 
 import UserService from "../services/user.service";
 import {
   setHours,
   setMinutes,
   addHours,
-  differenceInDays,
-  differenceInHours,
-  differenceInCalendarDays,
   addDays,
-  getTime,
-  getHours,
   isSameDay,
   isWithinInterval,
   isAfter,
@@ -36,12 +34,11 @@ window.addEventListener("resize", () => {
   document.documentElement.style.setProperty("--vh", `${vh}px`);
 });
 
-const Home = () => {
+const Home = (props) => {
   const [content, setContent] = useState("");
+  // const history = useHistory();
   const [vehicleType, setVehicleType] = useState("Any");
   const [pickUpDate, setPickUpDate] = useState(
-    // setHours(setMinutes(new Date(), 0), 8)
-    // FOR CURRENT TIME
     roundToNearestMinutes(new Date(), { nearestTo: 30 })
   );
   const [dropOffDate, setDropOffDate] = useState(
@@ -55,9 +52,8 @@ const Home = () => {
     setHours(setMinutes(new Date(), 0), 18)
   );
   const [currentTime, setCurrentTime] = useState(
-    // FOR CURRENT TIME
+    // Current Time
     // roundToNearestMinutes(new Date(), { nearestTo: 30 })
-
     setHours(setMinutes(new Date(), 0), 12)
   );
 
@@ -137,7 +133,7 @@ const Home = () => {
 
       setMinPickUpTime(startTime);
       setPickUpDate(date);
-      //WTF is this? //Checking if Pick-Up day is after Drop-Off day
+      //Checking if Pick-Up day is after Drop-Off day
       if (
         isAfter(
           setHours(setMinutes(date, 0), 0),
@@ -168,10 +164,26 @@ const Home = () => {
     setVehicleType(inputVehicleType);
   };
 
-  const handleSearch = () => {
+  const handleSearch = async () => {
     console.log(vehicleType);
     console.log(pickUpDate);
     console.log(dropOffDate);
+
+    // setVehicleSearch("Any")
+    // props.history.push({
+    //   pathname: "/booking",
+    //   data: vehicleType
+    // });
+
+    props.history.push({
+      pathname: "/booking",
+      state: { vehicleType, pickUpDate, dropOffDate },
+    });
+
+    // const result = await axios.get("http://localhost:5000/api/vehicles");
+    // // const result = await UserService.getVehicleList();
+    // console.log(result);
+    // setVehicleSearch(result.data);
   };
 
   const scrollToBooking = () => booking.current.scrollIntoView();
