@@ -13,7 +13,10 @@ import axios from "axios";
 import AutomaticTransmissionIcon from "../assets/icons/automatic-transmission.png";
 import ManualTransmissionIcon from "../assets/icons/manual-transmission.png";
 import SeatIcon from "../assets/icons/seat.png";
-import DollarIcon from "../assets/icons/dollar.png";
+import PoundIcon from "../assets/icons/pound.png";
+import SatNav from "../assets/icons/gps.png";
+import BabySeats from "../assets/icons/baby-car-seat.png";
+import WineChiller from "../assets/icons/fridge.png";
 
 const SearchedVehicles = (props) => {
   const [vehicles, setVehicles] = useState([]);
@@ -77,7 +80,19 @@ const SearchedVehicles = (props) => {
   };
 
   const handleShow = () => setShow(true);
-  const handleClose = () => setShow(false);
+  const handleClose = () => {
+    setShow(false);
+    setViewVehicleID("");
+    setViewVehicleType("");
+    setViewVehicleManufacturer("");
+    setViewVehicleModel("");
+    setViewVehicleTransmission("");
+    setViewVehicleFuelType("");
+    setViewVehicleDailyCost("");
+    setViewVehicleSeatNumber("");
+    setViewVehicleDailyCost("");
+    setViewVehicleImage("");
+  };
 
   const handleBookModal = (id) => {
     getVehicle(id);
@@ -126,10 +141,10 @@ const SearchedVehicles = (props) => {
                     <Col style={{ textAlign: "center" }}>
                       <img
                         className="vehicle-card-icon"
-                        src={DollarIcon}
+                        src={PoundIcon}
                         alt="Cost"
                       />
-                      <p>{vehicle.dailyCost}</p>
+                      <p>{vehicle.dailyCost}/Day</p>
                     </Col>
                   </Row>
                   <Row>
@@ -149,15 +164,90 @@ const SearchedVehicles = (props) => {
           </Col>
         ))}
       </Row>
-      <Modal show={show} onHide={handleClose}>
+      <Modal size="lg" show={show} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Vehicle Booking</Modal.Title>
+          <Modal.Title className="vehicle-book-modal-title">
+            <h1>
+              <strong>{viewVehicleManufacturer}</strong>&nbsp;
+              {viewVehicleModel}
+            </h1>
+            <h4>{viewVehicleType}</h4>
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <img
-            alt="Vehicle"
-            src={viewVehicleImage}
-          />
+          <Row>
+            <Col lg={7}>
+              <img
+                className="Select-vehicle-image"
+                alt="Vehicle"
+                src={viewVehicleImage}
+              />
+              <Row>
+                <Col style={{ textAlign: "center" }}>
+                  <img
+                    className="select-vehicle-card-icon"
+                    src={AutomaticTransmissionIcon}
+                    alt="Automatic Transmission"
+                  />
+                  <p>{viewVehicleTransmission}</p>
+                </Col>
+                <Col style={{ textAlign: "center" }}>
+                  <img
+                    className="select-vehicle-card-icon"
+                    src={SeatIcon}
+                    alt="Seat Number"
+                  />
+                  <p>{viewVehicleSeatNumber}</p>
+                </Col>
+                <Col style={{ textAlign: "center" }}>
+                  <img
+                    className="select-vehicle-card-icon"
+                    src={PoundIcon}
+                    alt="Cost"
+                  />
+                  <p>{viewVehicleDailyCost}/Day</p>
+                </Col>
+              </Row>
+            </Col>
+            <Col lg={5}>
+              <Row>
+                <h2>Select Extras:</h2>
+              </Row>
+              <div className="extras-container">
+                <Row>
+                  <Button variant="light" className="extra-card-button">
+                    <img
+                      className="select-vehicle-card-icon"
+                      src={SatNav}
+                      alt="SatNav"
+                    />
+                    <h5>SatNav</h5>
+                  </Button>
+                </Row>
+                <Row className="extra-card">
+                  <Button variant="light" className="extra-card-button">
+                    <img
+                      className="select-vehicle-card-icon"
+                      src={BabySeats}
+                      alt="BabySeats"
+                    />
+                    <h5>Baby Seats</h5>
+                  </Button>
+                </Row>
+                <Row className="extra-card">
+                  <Button variant="light" className="extra-card-button">
+                    <img
+                      className="select-vehicle-card-icon"
+                      src={WineChiller}
+                      alt="WineChiller"
+                    />
+
+                    <h5>Wine Chiller</h5>
+                  </Button>
+                </Row>
+              </div>
+            </Col>
+          </Row>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>

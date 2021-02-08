@@ -58,6 +58,49 @@
   width: 100%;
 }
 
+.vehicle-card-icon{
+  height:32px
+}
+
+
+
+/* Booking Vehicle Page */
+.Select-vehicle-image{
+  width: 100%
+}
+
+.select-vehicle-card-icon {
+  height: 64px
+}
+
+.vehicle-book-modal-title{
+  width:100%
+}
+
+.extra-card-button{
+  margin: 2px 2px 2px 2px;
+  display: inline-flex;
+  width: 100%;
+  text-align: left;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  box-shadow: 0 0px 8px 0px rgba(168,168,168,1);
+  padding: 10px;
+  border-radius: 10px;
+  background-color: #fff;
+}
+
+
+.extra-card-button:hover{
+}
+
+.extra-card-button:active{
+}
+
+.extra-card-button h5{
+  margin-left: 5px;
+  align-self: center;
+}
 /* .text-center{
   text-align: center;
 } */

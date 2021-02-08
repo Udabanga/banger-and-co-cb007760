@@ -11,11 +11,13 @@ const upload = async (req, res) => {
 
     res.status(200).send({
       message: "Uploaded the file successfully: " + req.file.originalname,
+      file: req.file.filename
     });
 
     if (req.file.mimetype.startsWith("image")) {
       res.status(200).send({
         message: "Uploaded the file successfully: " + req.file.originalname,
+        file: req.file.filename
       });
     } else {
       return res.status(400).send({ message: "Please upload an image file!" });

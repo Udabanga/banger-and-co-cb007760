@@ -200,10 +200,17 @@ exports.delete = (req, res) => {
 };
 
 // Update a Update by the id in the request
-exports.update = (req, res) => {
+exports.update = async (req, res) => {
   const id = req.body.id;
-
   // const id = req.params.id
+  // if()
+  await uploadFile(req, res)
+    .then((data) => {
+      res.send(data);
+    })
+    .catch((err) => {
+      res.send(err);
+    });
 
   Vehicle.update(req.body, {
     where: { id: id },

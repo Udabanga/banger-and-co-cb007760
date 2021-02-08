@@ -4,8 +4,8 @@ import { Table, Button, ButtonGroup, Modal, Form } from "react-bootstrap";
 import FormValidate from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 
 import UserService from "../../services/user.service";
 
@@ -23,14 +23,23 @@ const Vehicles = () => {
   const [editFuelType, setEditFuelType] = useState("");
   const [editDailyCost, setEditDailyCost] = useState("");
   const [editSeatNumber, setEditSeatNumber] = useState("");
+  // const [editImageName, setEditImageName] = useState("");
+
+  const [updateImageName, setUpdateImageName] = useState("");
 
   const [image, setImage] = useState(null);
   const [previewImage, setPreviewImage] = useState(null);
   const [imageName, setImageName] = useState("");
   const [tableView, setTableView] = useState("Active");
 
-  const [modalTitle, setModalTitle] = useState("");
+  // var [i,setI] = useState(0);
 
+  var i = 0;
+
+  var editImageName;
+
+  const [modalTitle, setModalTitle] = useState("");
+  var imagething = "";
   useEffect(() => {
     getVehicleList();
   }, []);
@@ -75,6 +84,7 @@ const Vehicles = () => {
         setPreviewImage(
           "http://localhost:5000/images/" + response.data.imageName
         );
+        console.log(editType);
       })
       .catch(function (error) {
         console.log(error);
@@ -112,9 +122,48 @@ const Vehicles = () => {
     }
   };
   // http://localhost:5000/api/vehicles/create
-  const handleDelete = (id, email) => {};
+  const handleDelete = (id) => {
+    axios
+      .delete("http://localhost:5000/api/vehicles/delete", {data: {id: id}})
+      .then(function (response) {
+        console.log(response);
+        getVehicleList();
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
 
-  const handleUpdate = () => {
+  // const handleUpdate = () => {
+  //   console.log(i);
+  //   // setI(i+1)
+  //   i=i+1
+  //   console.log(i);
+
+  // };
+
+  const handleUpdate = async () => {
+    // setEditSeatNumber("");
+    let formData = new FormData();
+    formData.append("file", image);
+    console.log(image.name);
+    await axios
+      .post("http://localhost:5000/upload", formData)
+      .then(function (response) {
+        console.log(response.data.file);
+        editImageName = response.data.file;
+        // setEditImageName(response.data.file);
+        // imagething=response.data.file;
+        // setEditImageName(imagething);
+        console.log(editImageName);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+
+    console.log(editSeatNumber);
+    console.log(editImageName);
+    console.log(editSeatNumber);
     if (checkBtn.current.context._errors.length === 0) {
       axios
         .put("http://localhost:5000/api/vehicles/update", {
@@ -126,7 +175,7 @@ const Vehicles = () => {
           fuelType: editFuelType,
           dailyCost: editDailyCost,
           seatNumber: editSeatNumber,
-          dailyCost: editDailyCost,
+          imageName: editImageName,
         })
         .then(function (response) {
           console.log(response);
@@ -166,7 +215,7 @@ const Vehicles = () => {
 
   const onChangeSeatNumber = (e) => {
     const seatNumber = e.target.value;
-    setEditSeatNumber(seatNumber)
+    setEditSeatNumber(seatNumber);
   };
 
   const onChangeDailyCost = (e) => {
@@ -178,7 +227,7 @@ const Vehicles = () => {
     console.log("image: ", image);
     setPreviewImage(URL.createObjectURL(e.target.files[0]));
     setImage(e.target.files[0]);
-    setImageName(e.target.files[0].name);
+    // setImageName(e.target.files[0].name);
   };
 
   return (
@@ -194,10 +243,31 @@ const Vehicles = () => {
         </div>
       </div>
       <ButtonGroup aria-label="Basic example">
-        <Button onClick={() => setTableView("Active")} active={tableView == "Active"} variant="secondary">Active </Button>
-        <Button onClick={() => setTableView("Drafted")} active={tableView == "Drafted"} variant="secondary">Drafted</Button>
-        <Button onClick={() => setTableView("Deleted")} active={tableView == "Deleted"} variant="secondary">Deleted</Button>
+        <Button
+          onClick={() => setTableView("Active")}
+          active={tableView == "Active"}
+          variant="secondary"
+        >
+          Active{" "}
+        </Button>
+        <Button
+          onClick={() => setTableView("Drafted")}
+          active={tableView == "Drafted"}
+          variant="secondary"
+        >
+          Drafted
+        </Button>
+        <Button
+          onClick={() => setTableView("Deleted")}
+          active={tableView == "Deleted"}
+          variant="secondary"
+        >
+          Deleted
+        </Button>
       </ButtonGroup>
+      <Button variant="primary" onClick={handleUpdate}>
+        Save Changes
+      </Button>
       <Table className="border thead-dark">
         <thead className="thead-dark">
           <tr>
@@ -235,7 +305,12 @@ const Vehicles = () => {
                 >
                   <FontAwesomeIcon icon={faEdit} />
                 </Button>
-                <Button variant="danger"><FontAwesomeIcon icon={faTrash} /></Button>
+                <Button
+                  variant="danger"
+                  onClick={() => handleDelete(vehicle.id)}
+                >
+                  <FontAwesomeIcon icon={faTrash} />
+                </Button>
               </td>
             </tr>
           ))}
@@ -250,7 +325,7 @@ const Vehicles = () => {
           }
           ref={form}
         > */}
-        <FormValidate onSubmit={handleUpdate} ref={form}>
+        <FormValidate ref={form}>
           <Modal.Header closeButton>
             <Modal.Title>{modalTitle}</Modal.Title>
           </Modal.Header>
@@ -347,12 +422,12 @@ const Vehicles = () => {
             {/* <Button variant="primary" onClick={handleUpdate}>
               Save Changes
             </Button> */}
-            {modalTitle == "Edit Vehicle" && (
+            {modalTitle === "Edit Vehicle" && (
               <Button variant="primary" onClick={handleUpdate}>
                 Save Changes
               </Button>
             )}
-            {modalTitle == "Add Vehicle" && (
+            {modalTitle === "Add Vehicle" && (
               <Button variant="primary" onClick={handleAdd}>
                 Add Vehicle
               </Button>
