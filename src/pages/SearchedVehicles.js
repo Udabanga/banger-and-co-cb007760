@@ -6,9 +6,11 @@ import {
   Row,
   Col,
   Button,
+  ButtonGroup,
   Modal,
 } from "react-bootstrap";
 import axios from "axios";
+import AuthService from "../services/auth.service";
 
 import AutomaticTransmissionIcon from "../assets/icons/automatic-transmission.png";
 import ManualTransmissionIcon from "../assets/icons/manual-transmission.png";
@@ -23,7 +25,11 @@ const SearchedVehicles = (props) => {
   const vehicleType = props.location.state.vehicleType;
   const pickUpDate = props.location.state.pickUpDate;
   const dropOffDate = props.location.state.dropOffDate;
-  const [show, setShow] = useState(false);
+  const [showBookingModal, setShowBookingModal] = useState(false);
+  const [showMessageModal, setMessageModal] = useState(false);
+  const [bookingResponse, setBookingResponse] = useState("");
+  const [messageTitle, setMessageTitle] = useState("");
+  const [messageBody, setMessageBody] = useState("");
 
   const [viewVehicleID, setViewVehicleID] = useState("");
   const [viewVehicleType, setViewVehicleType] = useState("");
@@ -35,8 +41,19 @@ const SearchedVehicles = (props) => {
   const [viewVehicleSeatNumber, setViewVehicleSeatNumber] = useState("");
   const [viewVehicleImage, setViewVehicleImage] = useState("");
 
+  const [selectSatNav, setSelectSatNav] = useState(false);
+  const [selectBabySeats, setSelectBabySeats] = useState(false);
+  const [selectWineChiller, setSelectWineChiller] = useState(false);
+
+  const [currentUser, setCurrentUser] = useState(undefined);
+
   useEffect(() => {
     getVehicleList();
+    const user = AuthService.getCurrentUser();
+    if (user) {
+      setCurrentUser(user);
+    }
+    // console.log(user)
   }, []);
 
   const getVehicleList = async () => {
@@ -79,9 +96,10 @@ const SearchedVehicles = (props) => {
       });
   };
 
-  const handleShow = () => setShow(true);
-  const handleClose = () => {
-    setShow(false);
+  const handleShowBookModal = () => setShowBookingModal(true);
+
+  const handleCloseBookModal = () => {
+    setShowBookingModal(false);
     setViewVehicleID("");
     setViewVehicleType("");
     setViewVehicleManufacturer("");
@@ -92,11 +110,71 @@ const SearchedVehicles = (props) => {
     setViewVehicleSeatNumber("");
     setViewVehicleDailyCost("");
     setViewVehicleImage("");
+
+    setSelectBabySeats(false);
+    setSelectSatNav(false);
+    setSelectWineChiller(false);
+  };
+
+  const handleBooking = () => {
+    axios
+      .post("http://localhost:5000/api/bookings/create", {
+        vehicleID: viewVehicleID,
+        userID: currentUser.id,
+        pickUpTime: pickUpDate,
+        dropOffTime: dropOffDate,
+        status: "Booked",
+      })
+      .then(function (response) {
+        console.log(response);
+        setMessageModal(true);
+        setShowBookingModal(false);
+        setMessageTitle("Success")
+        setMessageBody("Vehicle Successfully Booked")
+      })
+      .catch(function (error) {
+        console.log(error);
+        setMessageModal(true);
+        setShowBookingModal(false);
+        setMessageTitle("Error")
+        setMessageBody("An error occured")
+      });
   };
 
   const handleBookModal = (id) => {
     getVehicle(id);
-    handleShow();
+    handleShowBookModal();
+  };
+
+  const handleMessageClose = () =>{
+    setMessageModal(false)
+  }
+
+  
+
+  // Extras States
+  const onChangeSatNav = () => {
+    if (selectSatNav === false) {
+      setSelectSatNav(true);
+    } else {
+      setSelectSatNav(false);
+    }
+  };
+
+  const onChangeBabySeats = () => {
+    if (selectBabySeats === false) {
+      setSelectBabySeats(true);
+    } else {
+      setSelectBabySeats(false);
+    }
+  };
+
+  const onChangeWineChiller = () => {
+    if (selectWineChiller === false) {
+      setSelectWineChiller(true);
+    } else {
+      setSelectWineChiller(false);
+    }
   };
 
   return (
@@ -164,7 +242,9 @@ const SearchedVehicles = (props) => {
           </Col>
         ))}
       </Row>
-      <Modal size="lg" show={show} onHide={handleClose}>
+
+      {/* Booking Modal */}
+      <Modal size="lg" show={showBookingModal} onHide={handleCloseBookModal}>
         <Modal.Header closeButton>
           <Modal.Title className="vehicle-book-modal-title">
             <h1>
@@ -210,53 +290,72 @@ const SearchedVehicles = (props) => {
               </Row>
             </Col>
             <Col lg={5}>
-              <Row>
-                <h2>Select Extras:</h2>
-              </Row>
-              <div className="extras-container">
-                <Row>
-                  <Button variant="light" className="extra-card-button">
-                    <img
-                      className="select-vehicle-card-icon"
-                      src={SatNav}
-                      alt="SatNav"
-                    />
-                    <h5>SatNav</h5>
-                  </Button>
-                </Row>
-                <Row className="extra-card">
-                  <Button variant="light" className="extra-card-button">
-                    <img
-                      className="select-vehicle-card-icon"
-                      src={BabySeats}
-                      alt="BabySeats"
-                    />
-                    <h5>Baby Seats</h5>
-                  </Button>
-                </Row>
-                <Row className="extra-card">
-                  <Button variant="light" className="extra-card-button">
-                    <img
-                      className="select-vehicle-card-icon"
-                      src={WineChiller}
-                      alt="WineChiller"
-                    />
+              <h2>Select Extras:</h2>
+              <ButtonGroup vertical>
+                <Button
+                  active={selectSatNav}
+                  fovus
+                  onClick={() => onChangeSatNav()}
+                  variant="light"
+                  className="extra-card-button"
+                >
+                  <img
+                    className="select-vehicle-card-icon"
+                    src={SatNav}
+                    alt="SatNav"
+                  />
+                  <h5>SatNav</h5>
+                  <p>+£10</p>
+                </Button>
+                <Button
+                  active={selectBabySeats}
+                  onClick={() => onChangeBabySeats()}
+                  variant="light"
+                  className="extra-card-button"
+                >
+                  <img
+                    className="select-vehicle-card-icon"
+                    src={BabySeats}
+                    alt="BabySeats"
+                  />
+                  <h5>Baby Seats</h5>
+                  <p>+£15</p>
+                </Button>
+                <Button
+                  active={selectWineChiller}
+                  onClick={() => onChangeWineChiller()}
+                  variant="light"
+                  className="extra-card-button"
+                >
+                  <img
+                    className="select-vehicle-card-icon"
+                    src={WineChiller}
+                    alt="WineChiller"
+                  />
 
-                    <h5>Wine Chiller</h5>
-                  </Button>
-                </Row>
-              </div>
+                  <h5>Wine Chiller</h5>
+                  <p>+£25</p>
+                </Button>
+              </ButtonGroup>
             </Col>
           </Row>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
+          <Button variant="secondary" onClick={handleCloseBookModal}>
             Close
           </Button>
-          <Button variant="primary" onClick={handleClose}>
-            Save Changes
+          <Button variant="primary" onClick={handleBooking}>
+            Book Vehicle
           </Button>
         </Modal.Footer>
+      </Modal>
+
+      {/* Message Modal */}
+      <Modal show={showMessageModal} onHide={handleMessageClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>{messageTitle}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>{messageBody}</Modal.Body>
       </Modal>
     </Container>
   );
