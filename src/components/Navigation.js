@@ -7,7 +7,7 @@ import Logo from "../assets/Logo.png";
 import AuthService from "../services/auth.service";
 
 function Navigation() {
-  const [showModerator, setShowModerator] = useState(false);
+  const [showEmployee, setShowEmployee] = useState(false);
   const [showAdmin, setShowAdmin] = useState(false);
   const [currentUser, setCurrentUser] = useState(undefined);
 
@@ -16,7 +16,7 @@ function Navigation() {
 
     if (user) {
       setCurrentUser(user);
-      setShowModerator(user.roles.includes("ROLE_MODERATOR"));
+      setShowEmployee(user.roles.includes("ROLE_EMPLOYEE"));
       setShowAdmin(user.roles.includes("ROLE_ADMIN"));
     }
   }, []);
@@ -45,10 +45,10 @@ function Navigation() {
             </NavLink>
           </Nav.Item>
 
-          {showModerator && (
+          {showEmployee && (
             <Nav.Item>
               <NavLink to={"/mod"} className="nav-link">
-                Moderator Page
+                Employee Page
               </NavLink>
             </Nav.Item>
           )}

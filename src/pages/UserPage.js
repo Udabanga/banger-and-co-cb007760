@@ -37,13 +37,13 @@
 import React, { useState, useEffect } from "react";
 
 import UserService from "../services/user.service";
-import Sidebar from "../components/SidebarUser";
-import Content from "../admin_components/Content";
+import Sidebar from "./userPages/Sidebar";
+import Content from "./userPages/Content";
 import {  BrowserRouter as Router } from 'react-router-dom';
-import { GlobalAppContext } from "../admin_components/context";
-import "../styleAdmin.css";
+import { GlobalAppContext } from "./userPages/context";
+import "../styleUserPage.css";
 
-const AdminPage = () => {
+const UserPage = () => {
   const [content, setContent] = useState("");
   const [isOpen, setIsOpen] = useState(true);
   const [toggled, setToggled] = useState(true);
@@ -66,11 +66,12 @@ const AdminPage = () => {
     );
   }, []);
 
+
   let style = toggled ? "isOpen" : "";
 
   if (content === "User Content.") {
     return (
-      <body class="admin-page">
+      <body class="user-page">
       <Router>
         <GlobalAppContext.Provider value={{toggled, setToggled}}>
           <div className="App wrapper">
@@ -92,5 +93,5 @@ const AdminPage = () => {
   }
 };
 
-export default AdminPage;
+export default UserPage;
 

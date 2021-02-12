@@ -1,7 +1,7 @@
 import React , { useContext, useState, useEffect } from 'react';
 import { Navbar, Button, Nav } from "react-bootstrap";
 import { GlobalAppContext } from "./context";
-import AuthService from "../services/auth.service";
+import AuthService from "../../services/auth.service";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBars } from '@fortawesome/free-solid-svg-icons'
 
@@ -10,7 +10,7 @@ const NavBar = () => {
     GlobalAppContext
   );
 
-  const [showModerator, setShowModerator] = useState(false);
+  const [showEmployee, setShowEmployee] = useState(false);
   const [showAdmin, setShowAdmin] = useState(false);
   const [currentUser, setCurrentUser] = useState(undefined);
 
@@ -19,7 +19,7 @@ const NavBar = () => {
 
     if (user) {
       setCurrentUser(user);
-      setShowModerator(user.roles.includes("ROLE_MODERATOR"));
+      setShowEmployee(user.roles.includes("ROLE_EMPLOYEE"));
       setShowAdmin(user.roles.includes("ROLE_ADMIN"));
     }
   }, []);

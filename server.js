@@ -62,7 +62,7 @@ function initial() {
  
   Role.create({
     id: 2,
-    name: "moderator"
+    name: "employee"
   });
  
   Role.create({

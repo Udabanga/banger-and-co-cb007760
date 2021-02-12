@@ -5,7 +5,7 @@ module.exports = function (app) {
   // Retrieve all Vehicles
   app.get("/api/vehicles/", controller.findAll);
 
-  // Retrieve all Vehicles available of Type
+  // Retrieve all Vehicles from search
   app.post("/api/vehicles/available", controller.findAvailable);
 
   // Create a Vehicle

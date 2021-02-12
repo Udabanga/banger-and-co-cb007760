@@ -13,7 +13,7 @@ import Home from "./pages/Home";
 import CarListing from "./pages/CarListing"
 import Profile from "./pages/Profile";
 import UserPage from "./pages/UserPage";
-import ModeratorPage from "./pages/ModeratorPage";
+import EmployeePage from "./pages/EmployeePage";
 import AdminPage from "./pages/AdminPage";
 import Booking from './pages/SearchedVehicles'
 import NoMatch from "./pages/NoMatch";
@@ -33,8 +33,8 @@ const App = () => {
         <PublicRoute exact path="/login" component={Login} />
         <PublicRoute exact path="/register" component={Register} />
         <PublicRoute exact path="/profile" component={Profile} />
-        <PublicRoute exact path="/user" component={UserPage} />
-        <PublicRoute exact path="/mod" component={ModeratorPage} />
+        <PublicRoute path="/user" component={UserPage} />
+        <PublicRoute exact path="/mod" component={EmployeePage} />
         <PublicRoute exact path="/carListing" component={CarListing} />
         <PublicRoute exact path="/booking" component={Booking} />
 

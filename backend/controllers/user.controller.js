@@ -101,6 +101,6 @@ exports.adminPage = (req, res) => {
   res.status(200).send("Admin Content.");
 };
 
-exports.moderatorPage = (req, res) => {
-  res.status(200).send("Moderator Content.");
+exports.employeePage = (req, res) => {
+  res.status(200).send("Employee Content.");
 };

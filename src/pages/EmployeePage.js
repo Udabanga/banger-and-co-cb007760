@@ -2,11 +2,11 @@ import React, { useState, useEffect } from "react";
 
 import UserService from "../services/user.service";
 
-const ModeratorPage = () => {
+const EmployeePage = () => {
   const [content, setContent] = useState("");
 
   useEffect(() => {
-    UserService.getModeratorPage().then(
+    UserService.getEmployeePage().then(
       (response) => {
         setContent(response.data);
       },
@@ -32,4 +32,4 @@ const ModeratorPage = () => {
   );
 };
 
-export default ModeratorPage;
+export default EmployeePage;

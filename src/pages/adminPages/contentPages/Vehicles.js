@@ -7,7 +7,7 @@ import CheckButton from "react-validation/build/button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 
-import UserService from "../../services/user.service";
+import UserService from "../../../services/user.service";
 
 const Vehicles = () => {
   const form = useRef();

@@ -11,7 +11,7 @@ const getUserPage = () => {
   return axios.get(API_URL + "test/user", { headers: authHeader() });
 };
 
-const getModeratorPage = () => {
+const getEmployeePage = () => {
   return axios.get(API_URL + "test/mod", { headers: authHeader() });
 };
 
@@ -30,7 +30,7 @@ const updateUser = () => {
 export default {
   getPublicContent,
   getUserPage,
-  getModeratorPage,
+  getEmployeePage,
   getAdminPage,
   getUserList,
   updateUser,

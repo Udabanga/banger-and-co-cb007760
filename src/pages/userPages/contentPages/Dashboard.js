@@ -1,11 +1,11 @@
 import React,{useState, useEffect} from 'react'
 
-const Bookings = () => {
+const Dashboard = () => {
     return (
         <div className="shadow-sm p-3 mb-5 bg-white rounded">
-            <h1>Bookings</h1>
+            <h1>Dashboard</h1>
         </div>
     )
 }
 
-export default Bookings;
+export default Dashboard;
