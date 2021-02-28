@@ -1,3 +1,7 @@
+.banner{
+  width: 100%;
+}
+
 .banner-image {
   height: 100vh;
   /* Fallback for browsers that do not support Custom Properties */
@@ -11,7 +15,7 @@
 
 .banner-image-outer {
   position: relative;
-  width: 100%;
+  min-width: 100%;
   overflow: hidden;
 }
 .book-now-button-container {
@@ -96,7 +100,7 @@
   background-color: #fff;
 }
 
-.extra-card-button p{
+.extra-card-button p {
   margin-top: revert;
 }
 
@@ -107,10 +111,9 @@
 .extra-card-button:active {
 }
 
-
-
-.btn-light.focus, .btn-light:focus {
-  color: #212529; 
+.btn-light.focus,
+.btn-light:focus {
+  color: #212529;
   background-color: #fff;
   border-color: #fff;
   box-shadow: 0 0 0 0.2rem rgb(216 217 219 / 50%);
@@ -128,6 +131,29 @@
   background-color: #c43b3b;
   box-shadow: 0px 15px 20px rgba(229, 89, 46, 0.4);
   color: #fff;
+}
+
+.background-image {
+  /* background-image: url("./assets/Banner.jpg"); */
+  width: 100%;
+  height: fit-content;
+  object-fit: cover;
+  object-position: top;
+  position: fixed;
+  top: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+
+.card-title-img {
+  height: 150px;
+  margin: 0 auto 0;
+}
+
+.card-container.card {
+  max-width: 500px !important;
+  padding: 40px 40px;
 }
 
 #wrapper {
@@ -170,7 +196,7 @@
 }
 
 .book-card {
-  width: 474px;
+  /* width: 474px; */
   text-align: left;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;

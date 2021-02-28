@@ -1,10 +1,23 @@
 import React, { useState, useRef } from "react";
-import Form from "react-validation/build/form";
+import { useForm } from "react-hook-form";
+import Banner from "../assets/Banner.jpg";
 import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
-import {Container, Col, Card} from "react-bootstrap";
+import LoginLogo from "../assets/Login-Logo.png";
+import {
+  Container,
+  Col,
+  Card,
+  Form,
+  InputGroup,
+  Button,
+} from "react-bootstrap";
 
 import AuthService from "../services/auth.service";
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye } from "@fortawesome/free-solid-svg-icons";
+const eye = <FontAwesomeIcon icon={faEye} />;
 
 const required = (value) => {
   if (!value) {
@@ -17,6 +30,7 @@ const required = (value) => {
 };
 
 const Login = (props) => {
+  const { register, errors, handleSubmit, watch } = useForm({});
   const form = useRef();
   const checkBtn = useRef();
 
@@ -66,29 +80,82 @@ const Login = (props) => {
     }
   };
 
+  const onSubmit = (data) => {
+    AuthService.login(data.email, data.password).then(
+      () => {
+        props.history.push("/profile");
+        window.location.reload();
+      },
+      (error) => {
+        const resMessage =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+
+        setLoading(false);
+        setMessage(resMessage);
+      }
+    );
+  }
+
   return (
-    <Col md={12}>
+    <div>
+      <img src={Banner} className="background-image" />
       <Card className="card-container">
-        <img
-          src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
-          alt="profile-img"
-          className="profile-img-card"
-        />
+        <img src={LoginLogo} alt="profile-img" className="card-title-img" />
 
-        <Form onSubmit={handleLogin} ref={form}>
-          <div className="form-group">
-            <label htmlFor="email">Email</label>
-            <Input
-              type="text"
-              className="form-control"
+        <Form noValidate onSubmit={handleSubmit(onSubmit)} ref={form}>
+          <Form.Group>
+            <Form.Label>Email Address</Form.Label>
+            <Form.Control
+              ref={register({
+                required: "Enter Email",
+                pattern: {
+                  value: /^\S+@\S+$/i,
+                  message: "Invalid Email Format",
+                },
+              })}
               name="email"
-              value={email}
-              onChange={onChangeEmail}
-              validations={[required]}
+              type="email"
+              // value={email}
+              // onChange={onChangeEmail}
+              isInvalid={errors.email}
             />
-          </div>
+            {errors.email && (
+              <Form.Control.Feedback type="invalid">
+                {errors.email.message}
+              </Form.Control.Feedback>
+            )}
+          </Form.Group>
 
-          <div className="form-group">
+          <Form.Group>
+            <Form.Label>Password</Form.Label>
+            <InputGroup>
+              <Form.Control
+                ref={register({
+                  required: "Enter Password"
+                })}
+                name="password"
+                type="password"
+                // value={password}
+                // onChange={onChangePassword}
+                isInvalid={errors.password}
+              />
+              <InputGroup.Prepend>
+                <Button variant="secondary">{eye}</Button>
+              </InputGroup.Prepend>
+
+              {errors.password && (
+                <Form.Control.Feedback type="invalid">
+                  {errors.password.message}
+                </Form.Control.Feedback>
+              )}
+            </InputGroup>
+          </Form.Group>
+          <Button type="submit">Submit</Button>
+          {/* <div className="form-group">
             <label htmlFor="password">Password</label>
             <Input
               type="password"
@@ -107,7 +174,7 @@ const Login = (props) => {
               )}
               <span>Login</span>
             </button>
-          </div>
+          </div> */}
 
           {message && (
             <div className="form-group">
@@ -116,13 +183,11 @@ const Login = (props) => {
               </div>
             </div>
           )}
-          <CheckButton style={{ display: "none" }} ref={checkBtn} />
+          {/* <CheckButton style={{ display: "none" }} ref={checkBtn} /> */}
         </Form>
       </Card>
-    </Col>
+    </div>
   );
 };
 
 export default Login;
-
-

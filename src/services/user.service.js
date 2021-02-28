@@ -12,7 +12,7 @@ const getUserPage = () => {
 };
 
 const getEmployeePage = () => {
-  return axios.get(API_URL + "test/mod", { headers: authHeader() });
+  return axios.get(API_URL + "test/employee", { headers: authHeader() });
 };
 
 const getAdminPage = () => {

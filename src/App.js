@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-daterangepicker/daterangepicker.css";
+import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
+import 'react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.min.css';
 import "./App.css";
 import "./style.css";
 
@@ -34,10 +36,13 @@ const App = () => {
         <PublicRoute exact path="/register" component={Register} />
         <PublicRoute exact path="/profile" component={Profile} />
         <PublicRoute path="/user" component={UserPage} />
-        <PublicRoute exact path="/mod" component={EmployeePage} />
+        {/* Employee table */}
+        {/* <PublicRoute exact path="/employee" component={AdminPage} /> */}
         <PublicRoute exact path="/carListing" component={CarListing} />
         <PublicRoute exact path="/booking" component={Booking} />
 
+
+        <AdminRoute exact path="/employee" component={AdminPage} />
         <AdminRoute path="/admin" component={AdminPage} />
 
         <PublicRoute component={NoMatch} />

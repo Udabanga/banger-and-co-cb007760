@@ -29,6 +29,9 @@ import {
   roundToNearestMinutes,
 } from "date-fns";
 
+let vh = window.innerHeight * 0.01;
+document.documentElement.style.setProperty("--vh", `${vh}px`);
+
 window.addEventListener("resize", () => {
   let vh = window.innerHeight * 0.01;
   document.documentElement.style.setProperty("--vh", `${vh}px`);
@@ -191,8 +194,9 @@ const Home = (props) => {
   return (
     <>
       {/* <div className="banner-image-backgroud"></div> */}
-
-      <img src={Banner} className="banner-image" />
+      <div className="banner">
+        <img src={Banner} alt="banner" className="banner-image" />
+      </div>
       <Container className="book-now-button-container">
         <button onClick={scrollToBooking} className="book-now-button">
           Book now

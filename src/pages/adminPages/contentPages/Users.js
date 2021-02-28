@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
+import AuthService from "../../../services/auth.service";
 import { Table, Button, ButtonGroup, Modal, Form } from "react-bootstrap";
 import FormValidate from "react-validation/build/form";
 import Input from "react-validation/build/input";
@@ -13,6 +14,9 @@ const Users = () => {
   const form = useRef();
   const checkBtn = useRef();
 
+  const [showEmployee, setShowEmployee] = useState(false);
+  const [showAdmin, setShowAdmin] = useState(false);
+
   const [users, setUsers] = useState([]);
   const [show, setShow] = useState(false);
   const [editID, setEditID] = useState("");
@@ -24,6 +28,12 @@ const Users = () => {
 
   useEffect(() => {
     getUserList();
+    const user = AuthService.getCurrentUser();
+
+    if (user) {
+      setShowEmployee(user.roles.includes("ROLE_EMPLOYEE"));
+      setShowAdmin(user.roles.includes("ROLE_ADMIN"));
+    }
   }, []);
 
   const getUserList = async () => {
@@ -97,7 +107,17 @@ const Users = () => {
 
   return (
     <div className="shadow-sm p-3 mb-5 bg-white rounded">
-      <h1>Users</h1>
+      
+      <div className="row">
+        <div className="col">
+        <h1>Users</h1>
+        </div>
+        <div className="col">
+          <Button className="admin-add-button">
+            Add User
+          </Button>
+        </div>
+      </div>
       <ButtonGroup aria-label="Basic example">
         <Button
           onClick={() => setTableView("Active")}

@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Button, ButtonGroup, Table } from "react-bootstrap";
+import BootstrapTable from "react-bootstrap-table-next";
+import paginationFactory from "react-bootstrap-table2-paginator";
+import ToolkitProvider, { Search } from "react-bootstrap-table2-toolkit";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 
@@ -7,6 +10,7 @@ import axios from "axios";
 const Bookings = () => {
   const [bookings, setBookings] = useState([]);
   const [tableView, setTableView] = useState("All");
+
   useEffect(() => {
     getBookingList();
   }, []);
@@ -17,6 +21,67 @@ const Bookings = () => {
     console.log(result);
     setBookings(result.data);
   };
+
+  const { SearchBar, ClearSearchButton } = Search;
+
+
+  const actionButtons = (cell, row, rowIndex, formatExtraData) => {
+    return (
+      <Button
+        onClick={() => {
+          console.log(row)
+        }}
+      >
+        Edit
+      </Button>
+    );
+  };
+
+  const columns = [
+    { dataField: "id", text: "#" },
+    { dataField: "vehicleID", text: "VehicleID", searchable: false },
+    { dataField: "userID", text: "UserID", searchable: false  },
+    {
+      dataField: "pickUpTime",
+      text: "Pick-Up Date",
+      formatter: (cell) => {
+        let dateObj = cell;
+        if (typeof cell !== "object") {
+          dateObj = new Date(cell);
+        }
+        return `${("0" + dateObj.getUTCDate()).slice(-2)}/${(
+          "0" +
+          (dateObj.getUTCMonth() + 1)
+        ).slice(
+          -2
+        )}/${dateObj.getUTCFullYear()}, ${dateObj.getUTCHours()}:${dateObj.getUTCMinutes()}`;
+      },
+      searchable: false 
+    },
+    {
+      dataField: "dropOffTime",
+      text: "Drop-Off Date",
+      formatter: (cell) => {
+        let dateObj = cell;
+        if (typeof cell !== "object") {
+          dateObj = new Date(cell);
+        }
+        return `${("0" + dateObj.getUTCDate()).slice(-2)}/${(
+          "0" +
+          (dateObj.getUTCMonth() + 1)
+        ).slice(
+          -2
+        )}/${dateObj.getUTCFullYear()}, ${dateObj.getUTCHours()}:${dateObj.getUTCMinutes()}`;
+      },
+      searchable: false 
+    },
+    { dataField: "status", text: "Status", searchable: false  },
+    { dataField: "actions", text: "Actions", searchable: false, formatter: actionButtons  },
+  ];
+  
+
+  
+
   return (
     <div className="shadow-sm p-3 mb-5 bg-white rounded">
       <h1>Bookings</h1>
@@ -50,7 +115,7 @@ const Bookings = () => {
           Cancelled
         </Button>
       </ButtonGroup>
-      <Table className="border thead-dark">
+      {/* <Table className="border thead-dark">
         <thead className="thead-dark">
           <tr>
             <th>#</th>
@@ -88,7 +153,22 @@ const Bookings = () => {
             </tr>
           ))}
         </tbody>
-      </Table>
+      </Table> */}
+      <ToolkitProvider
+        keyField="id"
+        data={bookings}
+        columns={columns}
+        paginationFactory={paginationFactory}
+        search
+      >
+        {(props) => (
+          <div>
+            <SearchBar {...props.searchProps} />
+            <hr />
+            <BootstrapTable {...props.baseProps} />
+          </div>
+        )}
+      </ToolkitProvider>
     </div>
   );
 };

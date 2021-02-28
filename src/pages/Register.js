@@ -1,40 +1,13 @@
-import React, { useState, useRef } from "react";
-import Form from "react-validation/build/form";
-import Input from "react-validation/build/input";
-import CheckButton from "react-validation/build/button";
-import { isEmail } from "validator";
-
+import React, { useState, useRef, useEffect } from "react";
+import { useForm } from "react-hook-form";
+import bsCustomFileInput from "bs-custom-file-input";
+import Banner from "../assets/Banner.jpg";
+import SignUpLogo from "../assets/Sign-Up-Logo.png";
+import { Card, Form, Row, Col, Button, InputGroup } from "react-bootstrap";
 import AuthService from "../services/auth.service";
-
-const required = (value) => {
-  if (!value) {
-    return (
-      <div className="alert alert-danger" role="alert">
-        This field is required!
-      </div>
-    );
-  }
-};
-
-const validEmail = (value) => {
-  if (!isEmail(value)) {
-    return (
-      <div className="alert alert-danger" role="alert">
-        This is not a valid email.
-      </div>
-    );
-  }
-};
-
-const vusername = (value) => {
-  if (value.length < 3 || value.length > 20) {
-    return (
-      <div className="alert alert-danger" role="alert">
-        The username must be between 3 and 20 characters.
-      </div>
-    );
-  }
-};
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye } from "@fortawesome/free-solid-svg-icons";
+const eye = <FontAwesomeIcon icon={faEye} />;
 
 const vpassword = (value) => {
   if (value.length < 6 || value.length > 40) {
@@ -47,133 +20,208 @@ const vpassword = (value) => {
 };
 
 const Register = (props) => {
-  const form = useRef();
-  const checkBtn = useRef();
-
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const { register, errors, handleSubmit, watch } = useForm({});
+  console.log(errors);
+  const password = useRef({});
+  password.current = watch("password", "");
   const [successful, setSuccessful] = useState(false);
   const [message, setMessage] = useState("");
-  const [fName, setFName] = useState("");
-  const [lName, setLName] = useState("");
 
-  const onChangeFName = (e) => {
-    const fName = e.target.value;
-    setFName(fName);
-  };
+  const [passwordNotSame, setPasswordNotSame] = useState(false);
+  const [passwordValidationError, setPasswordValidationError] = useState("");
+  const [validated, setValidated] = useState(false);
 
-  const onChangeLName = (e) => {
-    const lName = e.target.value;
-    setLName(lName);
-  };
+  useEffect(() => {
+    bsCustomFileInput.init();
+  }, []);
 
-  const onChangeEmail = (e) => {
-    const email = e.target.value;
-    setEmail(email);
-  };
+  const onSubmit = (data) => {
+    // alert(JSON.stringify(data));
+    AuthService.register(
+      data.email,
+      data.password,
+      data.fName,
+      data.lName
+    ).then(
+      (response) => {
+        setMessage(response.data.message);
+        setSuccessful(true);
+      },
+      (error) => {
+        const resMessage =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
 
-  const onChangePassword = (e) => {
-    const password = e.target.value;
-    setPassword(password);
-  };
-
-  const handleRegister = (e) => {
-    e.preventDefault();
-
-    setMessage("");
-    setSuccessful(false);
-
-    form.current.validateAll();
-
-    if (checkBtn.current.context._errors.length === 0) {
-      AuthService.register(email, password, fName, lName).then(
-        (response) => {
-          setMessage(response.data.message);
-          setSuccessful(true);
-        },
-        (error) => {
-          const resMessage =
-            (error.response &&
-              error.response.data &&
-              error.response.data.message) ||
-            error.message ||
-            error.toString();
-
-          setMessage(resMessage);
-          setSuccessful(false);
-        }
-      );
-    }
+        setMessage(resMessage);
+        console.log(resMessage);
+        setSuccessful(false);
+      }
+    );
   };
 
   return (
-    <div className="col-md-12">
-      <div className="card card-container">
-        <img
-          src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
-          alt="profile-img"
-          className="profile-img-card"
-        />
+    <div>
+      <img src={Banner} className="background-image" />
+      <Card className="card-container">
+        <img src={SignUpLogo} alt="sign-up-img" className="card-title-img" />
 
-        <Form onSubmit={handleRegister} ref={form}>
-          {!successful && (
-            <div>
-              <div className="form-group">
-                <label htmlFor="email">Email</label>
-                <Input
-                  type="text"
-                  className="form-control"
-                  name="email"
-                  value={email}
-                  onChange={onChangeEmail}
-                  validations={[required, validEmail]}
-                />
-              </div>
+        {!successful && (
+          <Form
+            noValidate
+            // validated={validated}
+            onSubmit={handleSubmit(onSubmit)}
+          >
+            <Form.Group controlId="formBasicEmail">
+              <Form.Label>Email Address</Form.Label>
+              <Form.Control
+                ref={register({
+                  required: "Enter Email",
+                  pattern: {
+                    value: /^\S+@\S+$/i,
+                    message: "Invalid Email Format",
+                  },
+                })}
+                name="email"
+                type="email"
+                // value={email}
+                // onChange={onChangeEmail}
+                isInvalid={errors.email}
+              />
+              {errors.email && (
+                <Form.Control.Feedback type="invalid">
+                  {errors.email.message}
+                </Form.Control.Feedback>
+              )}
 
-              <div className="form-group">
-                <label htmlFor="password">Password</label>
-                <Input
-                  type="password"
-                  className="form-control"
-                  name="password"
-                  value={password}
-                  onChange={onChangePassword}
-                  validations={[required, vpassword]}
-                />
-              </div>
-              
-              <div className="form-group">
-                <label htmlFor="fName">First Name</label>
-                <Input
-                  type="text"
-                  className="form-control"
-                  name="fName"
-                  value={fName}
-                  onChange={onChangeFName}
-                  validations={[required]}
-                />
-              </div>
+              <Row>
+                <Col>
+                  <Form.Label>Password</Form.Label>
+                  <InputGroup>
+                    <Form.Control
+                      ref={register({
+                        required: "Enter Password",
+                        minLength: {
+                          value: 8,
+                          message: "Password must have at least 8 characters",
+                        },
+                      })}
+                      name="password"
+                      type="password"
+                      // value={password}
+                      // onChange={onChangePassword}
+                      isInvalid={errors.password}
+                    />
+                    <InputGroup.Prepend>
+                      <Button variant="secondary">{eye}</Button>
+                    </InputGroup.Prepend>
 
-              <div className="form-group">
-                <label htmlFor="lName">Last Name</label>
-                <Input
-                  type="text"
-                  className="form-control"
-                  name="lName"
-                  value={lName}
-                  onChange={onChangeLName}
-                  validations={[required]}
-                />
-              </div>
+                    {errors.password && (
+                      <Form.Control.Feedback type="invalid">
+                        {errors.password.message}
+                      </Form.Control.Feedback>
+                    )}
+                  </InputGroup>
+                </Col>
+                <Col>
+                  <Form.Label>Confirm Password</Form.Label>
+                  <Form.Control
+                    ref={register({
+                      required: "Enter Confirm Password",
+                      validate: (value) =>
+                        value === password.current ||
+                        "The passwords do not match",
+                    })}
+                    name="passwordConfirm"
+                    type="password"
+                    isInvalid={errors.passwordConfirm}
+                    // value={passwordConfirm}
+                    // onChange={onChangePasswordConfirm}
+                  />
+                  {errors.passwordConfirm && (
+                    <Form.Control.Feedback type="invalid">
+                      {errors.passwordConfirm.message}
+                    </Form.Control.Feedback>
+                  )}
+                </Col>
+              </Row>
+              <br />
+              <Row>
+                <Col>
+                  <Form.Label>First Name</Form.Label>
+                  <Form.Control
+                    ref={register({ required: "Enter First Name" })}
+                    name="fName"
+                    type="text"
+                    isInvalid={errors.fName}
+                    // value={fName}
+                    // onChange={onChangeFName}
+                  />
+                  {errors.fName && (
+                    <Form.Control.Feedback type="invalid">
+                      {errors.fName.message}
+                    </Form.Control.Feedback>
+                  )}
+                </Col>
+                <Col>
+                  <Form.Label>Last Name</Form.Label>
+                  <Form.Control
+                    ref={register({ required: "Enter Last Name" })}
+                    name="lName"
+                    type="text"
+                    isInvalid={errors.lName}
+                    // value={lName}
+                    // onChange={onChangeLName}
+                  />
+                  {errors.lName && (
+                    <Form.Control.Feedback type="invalid">
+                      {errors.lName.message}
+                    </Form.Control.Feedback>
+                  )}
+                </Col>
+              </Row>
 
-              <div className="form-group">
-                <button className="btn btn-primary btn-block">Sign Up</button>
-              </div>
-            </div>
-          )}
+              <Form.Label>Mobile Number</Form.Label>
+              <Form.Control
+                ref={register({
+                  required: "Enter Mobile Number",
+                  minLength: 6,
+                  maxLength: 12,
+                })}
+                name="mobileNumber"
+                type="tel"
+                defaultValue="+94"
+                placeholder="+94"
+                // value={email}
+                // onChange={onChangeEmail}
+                isInvalid={errors.mobileNumber}
+              />
+              {errors.mobileNumber && (
+                <Form.Control.Feedback type="invalid">
+                  {errors.mobileNumber.message}
+                </Form.Control.Feedback>
+              )}
 
-          {message && (
-            <div className="form-group">
+              <br />
+              <Form.Label>Driving License</Form.Label>
+              <Form.File label="Image File" custom />
+              <br />
+              <br />
+              <Form.Label>Identity Form</Form.Label>
+              <Form.Text muted>
+                Recent utility bill (within 3 months) or council tax statement
+              </Form.Text>
+              <Form.File label="Image File" custom />
+            </Form.Group>
+            <Button type="submit">Submit</Button>
+          </Form>
+        )}
+
+        {message && (
+          <Form>
+            <Form.Group>
               <div
                 className={
                   successful ? "alert alert-success" : "alert alert-danger"
@@ -182,11 +230,10 @@ const Register = (props) => {
               >
                 {message}
               </div>
-            </div>
-          )}
-          <CheckButton style={{ display: "none" }} ref={checkBtn} />
-        </Form>
-      </div>
+            </Form.Group>
+          </Form>
+        )}
+      </Card>
     </div>
   );
 };
