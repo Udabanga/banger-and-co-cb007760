@@ -7,6 +7,8 @@ import { Card, Form, Row, Col, Button, InputGroup } from "react-bootstrap";
 import AuthService from "../services/auth.service";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye } from "@fortawesome/free-solid-svg-icons";
+
+import axios from "axios";
 const eye = <FontAwesomeIcon icon={faEye} />;
 
 const vpassword = (value) => {
@@ -37,29 +39,48 @@ const Register = (props) => {
 
   const onSubmit = (data) => {
     // alert(JSON.stringify(data));
-    AuthService.register(
-      data.email,
-      data.password,
-      data.fName,
-      data.lName
-    ).then(
-      (response) => {
+    // AuthService.register(
+    //   data.email,
+    //   data.password,
+    //   data.fName,
+    //   data.lName
+    // ).then(
+    //   (response) => {
+    //     setMessage(response.data.message);
+    //     setSuccessful(true);
+    //   },
+    //   (error) => {
+    //     const resMessage =
+    //       (error.response &&
+    //         error.response.data &&
+    //         error.response.data.message) ||
+    //       error.message ||
+    //       error.toString();
+
+    //     setMessage(resMessage);
+    //     console.log(resMessage);
+    //     setSuccessful(false);
+    //   }
+    // );
+
+    let formData = new FormData();
+    formData.append("email", data.email);
+    formData.append("password", data.password);
+    formData.append("fName", data.fName);
+    formData.append("lName", data.lName);
+    formData.append("file", data.file[0]);
+    axios
+      .post("http://localhost:5000/api/auth/register", formData)
+      .then(function (response) {
+        console.log(response);
         setMessage(response.data.message);
         setSuccessful(true);
-      },
-      (error) => {
-        const resMessage =
-          (error.response &&
-            error.response.data &&
-            error.response.data.message) ||
-          error.message ||
-          error.toString();
-
-        setMessage(resMessage);
-        console.log(resMessage);
+      })
+      .catch(function (error) {
+        console.log(error);
+        setMessage(error.message);
         setSuccessful(false);
-      }
-    );
+      });
   };
 
   return (
@@ -206,7 +227,13 @@ const Register = (props) => {
 
               <br />
               <Form.Label>Driving License</Form.Label>
-              <Form.File label="Image File" custom />
+              <Form.File
+                ref={register()}
+                name="file"
+                accept="image/*"
+                label="Image File"
+                custom
+              />
               <br />
               <br />
               <Form.Label>Identity Form</Form.Label>

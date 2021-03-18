@@ -1,10 +1,19 @@
 import React from "react";
-import {Route} from "react-router-dom"
-import Navigation from "../components/Navigation"
+import { Route } from "react-router-dom";
+import Navigation from "../components/Navigation";
+import Footer from "../components/Footer";
 
 export default function PublicRoute({ component: Component, ...rest }) {
-  return <Route {...rest} component={(props) => <div>
-    <Navigation />
-    <Component {...props} />
-  </div>} />;
+  return (
+    <Route
+      {...rest}
+      component={(props) => (
+        <>
+          <Navigation />
+          <Component {...props} />
+          {/* <Footer /> */}
+        </>
+      )}
+    />
+  );
 }

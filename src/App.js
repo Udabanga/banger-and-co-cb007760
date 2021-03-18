@@ -28,7 +28,7 @@ import PublicRoute from "./route/PublicRoute";
 const App = () => {
 
   return (
-    <div>
+    <>
       <Switch>
 
         <PublicRoute exact path={["/", "/home"]} component={Home} />
@@ -47,7 +47,7 @@ const App = () => {
 
         <PublicRoute component={NoMatch} />
       </Switch>
-    </div>
+    </>
   );
 };
 

@@ -12,10 +12,10 @@ module.exports = function(app) {
 
   app.post(
     "/api/auth/register",
-    [
-      verifyRegister.checkDuplicateEmail,
-      verifyRegister.checkRolesExisted
-    ],
+    // [
+    //   verifyRegister.checkDuplicateEmail,
+    //   verifyRegister.checkRolesExisted
+    // ],
     controller.register
   );
 

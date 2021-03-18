@@ -1,11 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useContext, useState, useEffect } from "react";
+import { GlobalAppContext } from "../context";
 import { Button, Table } from "react-bootstrap";
 import axios from "axios";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBars } from "@fortawesome/free-solid-svg-icons";
 
 import AuthService from "../../../services/auth.service";
 
 const Bookings = () => {
   const [bookings, setBookings] = useState([]);
+  const { toggled, setToggled } = useContext(GlobalAppContext);
   const [currentUser, setCurrentUser] = useState(undefined);
   const user = AuthService.getCurrentUser();
   useEffect(() => {
@@ -30,7 +34,12 @@ const Bookings = () => {
 
   return (
     <div className="shadow-sm p-3 mb-5 bg-white rounded">
-      <h1>Bookings</h1>
+      <div className="heading-user-page">
+        <Button variant="outline-info" onClick={() => setToggled(!toggled)}>
+          <FontAwesomeIcon icon={faBars} />
+        </Button>
+        <h1>Bookings</h1>
+      </div>
       <Table className="border thead-dark">
         <thead className="thead-dark">
           <tr>

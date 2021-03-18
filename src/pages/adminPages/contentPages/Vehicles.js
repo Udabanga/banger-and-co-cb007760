@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { Table, Button, ButtonGroup, Modal, Form } from "react-bootstrap";
+import BootstrapTable from "react-bootstrap-table-next";
+import paginationFactory from "react-bootstrap-table2-paginator";
+import ToolkitProvider, { Search } from "react-bootstrap-table2-toolkit";
 import FormValidate from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
@@ -34,7 +37,52 @@ const Vehicles = () => {
 
   // var [i,setI] = useState(0);
 
-  var i = 0;
+  const { SearchBar, ClearSearchButton } = Search;
+
+  const actionButtons = (cell, row, rowIndex, formatExtraData) => {
+    return (
+      <div>
+        <Button variant="warning" onClick={() => handleEditModal(row.id)}>
+          <FontAwesomeIcon icon={faEdit} />
+        </Button>
+        <Button variant="danger" onClick={() => handleDelete(row.id)}>
+          <FontAwesomeIcon icon={faTrash} />
+        </Button>
+      </div>
+    );
+  };
+
+  const vehicleImageLoader = (cell, row, rowIndex, formatExtraData) => {
+    return (
+      <img
+        className="table-image"
+        src={"http://localhost:5000/images/" + row.imageName}
+        alt={row.imageName}
+      />
+    );
+  };
+
+  const columns = [
+    { dataField: "id", text: "#" },
+    {
+      dataField: "imageName",
+      text: "Image",
+      searchable: false,
+      formatter: vehicleImageLoader,
+    },
+    { dataField: "type", text: "Type", searchable: false },
+    { dataField: "manufacturer", text: "Manufacturer", searchable: false },
+    { dataField: "model", text: "Model", searchable: false },
+    { dataField: "transmission", text: "Transmission", searchable: false },
+    { dataField: "fuelType", text: "Fuel Type", searchable: false },
+    { dataField: "dailyCost", text: "Daily Cost", searchable: false },
+    {
+      dataField: "actions",
+      text: "Actions",
+      searchable: false,
+      formatter: actionButtons,
+    },
+  ];
 
   var editImageName;
 
@@ -124,7 +172,7 @@ const Vehicles = () => {
   // http://localhost:5000/api/vehicles/create
   const handleDelete = (id) => {
     axios
-      .delete("http://localhost:5000/api/vehicles/delete", {data: {id: id}})
+      .delete("http://localhost:5000/api/vehicles/delete", { data: { id: id } })
       .then(function (response) {
         console.log(response);
         getVehicleList();
@@ -268,55 +316,22 @@ const Vehicles = () => {
       <Button variant="primary" onClick={handleUpdate}>
         Save Changes
       </Button>
-      <Table className="border thead-dark">
-        <thead className="thead-dark">
-          <tr>
-            <th>#</th>
-            <th>Image</th>
-            <th>Type</th>
-            <th>Manufacturer</th>
-            <th>Model</th>
-            <th>Transmission</th>
-            <th>Fuel Type</th>
-            <th>Daily Cost</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {vehicles.map((vehicle) => (
-            <tr>
-              <td>{vehicle.id}</td>
-              <td>
-                <img
-                  className="table-image"
-                  src={"http://localhost:5000/images/" + vehicle.imageName}
-                />
-              </td>
-              <td>{vehicle.type}</td>
-              <td>{vehicle.manufacturer}</td>
-              <td>{vehicle.model}</td>
-              <td>{vehicle.transmission}</td>
-              <td>{vehicle.fuelType}</td>
-              <td>{vehicle.dailyCost}</td>
-              <td>
-                <Button
-                  variant="warning"
-                  onClick={() => handleEditModal(vehicle.id)}
-                >
-                  <FontAwesomeIcon icon={faEdit} />
-                </Button>
-                <Button
-                  variant="danger"
-                  onClick={() => handleDelete(vehicle.id)}
-                >
-                  <FontAwesomeIcon icon={faTrash} />
-                </Button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </Table>
 
+      <ToolkitProvider
+        keyField="id"
+        data={vehicles}
+        columns={columns}
+        paginationFactory={paginationFactory}
+        search
+      >
+        {(props) => (
+          <div>
+            <SearchBar {...props.searchProps} />
+            <hr />
+            <BootstrapTable {...props.baseProps} />
+          </div>
+        )}
+      </ToolkitProvider>
       <Modal show={show} onHide={handleClose}>
         {/* <FormValidate
           onSubmit={

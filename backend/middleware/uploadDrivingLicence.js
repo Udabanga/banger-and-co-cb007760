@@ -2,9 +2,9 @@ const util = require("util");
 const multer = require("multer");
 
 let storage = multer.diskStorage({
-  destination: "./public/images",
+  destination: "./public/licences",
   filename: (req, file, cb) => {
-    cb(null, `${Date.now()}-bangerco-${file.originalname.replace(/\s/g, '')}`);
+    cb(null, `licence-${Date.now()}-${file.originalname.replace(/\s/g, '')}`);
   },
 });
 

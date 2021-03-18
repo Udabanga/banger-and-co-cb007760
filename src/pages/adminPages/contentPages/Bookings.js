@@ -3,6 +3,7 @@ import { Button, ButtonGroup, Table } from "react-bootstrap";
 import BootstrapTable from "react-bootstrap-table-next";
 import paginationFactory from "react-bootstrap-table2-paginator";
 import ToolkitProvider, { Search } from "react-bootstrap-table2-toolkit";
+import moment from "moment";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 
@@ -24,12 +25,11 @@ const Bookings = () => {
 
   const { SearchBar, ClearSearchButton } = Search;
 
-
   const actionButtons = (cell, row, rowIndex, formatExtraData) => {
     return (
       <Button
         onClick={() => {
-          console.log(row)
+          console.log(row);
         }}
       >
         Edit
@@ -40,47 +40,41 @@ const Bookings = () => {
   const columns = [
     { dataField: "id", text: "#" },
     { dataField: "vehicleID", text: "VehicleID", searchable: false },
-    { dataField: "userID", text: "UserID", searchable: false  },
+    { dataField: "userID", text: "UserID", searchable: false },
     {
       dataField: "pickUpTime",
       text: "Pick-Up Date",
       formatter: (cell) => {
-        let dateObj = cell;
-        if (typeof cell !== "object") {
-          dateObj = new Date(cell);
+        if (!cell) {
+          return "";
         }
-        return `${("0" + dateObj.getUTCDate()).slice(-2)}/${(
-          "0" +
-          (dateObj.getUTCMonth() + 1)
-        ).slice(
-          -2
-        )}/${dateObj.getUTCFullYear()}, ${dateObj.getUTCHours()}:${dateObj.getUTCMinutes()}`;
+        return `${
+          moment(cell).format("DD-MM-YYYY, HH:mm")
+        }`;
       },
-      searchable: false 
+      searchable: false,
     },
     {
       dataField: "dropOffTime",
       text: "Drop-Off Date",
       formatter: (cell) => {
-        let dateObj = cell;
-        if (typeof cell !== "object") {
-          dateObj = new Date(cell);
+        if (!cell) {
+          return "";
         }
-        return `${("0" + dateObj.getUTCDate()).slice(-2)}/${(
-          "0" +
-          (dateObj.getUTCMonth() + 1)
-        ).slice(
-          -2
-        )}/${dateObj.getUTCFullYear()}, ${dateObj.getUTCHours()}:${dateObj.getUTCMinutes()}`;
+        return `${
+          moment(cell).format("DD-MM-YYYY, HH:mm")
+        }`;
       },
-      searchable: false 
+      searchable: false,
     },
-    { dataField: "status", text: "Status", searchable: false  },
-    { dataField: "actions", text: "Actions", searchable: false, formatter: actionButtons  },
+    { dataField: "status", text: "Status", searchable: false },
+    {
+      dataField: "actions",
+      text: "Actions",
+      searchable: false,
+      formatter: actionButtons,
+    },
   ];
-  
-
-  
 
   return (
     <div className="shadow-sm p-3 mb-5 bg-white rounded">

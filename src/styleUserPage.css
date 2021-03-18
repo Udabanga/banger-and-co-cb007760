@@ -120,6 +120,10 @@ li a.dropdown-toggle::after {
   transition: all 0.5s;
 }
 
+.heading-user-page{
+  display:-webkit-inline-box;
+}
+
 /* Admin Content */
 
 .admin-add-button {

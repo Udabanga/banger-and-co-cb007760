@@ -5,6 +5,8 @@ const Role = db.role;
 
 const Op = db.Sequelize.Op;
 
+const uploadFile = require("../middleware/uploadDrivingLicence");
+
 // Retrieve all Users from the database.
 exports.findAll = (req, res) => {
   User.findAll({

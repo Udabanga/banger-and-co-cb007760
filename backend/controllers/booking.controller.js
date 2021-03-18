@@ -21,7 +21,7 @@ exports.findAll = (req, res) => {
 exports.findAllUser = (req, res) => {
   Booking.findAll({
     where: {
-      userID: req.body.userID
+      userID: req.body.userID,
     },
   })
     .then((data) => {
@@ -41,6 +41,10 @@ exports.create = (req, res) => {
     userID: req.body.userID,
     pickUpTime: req.body.pickUpTime,
     dropOffTime: req.body.dropOffTime,
+    satNav: req.body.satNav,
+    babySeats: req.body.babySeats,
+    wineChiller: req.body.wineChiller,
+    bookCost: req.body.bookCost,
     status: req.body.status,
   })
     .then((data) => {
@@ -51,5 +55,4 @@ exports.create = (req, res) => {
         message: err.message || "Some error occurred while creating a Booking.",
       });
     });
-    
 };

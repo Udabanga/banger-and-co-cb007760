@@ -10,7 +10,19 @@ module.exports = (sequelize, Sequelize) => {
         type: Sequelize.DATE
       },
       dropOffTime: {
-        type: Sequelize.DATE
+        type: Sequelize.STRING
+      },
+      satNav: {
+        type: Sequelize.STRING
+      },
+      babySeats: {
+        type: Sequelize.STRING
+      },
+      wineChiller: {
+        type: Sequelize.STRING
+      },
+      bookCost: {
+        type: Sequelize.STRING
       },
       status: {
         type: Sequelize.STRING

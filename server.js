@@ -1,7 +1,8 @@
 const express = require("express");
-const bodyParser = require("body-parser");
+const bodyParser = require('body-parser')
 const cors = require("cors");
-
+var multer = require('multer');
+var upload = multer();
 
 const app = express();
 
@@ -12,14 +13,25 @@ var corsOptions = {
 };
 
 
-app.use(express.static('public'))
+
 app.use(cors(corsOptions));
 
 // parse requests of content-type - application/json
 app.use(bodyParser.json());
 
+
+// app.use(bodyParser.urlencoded());
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
+
+
+// app.use(express.json());
+// app.use(express.urlencoded({
+//   extended: true
+// }));
+// app.use(upload.array());
+
+app.use(express.static('public'))
 
 // database
 const db = require("./backend/models");

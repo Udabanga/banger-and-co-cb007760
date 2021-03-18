@@ -45,6 +45,13 @@ const SearchedVehicles = (props) => {
   const [selectBabySeats, setSelectBabySeats] = useState(false);
   const [selectWineChiller, setSelectWineChiller] = useState(false);
 
+  const [satNavCost, setSatNavCost] = useState(0);
+  const [babySeatsCost, setBabySeatsCost] = useState(0);
+  const [wineChillerCost, setWineChillerCost] = useState(0);
+  const [bookCost, setBookCost] = useState(
+    satNavCost + babySeatsCost + wineChillerCost
+  );
+
   const [currentUser, setCurrentUser] = useState(undefined);
 
   useEffect(() => {
@@ -87,6 +94,9 @@ const SearchedVehicles = (props) => {
         setViewVehicleDailyCost(response.data.dailyCost);
         setViewVehicleSeatNumber(response.data.seatNumber);
         setViewVehicleDailyCost(response.data.dailyCost);
+        setSelectSatNav(response.data.satNav);
+        setSelectBabySeats(response.data.babySeats);
+        setSelectWineChiller(response.data.wineChiller);
         setViewVehicleImage(
           "http://localhost:5000/images/" + response.data.imageName
         );
@@ -110,7 +120,6 @@ const SearchedVehicles = (props) => {
     setViewVehicleSeatNumber("");
     setViewVehicleDailyCost("");
     setViewVehicleImage("");
-
     setSelectBabySeats(false);
     setSelectSatNav(false);
     setSelectWineChiller(false);
@@ -123,21 +132,25 @@ const SearchedVehicles = (props) => {
         userID: currentUser.id,
         pickUpTime: pickUpDate,
         dropOffTime: dropOffDate,
+        satNav: selectSatNav,
+        babySeats: selectBabySeats,
+        wineChiller: selectWineChiller,
+        bookCost: bookCost,
         status: "Booked",
       })
       .then(function (response) {
         console.log(response);
         setMessageModal(true);
         setShowBookingModal(false);
-        setMessageTitle("Success")
-        setMessageBody("Vehicle Successfully Booked")
+        setMessageTitle("Success");
+        setMessageBody("Vehicle Successfully Booked");
       })
       .catch(function (error) {
         console.log(error);
         setMessageModal(true);
         setShowBookingModal(false);
-        setMessageTitle("Error")
-        setMessageBody("An error occured")
+        setMessageTitle("Error");
+        setMessageBody("An error occured");
       });
   };
 
@@ -146,34 +159,38 @@ const SearchedVehicles = (props) => {
     handleShowBookModal();
   };
 
-  const handleMessageClose = () =>{
-    setMessageModal(false)
-  }
-
-  
+  const handleMessageClose = () => {
+    setMessageModal(false);
+  };
 
   // Extras States
   const onChangeSatNav = () => {
     if (selectSatNav === false) {
       setSelectSatNav(true);
+      setSatNavCost(10);
     } else {
       setSelectSatNav(false);
+      setSatNavCost(0);
     }
   };
 
   const onChangeBabySeats = () => {
     if (selectBabySeats === false) {
       setSelectBabySeats(true);
+      setBabySeatsCost(15);
     } else {
       setSelectBabySeats(false);
+      setBabySeatsCost(0);
     }
   };
 
   const onChangeWineChiller = () => {
     if (selectWineChiller === false) {
       setSelectWineChiller(true);
+      setWineChillerCost(25);
     } else {
       setSelectWineChiller(false);
+      setWineChillerCost(0);
     }
   };
 
