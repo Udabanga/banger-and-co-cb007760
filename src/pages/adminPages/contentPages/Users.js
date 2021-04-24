@@ -30,7 +30,11 @@ const Users = () => {
   const [editLName, setEditLName] = useState("");
   const [editStatus, setEditStatus] = useState("");
   const [imageDriversLicence, setImageDriversLicence] = useState("");
+  const [imageIdentityForm, setImageIdentityForm] = useState("");
+  const [previewImage, setPreviewImage] = useState("");
   const [tableView, setTableView] = useState("Active");
+  const [modalTitle, setModalTitle] = useState("")
+
 
   const { SearchBar, ClearSearchButton } = Search;
 
@@ -94,7 +98,18 @@ const Users = () => {
     setUsers(result.data);
   };
 
-  const handleViewDriversLicence = () => setShowDriversLicence(true);
+  const handleViewDrivingLicenceModal = () => {
+    setPreviewImage(imageDriversLicence)
+    setModalTitle("Driving Licence")
+    setShowDriversLicence(true);
+  }
+
+  const handleViewIdentityFormModal = () => {
+    setPreviewImage(imageIdentityForm)
+    setModalTitle("Identity Form")
+    setShowDriversLicence(true);
+  }
+
   const handleCloseDriversLicence = () => setShowDriversLicence(false);
 
   const handleClose = () => setShow(false);
@@ -110,7 +125,8 @@ const Users = () => {
         setEditFName(response.data.fName);
         setEditLName(response.data.lName);
         setEditStatus(response.data.status)
-        setImageDriversLicence(response.data.drivingLicence);
+        setImageDriversLicence("http://localhost:5000/uploads/"+response.data.drivingLicence);
+        setImageIdentityForm("http://localhost:5000/uploads/"+response.data.identityForm);
       })
       .catch(function (error) {
         console.log(error);
@@ -274,13 +290,17 @@ const Users = () => {
               </Form.Control>
             </Form.Group>
             <Button
-              onClick={handleViewDriversLicence}
+              onClick={handleViewDrivingLicenceModal}
               disabled={imageDriversLicence === ""}
               variant="info"
             >
               Driver's Licence
             </Button>{" "}
-            <Button variant="info">Identity Form</Button>
+            <Button
+              onClick={handleViewIdentityFormModal}
+              disabled={imageIdentityForm === ""}
+              variant="info"
+            >Identity Form</Button>
             <CheckButton style={{ display: "none" }} ref={checkBtn} />
           </Modal.Body>
           <Modal.Footer>
@@ -300,11 +320,11 @@ const Users = () => {
         onHide={handleCloseDriversLicence}
       >
         <Modal.Header closeButton>
-          <Modal.Title>Driving Licence</Modal.Title>
+          <Modal.Title>{modalTitle}</Modal.Title>
         </Modal.Header>
         <img
-          src={"http://localhost:5000/licences/" + imageDriversLicence}
-          alt="Driver's Licence"
+          src={previewImage}
+          alt={modalTitle}
         />
       </Modal>
     </div>

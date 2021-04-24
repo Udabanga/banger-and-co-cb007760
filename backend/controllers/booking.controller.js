@@ -6,7 +6,15 @@ const Booking = db.booking;
 const Op = db.Sequelize.Op;
 
 exports.findAll = (req, res) => {
-  Booking.findAll()
+  Booking.findAll({
+    include: [{
+      model: User,
+    },
+    {
+      model: Vehicle
+    }
+  ],
+  })
     .then((data) => {
       res.send(data);
     })
@@ -23,6 +31,13 @@ exports.findAllUser = (req, res) => {
     where: {
       userID: req.body.userID,
     },
+    include: [{
+      model: User,
+    },
+    {
+      model: Vehicle
+    }
+  ],
   })
     .then((data) => {
       res.send(data);
@@ -31,6 +46,35 @@ exports.findAllUser = (req, res) => {
       res.status(500).send({
         message:
           err.message || "Some error occurred while retrieving Booking Info.",
+      });
+    });
+};
+
+
+exports.findOne = (req, res) => {
+  const id = req.body.id;
+
+  Booking.findByPk(id, {
+    include: [{
+      model: User,
+      as: "user",
+      // where: {
+      //   id: {
+      //     [Op.eq]: 1,
+      //   },
+      // },
+    },
+    {
+      model: Vehicle,
+      as: "vehicle",
+    }]
+  })
+    .then((data) => {
+      res.send(data);
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message: err
       });
     });
 };

@@ -68,7 +68,9 @@ const Register = (props) => {
     formData.append("password", data.password);
     formData.append("fName", data.fName);
     formData.append("lName", data.lName);
-    formData.append("file", data.file[0]);
+    formData.append("drivingLicence", data.drivingLicence[0]);
+    formData.append("identityForm", data.identityForm[0]);
+    // formData.append("identityForm", data.file[1][0]);
     axios
       .post("http://localhost:5000/api/auth/register", formData)
       .then(function (response) {
@@ -229,7 +231,7 @@ const Register = (props) => {
               <Form.Label>Driving License</Form.Label>
               <Form.File
                 ref={register()}
-                name="file"
+                name="drivingLicence"
                 accept="image/*"
                 label="Image File"
                 custom
@@ -240,7 +242,13 @@ const Register = (props) => {
               <Form.Text muted>
                 Recent utility bill (within 3 months) or council tax statement
               </Form.Text>
-              <Form.File label="Image File" custom />
+              <Form.File
+                ref={register()}
+                name="identityForm"
+                accept="image/*"
+                label="Image File"
+                custom
+              />
             </Form.Group>
             <Button type="submit">Submit</Button>
           </Form>

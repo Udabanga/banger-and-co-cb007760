@@ -18,9 +18,9 @@ module.exports = (sequelize, Sequelize) => {
     drivingLicence: {
       type: Sequelize.STRING,
     },
-    // identityForm: {
-    //   type: Sequelize.STRING,
-    // },
+    identityForm: {
+      type: Sequelize.STRING,
+    },
   });
 
   return User;

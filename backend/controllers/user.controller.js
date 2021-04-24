@@ -7,6 +7,7 @@ const Op = db.Sequelize.Op;
 
 const uploadFile = require("../middleware/uploadDrivingLicence");
 
+
 // Retrieve all Users from the database.
 exports.findAll = (req, res) => {
   User.findAll({
@@ -34,7 +35,12 @@ exports.findAll = (req, res) => {
 exports.findOne = (req, res) => {
   const id = req.body.id;
 
-  User.findByPk(id)
+  User.findByPk(id,{
+    include: {
+      model: Role,
+      as: "roles",
+    },
+  })
     .then((data) => {
       res.send(data);
     })

@@ -13,6 +13,9 @@ module.exports = function (app) {
 
   // Retrieve a Vehicle
   app.post("/api/vehicles/find", controller.findOne);
+
+  // Retrieve a Vehicle's Bookings
+  app.post("/api/vehicles/find/bookings", controller.findOneBookings);
   
 
   // Delete a Vehicle

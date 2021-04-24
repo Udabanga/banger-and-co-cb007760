@@ -6,6 +6,7 @@ const Booking = db.booking;
 const Op = db.Sequelize.Op;
 
 const uploadFile = require("../middleware/upload");
+const bookingRoutes = require("../routes/booking.routes");
 
 // const Sequelize = require("sequelize");
 // const sequelize = new Sequelize(
@@ -94,7 +95,27 @@ exports.findOne = (req, res) => {
     })
     .catch((err) => {
       res.status(500).send({
-        message: "Error retrieving Vehicle with id=" + id,
+        message: err,
+      });
+    });
+};
+
+// Find a single Vehicle Bookings with an id
+exports.findOneBookings = (req, res) => {
+  const id = req.body.id;
+
+  Vehicle.findByPk(id,{
+    include: {
+      model: Booking,
+      as: "bookings",
+    },
+  })
+    .then((data) => {
+      res.send(data);
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message: err,
       });
     });
 };
@@ -110,16 +131,22 @@ exports.findAvailable = (req, res) => {
       where: {
         // '$bookings.id$': null,
         [Op.or]: [
+          // {
+          //   [Op.and]: [
+          //     { "$bookings.pickUpTime$": { [Op.lt]: pickUpTime } },
+          //     { "$bookings.dropOffTime$": { [Op.lt]: dropOffTime } },
+          //   ],
+          // },
+          // {
+          //   [Op.and]: [
+          //     { "$bookings.pickUpTime$": { [Op.gt]: pickUpTime } },
+          //     { "$bookings.dropOffTime$": { [Op.gt]: dropOffTime } },
+          //   ],
+          // },
           {
             [Op.and]: [
-              { "$bookings.pickUpTime$": { [Op.lt]: pickUpTime } },
-              { "$bookings.dropOffTime$": { [Op.lt]: dropOffTime } },
-            ],
-          },
-          {
-            [Op.and]: [
-              { "$bookings.pickUpTime$": { [Op.gt]: pickUpTime } },
-              { "$bookings.dropOffTime$": { [Op.gt]: dropOffTime } },
+              { "$bookings.dropOffTime$": { [Op.lt]: pickUpTime } },
+              { "$bookings.pickUpTime$": { [Op.gt]: dropOffTime } },
             ],
           },
           {
@@ -133,7 +160,7 @@ exports.findAvailable = (req, res) => {
       include: [
         {
           model: Booking,
-          required: false,
+          as: "bookings",
         },
       ],
     })

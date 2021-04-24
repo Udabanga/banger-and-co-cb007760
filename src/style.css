@@ -85,6 +85,20 @@
 .card-text {
 }
 
+.extra-card-button-admin {
+  justify-content: space-between;
+  margin: 2px 2px 2px 2px;
+  /* display: inline-flex; */
+  width: 100%;
+  text-align: left;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  box-shadow: 0 0px 8px 0px rgba(168, 168, 168, 1);
+  padding: 10px;
+  border-radius: 10px;
+  background-color: #fff;
+}
+
 .extra-card-button {
   display: flex;
   justify-content: space-between;

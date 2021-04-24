@@ -10,14 +10,16 @@ const uploadFile = require("../middleware/uploadDrivingLicence");
 var jwt = require("jsonwebtoken");
 var bcrypt = require("bcryptjs");
 
-var drivingLicenceImage;
+var drivingLicenceImage = null;
+var identityFormImage = null;
 
 exports.register = async (req, res) => {
   try {
     await uploadFile(req, res);
-    drivingLicenceImage = req.file.filename;
-  } catch {
-    drivingLicenceImage = null;
+    drivingLicenceImage = req.files.drivingLicence[0].filename
+    identityFormImage = req.files.identityForm[0].filename
+  } catch(error) {
+    console.log(error)
   }
 
   // if (req.file === undefined) {
@@ -40,6 +42,7 @@ exports.register = async (req, res) => {
     fName: req.body.fName,
     lName: req.body.lName,
     drivingLicence: drivingLicenceImage,
+    identityForm: identityFormImage,
     status: "Pending",
   })
     .then((user) => {

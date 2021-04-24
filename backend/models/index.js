@@ -56,12 +56,25 @@ db.ROLES = ["user", "admin", "employee"];
 //   otherKey: "vehicleID"
 // });
 
-db.user.hasMany(db.booking,{
-  foreignKey: "userID",
+// db.user.hasMany(db.booking,{
+//   foreignKey: "userID",
+// })
+
+// db.vehicle.hasMany(db.booking,{
+//   foreignKey: "vehicleID",
+// })
+
+db.booking.hasOne(db.user,{
+  foreignKey: "id",
+})
+
+db.booking.hasOne(db.vehicle,{
+  foreignKey: "id",
 })
 
 db.vehicle.hasMany(db.booking,{
-  foreignKey: "vehicleID",
+  foreignKey: "id",
+  constraints: false
 })
 
 // db.vehicle.belongsToMany(db.booking, {
