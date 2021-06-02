@@ -30,9 +30,10 @@ module.exports = (sequelize, Sequelize) => {
     });
 
     // Association
-    // Booking.associate = function(models) {
-    //   Booking.hasOne(models.vehicleID, {foreignKey: 'id',sourceKey: 'vehicleID'});
-    // }
+    Booking.associate = function(models) {
+      Booking.hasOne(models.vehicleID, {foreignKey: 'vehicleID',sourceKey: 'vehicleID'});
+      Booking.hasOne(models.userID, {foreignKey: 'vehicleID',sourceKey: 'userID'});
+    }
     
     return Booking;
   };

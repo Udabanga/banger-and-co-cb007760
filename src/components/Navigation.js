@@ -27,7 +27,7 @@ function Navigation() {
   return (
     <Navbar expand="lg">
       <Navbar.Brand href="/">
-        <img src={Logo} />
+        <img src={Logo} alt="Logo"/>
       </Navbar.Brand>
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
       <Navbar.Collapse id="basic-navbar-nav">

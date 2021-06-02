@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useForm } from "react-hook-form";
 import {
   Button,
   ButtonGroup,
@@ -7,6 +8,7 @@ import {
   Row,
   Col,
   Form,
+  Alert
 } from "react-bootstrap";
 import BootstrapTable from "react-bootstrap-table-next";
 import paginationFactory from "react-bootstrap-table2-paginator";
@@ -27,11 +29,21 @@ import SatNav from "../../../assets/icons/gps.png";
 import BabySeats from "../../../assets/icons/baby-car-seat.png";
 import WineChiller from "../../../assets/icons/fridge.png";
 
+import bsCustomFileInput from 'bs-custom-file-input'
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+
 import axios from "axios";
 const Bookings = () => {
+  const { register, errors, handleSubmit, watch } = useForm({});
   const [bookings, setBookings] = useState([]);
   const [tableView, setTableView] = useState("All");
   const [show, setShow] = useState(false);
+  const [showSuspend, setShowSuspend] = useState(false);
+
+  const [bookingID, setBookingID] = useState("");
+  const [pickUpDate, setPickUpDate] = useState("");
+  const [dropOffDate, setDropOffDate] = useState("");
 
   const [vehicleID, setVehicleID] = useState("");
   const [vehicleType, setVehicleType] = useState("");
@@ -43,10 +55,13 @@ const Bookings = () => {
   const [vehicleSeatNumber, setVehicleSeatNumber] = useState("");
   const [vehicleImage, setVehicleImage] = useState("");
 
+  const [userID, setUserID] = useState("");
   const [userEmail, setUserEmail] = useState("");
   const [userFName, setUserFName] = useState("");
   const [userLName, setUserLName] = useState("");
-  const [userStatus, setUsertStatus] = useState("");
+  const [userNICNumber, setUsertNICNumber] = useState("");
+  const [userDrivingLicenceNumber, setUserDrivingLicenceNumber] = useState("");
+  const [userStatus, setUserStatus] = useState("");
 
   const [bookingStatus, setBookingStatus] = useState("");
   const [editBookingStatus, setEditBookingStatus] = useState("");
@@ -62,7 +77,10 @@ const Bookings = () => {
     satNavCost + babySeatsCost + wineChillerCost
   );
 
+  const [currentTime, setCurrentTime] = useState(new Date());
+
   useEffect(() => {
+    bsCustomFileInput.init();
     getBookingList();
   }, []);
 
@@ -78,6 +96,11 @@ const Bookings = () => {
       .post("http://localhost:5000/api/bookings/find", { id: id })
       .then(function (response) {
         console.log(response);
+        setBookingID(id);
+        setPickUpDate(response.data.pickUpTime);
+        setDropOffDate(response.data.dropOffTime);
+
+        setVehicleID(response.data.vehicle.id);
         setVehicleType(response.data.vehicle.type);
         setVehicleManufacturer(response.data.vehicle.manufacturer);
         setVehicleModel(response.data.vehicle.model);
@@ -88,13 +111,17 @@ const Bookings = () => {
         setVehicleImage(
           "http://localhost:5000/images/" + response.data.vehicle.imageName
         );
+        setUserID(response.data.user.id);
         setUserEmail(response.data.user.email);
         setUserFName(response.data.user.fName);
         setUserLName(response.data.user.lName);
-        setUsertStatus(response.data.user.status);
+        setUsertNICNumber(response.data.user.NICNumber);
+        setUserDrivingLicenceNumber(response.data.user.drivingLicenceNumber);
+        setUserStatus(response.data.user.status);
         setSelectSatNav(response.data.satNav);
         setSelectBabySeats(response.data.babySeats);
         setSelectWineChiller(response.data.wineChiller);
+        setBookCost(response.data.bookCost);
       })
       .catch(function (error) {
         console.log(error);
@@ -104,11 +131,75 @@ const Bookings = () => {
 
   const onChangeBookingStatus = (e) => {
     const bookingStatus = e.target.value;
-    setEditBookingStatus(bookingStatus);
+    if (bookingStatus == "Picked Up") {
+      axios
+        .get("http://localhost:5001/data.csv")
+        .then(function (response) {
+          console.log(response.data);
+          let invalidLicence = false;
+          let dataList = response.data.split("\r\n");
+          dataList.forEach((listItem) => {
+            if (userDrivingLicenceNumber == listItem) {
+              invalidLicence = true;
+            }
+            console.log(listItem);
+          });
+
+          if (invalidLicence == true) {
+            //set user to suspended
+            axios
+              .put("http://localhost:5000/api/users/update", {
+                id: userID,
+                status: "Suspended",
+              })
+              .then(function (response) {
+                console.log(response);
+                handleShowSuspendModal();
+                // getUserList();
+              })
+              .catch(function (error) {
+                console.log(error);
+              });
+            //send email
+
+            //Modal Error message
+            //set booking cancelled
+            setEditBookingStatus("Cancelled");
+          }
+          else {
+            setEditBookingStatus(bookingStatus);
+          }
+        })
+    }
+    else {
+      setEditBookingStatus(bookingStatus);
+    }
   }
 
   const handleShow = () => setShow(true);
-  const handleClose = () => setShow(false);
+  const handleClose = () => {
+    setVehicleType("");
+    setVehicleManufacturer("");
+    setVehicleModel("");
+    setVehicleTransmission("");
+    setVehicleFuelType("");
+    setVehicleDailyCost("");
+    setVehicleSeatNumber("");
+    setVehicleImage("");
+    setUserEmail("");
+    setUserFName("");
+    setUserLName("");
+    setUsertNICNumber("");
+    setUserDrivingLicenceNumber("");
+    setUserStatus("");
+    setSelectSatNav("");
+    setSelectBabySeats("");
+    setSelectWineChiller("");
+    setShow(false);
+  }
+
+  const handleShowSuspendModal = () => setShowSuspend(true);
+  const handleCloseSuspendModal = () => setShowSuspend(false);
 
   const { SearchBar, ClearSearchButton } = Search;
 
@@ -120,14 +211,60 @@ const Bookings = () => {
     );
   };
 
+  const onSubmit = (data) => {
+    let formData = new FormData();
+    formData.append("time", currentTime);
+    formData.append("drivingLicenceNumber", userDrivingLicenceNumber);
+    formData.append("driverImage", data.driverImage[0]);
+    axios
+      .post("http://localhost:5000/api/booking/reportDriver", formData)
+      .then(function (response) {
+        console.log(response);
+        // handleShowSuspendModal()
+      })
+      .catch(function (error) {
+        console.log(error);
+        // setMessage(error.message);
+        // setSuccessful(false);
+      });
+    // Update booking
+    axios
+      .put("http://localhost:5000/api/bookings/update", {
+        id: bookingID,
+        vehicleID: vehicleID,
+        userID: userID,
+        pickUpTime: pickUpDate,
+        dropOffTime: dropOffDate,
+        satNav: selectSatNav,
+        babySeats: selectBabySeats,
+        wineChiller: selectWineChiller,
+        bookCost: bookCost,
+        status: editBookingStatus,
+
+      })
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+    handleCloseSuspendModal()
+    handleClose()
+    getBookingList()
+
+  }
+
   const vehicleFormatter = (cell, row, rowIndex, formatExtraData) => {
     if (row.vehicle == null) {
       return "Vehicle not found"
-    } 
+    }
     return row.vehicle.manufacturer + " " + row.vehicle.model;
   };
 
   const nameFormatter = (cell, row, rowIndex, formatExtraData) => {
+    if (row.user == null) {
+      return "User not found"
+    }
     return row.user.fName + " " + row.user.lName;
   };
 
@@ -268,22 +405,6 @@ const Bookings = () => {
         filter={filterFactory()}
       />
 
-      {/* <ToolkitProvider
-        keyField="id"
-        data={bookings}
-        columns={columns}
-        paginationFactory={paginationFactory}
-        search
-      >
-        {(props) => (
-          <div>
-            <SearchBar {...props.searchProps} />
-            <hr />
-            <BootstrapTable {...props.baseProps} />
-          </div>
-        )}
-      </ToolkitProvider> */}
-
       <Modal size="lg" show={show} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>View Booking</Modal.Title>
@@ -374,7 +495,7 @@ const Bookings = () => {
               </ButtonGroup>
             </Col>
             <Col lg={5}>
-            <h2>User Details</h2>
+              <h2>User Details</h2>
               <Form.Group controlId="formBasicEmail">
                 <Form.Label>Email:</Form.Label>
                 <Form.Control
@@ -399,12 +520,29 @@ const Bookings = () => {
                   value={userLName}
                 ></Form.Control>
               </Form.Group>
+              <Form.Group controlId="formNICNumber">
+                <Form.Label>NIC Number:</Form.Label>
+                <Form.Control
+                  class="form-control"
+                  type="text"
+                  value={userNICNumber}
+                ></Form.Control>
+              </Form.Group>
+              <Form.Group controlId="formDrivingLicence">
+                <Form.Label>Driving Licence:</Form.Label>
+                <Form.Control
+                  class="form-control"
+                  type="text"
+                  value={userDrivingLicenceNumber}
+                ></Form.Control>
+              </Form.Group>
               <Form.Group controlId="formStatus">
                 <Form.Label>Status:</Form.Label>
                 <Form.Control value={userStatus} as="select">
                   <option>Not Insured</option>
                   <option>Insured</option>
                   <option>Blacklist</option>
+                  <option>Suspended</option>
                 </Form.Control>
               </Form.Group>
               <h2>Booking Details</h2>
@@ -428,6 +566,52 @@ const Bookings = () => {
             Save Changes
           </Button>
         </Modal.Footer>
+      </Modal>
+
+      <Modal show={showSuspend} backdrop="static" centered onHide={handleCloseSuspendModal}>
+        <Modal.Header closeButton>
+          Alert!
+        </Modal.Header>
+        <Modal.Body>
+          <Alert variant="danger" onClose={() => handleCloseSuspendModal}>
+            <Alert.Heading>Booking Cancelled</Alert.Heading>
+            <p>
+              This driving licence has been reported lost/stolen. Please enter the following details to notify the DMV
+            </p>
+            <Form onSubmit={handleSubmit(onSubmit)}>
+
+              <Form.Group className="mb-3" controlId="formBasicDriverImage">
+                <Form.Label>Driving License</Form.Label>
+                <Form.File
+                  ref={register()}
+                  name="driverImage"
+                  accept="image/*"
+                  label="Driver Image File"
+                  custom
+                />
+
+              </Form.Group>
+              <Form.Group className="mb-3" controlId="formBasicTime">
+                <Form.Label>Time</Form.Label>
+                <DatePicker
+                  ref={register()}
+                  name="time"
+                  selected={currentTime}
+                  showTimeSelect
+                  showTimeSelectOnly
+                  dateFormat="h:mm aa"
+                  timeIntervals={1}
+                  timeCaption="Time"
+                  onChange={(date) => setCurrentTime(date)}
+                />
+              </Form.Group>
+
+              <Button variant="primary" type="submit">
+                Submit
+              </Button>
+            </Form>
+          </Alert>
+        </Modal.Body>
       </Modal>
     </div>
   );

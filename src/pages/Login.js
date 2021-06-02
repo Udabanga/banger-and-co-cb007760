@@ -1,12 +1,8 @@
 import React, { useState, useRef } from "react";
 import { useForm } from "react-hook-form";
 import Banner from "../assets/Banner.jpg";
-import Input from "react-validation/build/input";
-import CheckButton from "react-validation/build/button";
 import LoginLogo from "../assets/Login-Logo.png";
 import {
-  Container,
-  Col,
   Card,
   Form,
   InputGroup,

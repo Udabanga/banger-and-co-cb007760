@@ -9,7 +9,7 @@ import "../styleAdminPage.css";
 
 const AdminPage = () => {
   const [content, setContent] = useState("");
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen] = useState(true);
   const [toggled, setToggled] = useState(true);
 
   useEffect(() => {

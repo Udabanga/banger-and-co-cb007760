@@ -38,36 +38,14 @@ const Register = (props) => {
   }, []);
 
   const onSubmit = (data) => {
-    // alert(JSON.stringify(data));
-    // AuthService.register(
-    //   data.email,
-    //   data.password,
-    //   data.fName,
-    //   data.lName
-    // ).then(
-    //   (response) => {
-    //     setMessage(response.data.message);
-    //     setSuccessful(true);
-    //   },
-    //   (error) => {
-    //     const resMessage =
-    //       (error.response &&
-    //         error.response.data &&
-    //         error.response.data.message) ||
-    //       error.message ||
-    //       error.toString();
-
-    //     setMessage(resMessage);
-    //     console.log(resMessage);
-    //     setSuccessful(false);
-    //   }
-    // );
 
     let formData = new FormData();
     formData.append("email", data.email);
     formData.append("password", data.password);
     formData.append("fName", data.fName);
     formData.append("lName", data.lName);
+    formData.append("NICNumber", data.NICNumber);
+    formData.append("drivingLicenceNumber", data.drivingLicenceNumber);
     formData.append("drivingLicence", data.drivingLicence[0]);
     formData.append("identityForm", data.identityForm[0]);
     // formData.append("identityForm", data.file[1][0]);
@@ -109,8 +87,6 @@ const Register = (props) => {
                 })}
                 name="email"
                 type="email"
-                // value={email}
-                // onChange={onChangeEmail}
                 isInvalid={errors.email}
               />
               {errors.email && (
@@ -133,8 +109,6 @@ const Register = (props) => {
                       })}
                       name="password"
                       type="password"
-                      // value={password}
-                      // onChange={onChangePassword}
                       isInvalid={errors.password}
                     />
                     <InputGroup.Prepend>
@@ -160,8 +134,6 @@ const Register = (props) => {
                     name="passwordConfirm"
                     type="password"
                     isInvalid={errors.passwordConfirm}
-                    // value={passwordConfirm}
-                    // onChange={onChangePasswordConfirm}
                   />
                   {errors.passwordConfirm && (
                     <Form.Control.Feedback type="invalid">
@@ -179,8 +151,6 @@ const Register = (props) => {
                     name="fName"
                     type="text"
                     isInvalid={errors.fName}
-                    // value={fName}
-                    // onChange={onChangeFName}
                   />
                   {errors.fName && (
                     <Form.Control.Feedback type="invalid">
@@ -195,8 +165,6 @@ const Register = (props) => {
                     name="lName"
                     type="text"
                     isInvalid={errors.lName}
-                    // value={lName}
-                    // onChange={onChangeLName}
                   />
                   {errors.lName && (
                     <Form.Control.Feedback type="invalid">
@@ -217,13 +185,29 @@ const Register = (props) => {
                 type="tel"
                 defaultValue="+94"
                 placeholder="+94"
-                // value={email}
-                // onChange={onChangeEmail}
                 isInvalid={errors.mobileNumber}
               />
               {errors.mobileNumber && (
                 <Form.Control.Feedback type="invalid">
                   {errors.mobileNumber.message}
+                </Form.Control.Feedback>
+              )}
+              
+              <Form.Label>NIC Number</Form.Label>
+              <Form.Control
+                ref={register({
+                  required: "Enter NIC Number",
+                  pattern: {
+                    value: /^([0-9]{9}[x|X|v|V]|[0-9]{12})$/m,
+                    message: "Invalid NIC Format",
+                  },
+                })}
+                name="NICNumber"
+                isInvalid={errors.nic}
+              />
+              {errors.email && (
+                <Form.Control.Feedback type="invalid">
+                  {errors.email.message}
                 </Form.Control.Feedback>
               )}
 
@@ -238,6 +222,18 @@ const Register = (props) => {
               />
               <br />
               <br />
+              <Form.Label>Driving Licence Number</Form.Label>
+              <Form.Control
+                ref={register({ required: "Enter Driving Licence Number" })}
+                name="drivingLicenceNumber"
+                type="text"
+                isInvalid={errors.drivingLicenceNumber}
+              />
+              {errors.lName && (
+                <Form.Control.Feedback type="invalid">
+                  {errors.lName.message}
+                </Form.Control.Feedback>
+              )}
               <Form.Label>Identity Form</Form.Label>
               <Form.Text muted>
                 Recent utility bill (within 3 months) or council tax statement

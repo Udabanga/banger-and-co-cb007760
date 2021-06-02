@@ -128,35 +128,35 @@ exports.findAvailable = (req, res) => {
 
   if (type === "Any") {
     Vehicle.findAll({
-      where: {
-        // '$bookings.id$': null,
-        [Op.or]: [
-          // {
-          //   [Op.and]: [
-          //     { "$bookings.pickUpTime$": { [Op.lt]: pickUpTime } },
-          //     { "$bookings.dropOffTime$": { [Op.lt]: dropOffTime } },
-          //   ],
-          // },
-          // {
-          //   [Op.and]: [
-          //     { "$bookings.pickUpTime$": { [Op.gt]: pickUpTime } },
-          //     { "$bookings.dropOffTime$": { [Op.gt]: dropOffTime } },
-          //   ],
-          // },
-          {
-            [Op.and]: [
-              { "$bookings.dropOffTime$": { [Op.lt]: pickUpTime } },
-              { "$bookings.pickUpTime$": { [Op.gt]: dropOffTime } },
-            ],
-          },
-          {
-            [Op.and]: [
-              { "$bookings.pickUpTime$": null },
-              { "$bookings.dropOffTime$": null },
-            ],
-          },
-        ],
-      },
+      // where: {
+      //   // '$bookings.id$': null,
+      //   [Op.or]: [
+      //     // {
+      //     //   [Op.and]: [
+      //     //     { "$bookings.pickUpTime$": { [Op.lt]: pickUpTime } },
+      //     //     { "$bookings.dropOffTime$": { [Op.lt]: dropOffTime } },
+      //     //   ],
+      //     // },
+      //     // {
+      //     //   [Op.and]: [
+      //     //     { "$bookings.pickUpTime$": { [Op.gt]: pickUpTime } },
+      //     //     { "$bookings.dropOffTime$": { [Op.gt]: dropOffTime } },
+      //     //   ],
+      //     // },
+      //     {
+      //       [Op.and]: [
+      //         { "$bookings.dropOffTime$": { [Op.lt]: pickUpTime } },
+      //         { "$bookings.pickUpTime$": { [Op.gt]: dropOffTime } },
+      //       ],
+      //     },
+      //     {
+      //       [Op.and]: [
+      //         { "$bookings.pickUpTime$": null },
+      //         { "$bookings.dropOffTime$": null },
+      //       ],
+      //     },
+      //   ],
+      // },
       include: [
         {
           model: Booking,

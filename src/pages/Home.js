@@ -2,12 +2,9 @@ import React, {
   useState,
   useEffect,
   useRef,
-  useContext,
-  createContext,
 } from "react";
 import Banner from "../assets/Banner.jpg";
 import { Container, Row, Col, Button, Form, Card } from "react-bootstrap";
-import axios from "axios";
 // import { useHistory } from "react-router-dom";
 
 import DatePicker from "react-datepicker";

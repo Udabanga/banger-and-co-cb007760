@@ -3,8 +3,12 @@ const bodyParser = require('body-parser')
 const cors = require("cors");
 var multer = require('multer');
 var upload = multer();
+var nodemailer = require('nodemailer')
 
 const app = express();
+
+
+// require('dotenv').config();
 
 global.__basedir = __dirname;
 
@@ -25,11 +29,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 
-// app.use(express.json());
-// app.use(express.urlencoded({
-//   extended: true
-// }));
-// app.use(upload.array());
 
 app.use(express.static('public'))
 
@@ -82,4 +81,33 @@ function initial() {
     name: "admin"
   });
 }
+
+
+// let transporter = nodemailer.createTransport({
+//   service: "gmail",
+//   auth: {
+//     user: "victorypearl69@gmail.com",
+//     pass: "Pa$$word123"
+//   }
+// })
+
+
+// let mailOptions = {
+//   from: "victorypearl69@gmail.com",
+//   to: "udayangajayamuthu@gmail.com",
+//   subject: "BangerCo Fraudulent User",
+//   text: "test",
+//   attachments: [
+//     {filename: 'logo192.png', path: "./public/logo192.png"}
+//   ]
+// }
+
+// transporter.sendMail(mailOptions, function(err, info){
+//   if(err){
+//     console.log(err)
+//   }
+//   else{
+//     console.log("Email sent successfully")
+//   }
+// })
 

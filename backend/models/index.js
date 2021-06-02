@@ -66,14 +66,18 @@ db.ROLES = ["user", "admin", "employee"];
 
 db.booking.hasOne(db.user,{
   foreignKey: "id",
+  sourceKey:"userID"
 })
 
 db.booking.hasOne(db.vehicle,{
   foreignKey: "id",
+  sourceKey:"vehicleID"
 })
+
 
 db.vehicle.hasMany(db.booking,{
   foreignKey: "id",
+  // sourceKey:"bookingIDs",
   constraints: false
 })
 

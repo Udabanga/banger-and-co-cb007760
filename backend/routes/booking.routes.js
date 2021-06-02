@@ -3,7 +3,7 @@ const controller = require("../controllers/booking.controller");
 
 module.exports = function (app) {
   // Retrieve all Bookings
-  app.get("/api/bookings/", controller.findAll);
+  app.get("/api/bookings", controller.findAll);
 
   // Retrieve all Bookings From single User
   app.post("/api/bookings/user", controller.findAllUser);
@@ -13,5 +13,11 @@ module.exports = function (app) {
 
   // Create a Bookings
   app.post("/api/bookings/create", controller.create);
+
+  // Update Boooking
+  app.put("/api/bookings/update", controller.update);
+
+  // Report Driver
+  app.post("/api/booking/reportDriver", controller.reportDriver);
 
 };

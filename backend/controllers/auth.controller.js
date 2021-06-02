@@ -41,6 +41,8 @@ exports.register = async (req, res) => {
     password: bcrypt.hashSync(req.body.password, 8),
     fName: req.body.fName,
     lName: req.body.lName,
+    NICNumber: req.body.NICNumber,
+    drivingLicenceNumber: req.body.drivingLicenceNumber,
     drivingLicence: drivingLicenceImage,
     identityForm: identityFormImage,
     status: "Pending",

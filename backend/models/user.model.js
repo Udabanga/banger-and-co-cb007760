@@ -15,6 +15,12 @@ module.exports = (sequelize, Sequelize) => {
     status: {
       type: Sequelize.STRING,
     },
+    NICNumber: {
+      type: Sequelize.STRING,
+    },
+    drivingLicenceNumber: {
+      type: Sequelize.STRING,
+    },
     drivingLicence: {
       type: Sequelize.STRING,
     },

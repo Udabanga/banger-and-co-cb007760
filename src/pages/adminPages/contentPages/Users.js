@@ -28,6 +28,8 @@ const Users = () => {
   const [editEmail, setEditEmail] = useState("");
   const [editFName, setEditFName] = useState("");
   const [editLName, setEditLName] = useState("");
+  const [editNICNumber, setEditNICNumber] = useState("");
+  const [editDrivingLicenceNumber, setEditDrivingLicenceNumber] = useState("");
   const [editStatus, setEditStatus] = useState("");
   const [imageDriversLicence, setImageDriversLicence] = useState("");
   const [imageIdentityForm, setImageIdentityForm] = useState("");
@@ -124,6 +126,8 @@ const Users = () => {
         setEditEmail(response.data.email);
         setEditFName(response.data.fName);
         setEditLName(response.data.lName);
+        setEditNICNumber(response.data.NICNumber);
+        setEditDrivingLicenceNumber(response.data.drivingLicenceNumber);
         setEditStatus(response.data.status)
         setImageDriversLicence("http://localhost:5000/uploads/"+response.data.drivingLicence);
         setImageIdentityForm("http://localhost:5000/uploads/"+response.data.identityForm);
@@ -145,6 +149,8 @@ const Users = () => {
           email: editEmail,
           fName: editFName,
           lName: editLName,
+          NICNumber: editNICNumber,
+          drivingLicenceNumber: editDrivingLicenceNumber,
         })
         .then(function (response) {
           console.log(response);
@@ -170,6 +176,16 @@ const Users = () => {
   const onChangeLName = (e) => {
     const lName = e.target.value;
     setEditLName(lName);
+  };
+
+  const onChangeNICNumber = (e) => {
+    const NICNumber = e.target.value;
+    setEditNICNumber(NICNumber);
+  };
+
+  const onChangeDrivingLicenceNumber = (e) => {
+    const drivingLicenceNumber = e.target.value;
+    setEditDrivingLicenceNumber(drivingLicenceNumber);
   };
 
   const onChangeStatus = (e) => {
@@ -281,12 +297,31 @@ const Users = () => {
                 onChange={onChangeLName}
               ></Input>
             </Form.Group>
+            <Form.Group controlId="NIC">
+              <Form.Label>NIC Number:</Form.Label>
+              <Input
+                class="form-control"
+                type="text"
+                value={editNICNumber}
+                onChange={onChangeNICNumber}
+              ></Input>
+            </Form.Group>
+            <Form.Group controlId="drivingLicenceNumber">
+              <Form.Label>Driving Licence Number:</Form.Label>
+              <Input
+                class="form-control"
+                type="text"
+                value={editDrivingLicenceNumber}
+                onChange={onChangeDrivingLicenceNumber}
+              ></Input>
+            </Form.Group>
             <Form.Group controlId="formStatus">
               <Form.Label>Status:</Form.Label>
               <Form.Control value={editStatus} onChange={onChangeStatus} as="select">
                 <option>Not Insured</option>
                 <option>Insured</option>
                 <option>Blacklist</option>
+                <option>Suspended</option>
               </Form.Control>
             </Form.Group>
             <Button

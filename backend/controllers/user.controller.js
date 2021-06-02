@@ -80,6 +80,8 @@ exports.delete = (req, res) => {
 exports.update = (req, res) => {
   const email = req.body.email;
   const id = req.body.id;
+  const NICNumber = req.body.NICNumber;
+  const drivingLicenceNumber = req.body.drivingLicenceNumber;
 
   // const id = req.params.id
 
