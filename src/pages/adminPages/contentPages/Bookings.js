@@ -40,6 +40,7 @@ const Bookings = () => {
   const [tableView, setTableView] = useState("All");
   const [show, setShow] = useState(false);
   const [showSuspend, setShowSuspend] = useState(false);
+  const [showFraudulent, setShowFraudulent] = useState(false);
 
   const [bookingID, setBookingID] = useState("");
   const [pickUpDate, setPickUpDate] = useState("");
@@ -131,6 +132,11 @@ const Bookings = () => {
 
   const onChangeBookingStatus = (e) => {
     const bookingStatus = e.target.value;
+    dmvCheck(bookingStatus)
+    fraudulentUserCheck(bookingStatus)
+  }
+
+  const dmvCheck = (bookingStatus) => {
     if (bookingStatus == "Picked Up") {
       axios
         .get("http://localhost:5001/data.csv")
@@ -165,11 +171,63 @@ const Bookings = () => {
             //Modal Error message
             //set booking cancelled
             setEditBookingStatus("Cancelled");
+            axios
+              .put("http://localhost:5000/api/bookings/update", {
+                id: bookingID,
+                status: "Cancelled",
+              })
+              .then(function (response) {
+                console.log(response);
+                getBookingList();
+              })
+              .catch(function (error) {
+                console.log(error);
+              });
+            getBookingList();
           }
           else {
             setEditBookingStatus(bookingStatus);
           }
         })
+    }
+    else {
+      setEditBookingStatus(bookingStatus);
+    }
+  }
+
+  const fraudulentUserCheck = (bookingStatus) => {
+    if (bookingStatus == "Picked Up") {
+      let formData = new FormData();
+      formData.append("nic", userNICNumber);
+      axios
+        .post("http://localhost:5000/api/bookings/fraudulentUser", {
+          nic: userNICNumber,
+        })
+        .then(function (response) {
+          console.log(response);
+          // handleShowSuspendModal()
+          if (response.data == true) {
+            handleShowFraudulentModal()
+            setEditBookingStatus("Cancelled")
+            axios
+              .put("http://localhost:5000/api/bookings/update", {
+                id: bookingID,
+                status: "Cancelled",
+              })
+              .then(function (response) {
+                console.log(response);
+                getBookingList();
+              })
+              .catch(function (error) {
+                console.log(error);
+              });
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+          // setMessage(error.message);
+          // setSuccessful(false);
+        });
     }
     else {
       setEditBookingStatus(bookingStatus);
@@ -201,7 +259,9 @@ const Bookings = () => {
   const handleShowSuspendModal = () => setShowSuspend(true);
   const handleCloseSuspendModal = () => setShowSuspend(false);
 
-  const { SearchBar, ClearSearchButton } = Search;
+  const handleShowFraudulentModal = () => setShowFraudulent(true);
+  const handleCloseFraudulentModal = () => setShowFraudulent(false);
+
 
   const actionButtons = (cell, row, rowIndex, formatExtraData) => {
     return (
@@ -211,21 +271,26 @@ const Bookings = () => {
     );
   };
 
-  const onSubmit = (data) => {
+  const onSubmitDMVForm = (data) => {
+    checkDriver(data)
+    handleCloseSuspendModal()
+    handleClose()
+    getBookingList()
+
+  }
+
+  const checkDriver = (data) => {
     let formData = new FormData();
     formData.append("time", currentTime);
     formData.append("drivingLicenceNumber", userDrivingLicenceNumber);
     formData.append("driverImage", data.driverImage[0]);
     axios
-      .post("http://localhost:5000/api/booking/reportDriver", formData)
+      .post("http://localhost:5000/api/bookings/reportDriver", formData)
       .then(function (response) {
         console.log(response);
-        // handleShowSuspendModal()
       })
       .catch(function (error) {
         console.log(error);
-        // setMessage(error.message);
-        // setSuccessful(false);
       });
     // Update booking
     axios
@@ -248,10 +313,6 @@ const Bookings = () => {
       .catch(function (error) {
         console.log(error);
       });
-    handleCloseSuspendModal()
-    handleClose()
-    getBookingList()
-
   }
 
   const vehicleFormatter = (cell, row, rowIndex, formatExtraData) => {
@@ -578,7 +639,7 @@ const Bookings = () => {
             <p>
               This driving licence has been reported lost/stolen. Please enter the following details to notify the DMV
             </p>
-            <Form onSubmit={handleSubmit(onSubmit)}>
+            <Form onSubmit={handleSubmit(onSubmitDMVForm)}>
 
               <Form.Group className="mb-3" controlId="formBasicDriverImage">
                 <Form.Label>Driving License</Form.Label>
@@ -610,6 +671,20 @@ const Bookings = () => {
                 Submit
               </Button>
             </Form>
+          </Alert>
+        </Modal.Body>
+      </Modal>
+
+      <Modal show={showFraudulent} backdrop="static" centered onHide={handleCloseFraudulentModal}>
+        <Modal.Header closeButton>
+          Alert!
+        </Modal.Header>
+        <Modal.Body>
+          <Alert variant="danger" onClose={() => handleCloseFraudulentModal}>
+            <Alert.Heading>Booking Cancelled</Alert.Heading>
+            <p>
+              This user has been found to have fraudulent claims from the Association of Sri Lankan Insurers database. This booking has been cancelled
+            </p>
           </Alert>
         </Modal.Body>
       </Modal>

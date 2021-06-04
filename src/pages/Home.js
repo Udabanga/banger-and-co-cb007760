@@ -4,13 +4,14 @@ import React, {
   useRef,
 } from "react";
 import Banner from "../assets/Banner.jpg";
-import { Container, Row, Col, Button, Form, Card } from "react-bootstrap";
+import { Container, Row, Col, Button, Form, Card, Spinner } from "react-bootstrap";
 // import { useHistory } from "react-router-dom";
 
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import CarImage from "../assets/car.png";
 import SearchImage from "../assets/search.png";
+import axios from "axios";
 
 import UserService from "../services/user.service";
 import {
@@ -26,6 +27,8 @@ import {
   roundToNearestMinutes,
 } from "date-fns";
 
+import DollarIcon from "../assets/icons/dollar.png";
+
 let vh = window.innerHeight * 0.01;
 document.documentElement.style.setProperty("--vh", `${vh}px`);
 
@@ -37,6 +40,8 @@ window.addEventListener("resize", () => {
 const Home = (props) => {
   const [content, setContent] = useState("");
   // const history = useHistory();
+  const [scrapeData, setScrapeData] = useState([]);
+
   const [vehicleType, setVehicleType] = useState("Any");
   const [pickUpDate, setPickUpDate] = useState(
     roundToNearestMinutes(new Date(), { nearestTo: 30 })
@@ -66,6 +71,8 @@ const Home = (props) => {
   const [minPickUpDate, setMinPickUpDate] = useState(new Date());
 
   const booking = useRef(null);
+  
+  const [loading, setLoadingHidden] = useState(false);
 
   useEffect(() => {
     UserService.getPublicContent().then(
@@ -82,6 +89,7 @@ const Home = (props) => {
       }
     );
     onChangePickUp(currentTime);
+    getScrapeDate();
     // setPickUpDate(currentTime);
   }, []);
 
@@ -184,6 +192,15 @@ const Home = (props) => {
     // // const result = await UserService.getVehicleList();
     // console.log(result);
     // setVehicleSearch(result.data);
+  };
+
+  const getScrapeDate = async () => {
+    setLoadingHidden(false)
+    const result = await axios.get("http://localhost:5000/api/competitorPrices");
+    setLoadingHidden(true)
+    // const result = await UserService.getVehicleList();
+    console.log(result);
+    setScrapeData(result.data);
   };
 
   const scrollToBooking = () => booking.current.scrollIntoView();
@@ -315,6 +332,45 @@ const Home = (props) => {
             </div>
           </Col>
         </Row>
+        <div class="book-card" style={{ marginTop: 30 }}>
+          <h2 style={{ textAlign: "center" }}>Competitor Prices</h2>
+          <div style={{ textAlign: "center" }}>
+            <Spinner hidden={loading} animation="border" />
+          </div>
+          <Row>
+            {/* {vehicles.forEach()} */}
+
+            {scrapeData.map((vehicle) => (
+              <Col lg={4} md={6} sm={12}>
+
+                <Card className="vehicle-card" style={{ marginTop: 0 }}>
+                  <Card.Img
+                    className="vehicle-card-img"
+                    variant="top"
+                    src={vehicle.image}
+                  />
+                  <Card.Body>
+                    <Card.Title>
+                      {vehicle.carName}
+                    </Card.Title>
+                    <Card.Text>
+                      <Row>
+                        <Col style={{ textAlign: "center" }}>
+                          <img
+                            className="vehicle-card-icon"
+                            src={DollarIcon}
+                            alt="Cost"
+                          />
+                          <p>{vehicle.carPrice}</p>
+                        </Col>
+                      </Row>
+                    </Card.Text>
+                  </Card.Body>
+                </Card>
+              </Col>
+            ))}
+          </Row>
+        </div>
       </Container>
     </>
   );

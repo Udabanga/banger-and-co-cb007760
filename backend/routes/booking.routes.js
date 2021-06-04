@@ -18,6 +18,14 @@ module.exports = function (app) {
   app.put("/api/bookings/update", controller.update);
 
   // Report Driver
-  app.post("/api/booking/reportDriver", controller.reportDriver);
+  app.post("/api/bookings/reportDriver", controller.reportDriver);
+
+  // Fraudulent User
+  app.post("/api/bookings/fraudulentUser", controller.fraudulentUser);
+
+  // Competitor Prices
+  app.get("/api/competitorPrices", controller.competitorPrices);
+
+  
 
 };
