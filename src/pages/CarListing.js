@@ -12,6 +12,8 @@ import SeatIcon from "../assets/icons/seat.png";
 import DollarIcon from "../assets/icons/dollar.png";
 import axios from "axios";
 
+import VehicleService from "../services/vehicle.service";
+
 const CarListing = () => {
   const [vehicles, setVehicles] = useState([]);
 
@@ -20,19 +22,16 @@ const CarListing = () => {
   }, []);
 
   const getVehicleList = async () => {
-    const result = await axios.get("http://localhost:5000/api/vehicles");
-    // const result = await UserService.getVehicleList();
+    const result = await VehicleService.getVehicleList();
     console.log(result);
     setVehicles(result.data);
   };
 
-  // const renderVehicleCard = (card, index) =>{}
 
   return (
     <Container>
       <h2 style={{ textAlign: "center" }}>Car Listing</h2>
       <Row>
-        {/* {vehicles.forEach()} */}
 
         {vehicles.map((vehicle) => (
           <Col lg={4} md={6} sm={12}>
@@ -47,7 +46,6 @@ const CarListing = () => {
                   {vehicle.manufacturer} {vehicle.model}
                 </Card.Title>
                 <Card.Text>{vehicle.type}</Card.Text>
-                {/* <Card.Text>Fuel Type: {vehicle.fuelType}</Card.Text> */}
                 <Card.Text>
                   <Row>
                     <Col style={{ textAlign: "center" }}>
@@ -75,13 +73,7 @@ const CarListing = () => {
                       <p>{vehicle.dailyCost}</p>
                     </Col>
                   </Row>
-                  <Row>
-                    <Button style={{ width: "100%" }}>Book</Button>
-                  </Row>
                 </Card.Text>
-                {/* <Card.Text>Transmission: {vehicle.transmission}</Card.Text>
-              <Card.Text>Seat No: {vehicle.seatNumber}</Card.Text>
-              <Card.Text>Daily Cost: Rs {vehicle.dailyCost}</Card.Text> */}
               </Card.Body>
             </Card>
           </Col>

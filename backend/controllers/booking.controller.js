@@ -19,9 +19,6 @@ let transporter = nodemailer.createTransport({
   }
 })
 
-
-
-
 exports.findAll = (req, res) => {
   Booking.findAll({
     include: [{
@@ -77,11 +74,6 @@ exports.findOne = (req, res) => {
     include: [{
       model: User,
       as: "user",
-      // where: {
-      //   id: {
-      //     [Op.eq]: 1,
-      //   },
-      // },
     },
     {
       model: Vehicle,
@@ -151,8 +143,6 @@ exports.reportDriver = async (req, res) => {
         { filename: 'driverImage.jpg', path: "./driverImage.jpg" }
       ]
     }
-  
-  
     transporter.sendMail(mailOptions, function (err, info) {
       if (err) {
         console.log(err)
@@ -165,15 +155,10 @@ exports.reportDriver = async (req, res) => {
   } catch (error) {
     console.log(error)
   }
-
-
-  
-
 };
 
 
 exports.fraudulentUser = async (req, res) => {
-  // const id = req.body.id;
   const insuranceFraudUser = await Insurance.findOne({where: {nic: req.body.nic}});
   
   if (insuranceFraudUser === null) {
@@ -181,26 +166,6 @@ exports.fraudulentUser = async (req, res) => {
   } else {
     res.send(true);
   }
-
-  // Insurance.findOne({where: {nic: req.body.nic}})
-  // .then((data) => {
-  //   res.send(data);
-  // })
-  // .catch((err) => {
-  //   res.status(500).send({
-  //     message: err,
-  //   });
-  // });
-
-  // Insurance.findOne({where: {nic: req.body.nic}})
-  // .then((data) => {
-  //   res.send(data);
-  // })
-  // .catch((err) => {
-  //   res.status(500).send({
-  //     message: err,
-  //   });
-  // });
 };
 
 // Web Scraping

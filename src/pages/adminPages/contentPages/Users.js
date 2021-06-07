@@ -35,6 +35,7 @@ const Users = () => {
   const [imageIdentityForm, setImageIdentityForm] = useState("");
   const [previewImage, setPreviewImage] = useState("");
   const [tableView, setTableView] = useState("Active");
+  const [modalTitleImage, setModalTitleImage] = useState("")
   const [modalTitle, setModalTitle] = useState("")
 
 
@@ -47,7 +48,7 @@ const Users = () => {
           <FontAwesomeIcon icon={faEdit} />
         </Button>
         <Button variant="danger">
-          <FontAwesomeIcon icon={faTrash} />
+          <FontAwesomeIcon icon={faTrash} onClick={() => handleDelete(row.id)} />
         </Button>
       </div>
     );
@@ -102,19 +103,30 @@ const Users = () => {
 
   const handleViewDrivingLicenceModal = () => {
     setPreviewImage(imageDriversLicence)
-    setModalTitle("Driving Licence")
+    setModalTitleImage("Driving Licence")
     setShowDriversLicence(true);
   }
 
   const handleViewIdentityFormModal = () => {
     setPreviewImage(imageIdentityForm)
-    setModalTitle("Identity Form")
+    setModalTitleImage("Identity Form")
     setShowDriversLicence(true);
   }
 
   const handleCloseDriversLicence = () => setShowDriversLicence(false);
 
-  const handleClose = () => setShow(false);
+  const handleClose = () => {
+    setEditID("");
+    setEditEmail("");
+    setEditFName("");
+    setEditLName("");
+    setEditNICNumber("");
+    setEditDrivingLicenceNumber("");
+    setEditStatus("")
+    setImageDriversLicence("");
+    setImageIdentityForm("");
+    setShow(false)
+  };
   const handleShow = () => setShow(true);
 
   const handleEditModal = (id) => {
@@ -129,8 +141,8 @@ const Users = () => {
         setEditNICNumber(response.data.NICNumber);
         setEditDrivingLicenceNumber(response.data.drivingLicenceNumber);
         setEditStatus(response.data.status)
-        setImageDriversLicence("http://localhost:5000/uploads/"+response.data.drivingLicence);
-        setImageIdentityForm("http://localhost:5000/uploads/"+response.data.identityForm);
+        setImageDriversLicence("http://localhost:5000/uploads/" + response.data.drivingLicence);
+        setImageIdentityForm("http://localhost:5000/uploads/" + response.data.identityForm);
       })
       .catch(function (error) {
         console.log(error);
@@ -139,7 +151,72 @@ const Users = () => {
     handleShow();
   };
 
-  const handleDelete = (id, email) => {};
+  const handleAddModal = () => {
+    setModalTitle("Add User");
+    handleShow();
+  };
+
+
+  const handleAdd = () => {
+    if (checkBtn.current.context._errors.length === 0) {
+      axios
+        .post("http://localhost:5000/api/auth/register", {
+          email: editEmail,
+          fName: editFName,
+          lName: editLName,
+          NICNumber: editNICNumber,
+          drivingLicenceNumber: editDrivingLicenceNumber,
+        })
+        .then(function (response) {
+          console.log(response);
+          getUserList();
+          handleClose();
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    }
+
+    // let formData = new FormData();
+    // formData.append("email", data.email);
+    // formData.append("password", data.password);
+    // formData.append("fName", data.fName);
+    // formData.append("lName", data.lName);
+    // formData.append("NICNumber", data.NICNumber);
+    // formData.append("drivingLicenceNumber", data.drivingLicenceNumber);
+    // formData.append("drivingLicence", data.drivingLicence[0]);
+    // formData.append("identityForm", data.identityForm[0]);
+    // // formData.append("identityForm", data.file[1][0]);
+    // axios
+    //   .post("http://localhost:5000/api/auth/register", formData)
+    //   .then(function (response) {
+    //     console.log(response);
+    //     setMessage(response.data.message);
+    //     setSuccessful(true);
+    //   })
+    //   .catch(function (error) {
+    //     console.log(error);
+    //     if(error.message == 'Request failed with status code 400'){
+    //       setMessage("Failed! Email is already in use!");
+    //     }
+    //     else{
+    //       setMessage(error.message);
+    //     }
+    //     setSuccessful(false);
+    //   });
+  };
+
+  const handleDelete = (id) => {
+    axios
+      .delete("http://localhost:5000/api/users/delete", { data: { id: id } })
+      .then(function (response) {
+        console.log(response);
+        getUserList();
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
 
   const handleUpdate = () => {
     if (checkBtn.current.context._errors.length === 0) {
@@ -201,7 +278,7 @@ const Users = () => {
           <h1>Users</h1>
         </div>
         <div className="col">
-          <Button className="admin-add-button">Add User</Button>
+          <Button className="admin-add-button" onClick={handleAddModal}>Add User</Button>
         </div>
       </div>
       <ButtonGroup aria-label="Basic example">
@@ -266,7 +343,7 @@ const Users = () => {
       <Modal show={show} onHide={handleClose}>
         <FormValidate onSubmit={handleUpdate} ref={form}>
           <Modal.Header closeButton>
-            <Modal.Title>Edit User</Modal.Title>
+            <Modal.Title>{modalTitle}</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Form.Group controlId="formBasicEmail">
@@ -342,9 +419,16 @@ const Users = () => {
             <Button variant="secondary" onClick={handleClose}>
               Close
             </Button>
-            <Button variant="primary" onClick={handleUpdate}>
-              Save Changes
-            </Button>
+            {modalTitle === "Edit User" && (
+              <Button variant="primary" onClick={handleUpdate}>
+                Save Changes
+              </Button>
+            )}
+            {modalTitle === "Add User" && (
+              <Button variant="primary" onClick={handleAdd}>
+                Add User
+              </Button>
+            )}
           </Modal.Footer>
         </FormValidate>
       </Modal>
@@ -355,11 +439,11 @@ const Users = () => {
         onHide={handleCloseDriversLicence}
       >
         <Modal.Header closeButton>
-          <Modal.Title>{modalTitle}</Modal.Title>
+          <Modal.Title>{modalTitleImage}</Modal.Title>
         </Modal.Header>
         <img
           src={previewImage}
-          alt={modalTitle}
+          alt={modalTitleImage}
         />
       </Modal>
     </div>

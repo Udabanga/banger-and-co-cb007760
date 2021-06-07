@@ -42,7 +42,7 @@ const App = () => {
         <PublicRoute exact path="/booking" component={Booking} />
 
 
-        <AdminRoute exact path="/employee" component={AdminPage} />
+        <AdminRoute path="/employee" component={AdminPage} />
         <AdminRoute path="/admin" component={AdminPage} />
 
         <PublicRoute component={NoMatch} />

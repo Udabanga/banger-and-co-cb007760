@@ -123,6 +123,8 @@ const Bookings = () => {
         setSelectBabySeats(response.data.babySeats);
         setSelectWineChiller(response.data.wineChiller);
         setBookCost(response.data.bookCost);
+
+        setBookingStatus(response.data.status);
       })
       .catch(function (error) {
         console.log(error);
@@ -150,7 +152,6 @@ const Bookings = () => {
             }
             console.log(listItem);
           });
-
           if (invalidLicence == true) {
             //set user to suspended
             axios
@@ -161,15 +162,10 @@ const Bookings = () => {
               .then(function (response) {
                 console.log(response);
                 handleShowSuspendModal();
-                // getUserList();
               })
               .catch(function (error) {
                 console.log(error);
               });
-            //send email
-
-            //Modal Error message
-            //set booking cancelled
             setEditBookingStatus("Cancelled");
             axios
               .put("http://localhost:5000/api/bookings/update", {
@@ -254,6 +250,32 @@ const Bookings = () => {
     setSelectBabySeats("");
     setSelectWineChiller("");
     setShow(false);
+  }
+
+  const handleSaveChanges = () => {
+    axios
+        .put("http://localhost:5000/api/bookings/update", {
+          id: bookingID,
+          vehicleID: vehicleID,
+          userID: userID,
+          pickUpTime: pickUpDate,
+          dropOffTime: dropOffDate,
+          satNav: selectSatNav,
+          babySeats: selectBabySeats,
+          wineChiller: selectWineChiller,
+          bookCost: bookCost,
+          status: editBookingStatus,
+        })
+        .then(function (response) {
+          console.log(response);
+          getBookingList();
+          setShow(false);
+        })
+        .catch(function (error) {
+          console.log(error);
+          setShow(false);
+        });
+
   }
 
   const handleShowSuspendModal = () => setShowSuspend(true);
@@ -382,7 +404,7 @@ const Bookings = () => {
       dataField: "status",
       text: "Status",
       searchable: false,
-      headerStyle: { width: "80px" },
+      headerStyle: { width: "100px" },
     },
     {
       dataField: "actions",
@@ -623,7 +645,7 @@ const Bookings = () => {
           <Button variant="secondary" onClick={handleClose}>
             Close
           </Button>
-          <Button variant="primary" onClick={handleClose}>
+          <Button variant="primary" onClick={handleSaveChanges}>
             Save Changes
           </Button>
         </Modal.Footer>

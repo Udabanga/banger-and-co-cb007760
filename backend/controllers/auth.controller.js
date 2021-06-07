@@ -4,7 +4,7 @@ const User = db.user;
 const Role = db.role;
 
 const Op = db.Sequelize.Op;
-
+const multer = require("multer");
 const uploadFile = require("../middleware/uploadDrivingLicence");
 
 var jwt = require("jsonwebtoken");
@@ -14,26 +14,42 @@ var drivingLicenceImage = null;
 var identityFormImage = null;
 
 exports.register = async (req, res) => {
+  // Save images
   try {
-    await uploadFile(req, res);
-    drivingLicenceImage = req.files.drivingLicence[0].filename
-    identityFormImage = req.files.identityForm[0].filename
-  } catch(error) {
+    await multer({
+      storage: multer.diskStorage({
+        destination: "./public/uploads",
+        filename: (req, file, cb) => {
+          cb(null, `${file.fieldname}-${Date.now()}-${file.originalname.replace(/\s/g, "")}`);
+        },
+      }),
+    }).fields([
+      { name: "drivingLicence", maxCount: 1 },
+      { name: "identityForm", maxCount: 1 },
+    ]);
+
+    await multer({
+      storage: multer.diskStorage({
+        destination: "./public/uploads",
+        filename: (req, file, cb) => {
+          cb(null, `${file.fieldname}-${Date.now()}-${file.originalname.replace(/\s/g, "")}`);
+        },
+      }),
+    }).fields([
+      { name: "drivingLicence", maxCount: 1 },
+      { name: "identityForm", maxCount: 1 },
+    ]);
+
+
+    if (req.files.drivingLicence[0].filename != null) {
+      drivingLicenceImage = req.files.drivingLicence[0].filename
+    }
+    if (req.files.identityForm[0].filename != null) {
+      identityFormImage = req.files.identityForm[0].filename
+    }
+  } catch (error) {
     console.log(error)
   }
-
-  // if (req.file === undefined) {
-  //   return res.status(400).send({ message: "Please upload a file!" });
-  // }
-
-  // res.status(200).send({
-  //   message: "Uploaded the file successfully: " + req.file.filename,
-  // });
-  // if (req.file.filename == null) {
-  //   drivingLicenceImage = "null";
-  // } else {
-  //   drivingLicenceImage = req.file.filename;
-  // }
 
   // Save User to Database
   User.create({
@@ -70,12 +86,14 @@ exports.register = async (req, res) => {
     .catch((err) => {
       res.status(500).send({ message: err.message });
     });
+
+
+
 };
 
 exports.login = (req, res) => {
   User.findOne({
     where: {
-      // username: req.body.username
       email: req.body.email,
     },
   })

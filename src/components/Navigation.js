@@ -47,7 +47,7 @@ function Navigation() {
 
           {showEmployee && (
             <Nav.Item>
-              <NavLink to={"/employee"} className="nav-link">
+              <NavLink to={"/admin"} className="nav-link">
                 Employee Page
               </NavLink>
             </Nav.Item>

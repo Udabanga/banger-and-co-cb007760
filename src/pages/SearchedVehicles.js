@@ -9,6 +9,7 @@ import {
   ButtonGroup,
   Modal,
 } from "react-bootstrap";
+import { NavLink } from "react-router-dom";
 import axios from "axios";
 import AuthService from "../services/auth.service";
 
@@ -27,7 +28,6 @@ const SearchedVehicles = (props) => {
   const dropOffDate = props.location.state.dropOffDate;
   const [showBookingModal, setShowBookingModal] = useState(false);
   const [showMessageModal, setMessageModal] = useState(false);
-  const [bookingResponse, setBookingResponse] = useState("");
   const [messageTitle, setMessageTitle] = useState("");
   const [messageBody, setMessageBody] = useState("");
 
@@ -126,32 +126,40 @@ const SearchedVehicles = (props) => {
   };
 
   const handleBooking = () => {
-    axios
-      .post("http://localhost:5000/api/bookings/create", {
-        vehicleID: viewVehicleID,
-        userID: currentUser.id,
-        pickUpTime: pickUpDate,
-        dropOffTime: dropOffDate,
-        satNav: selectSatNav,
-        babySeats: selectBabySeats,
-        wineChiller: selectWineChiller,
-        bookCost: bookCost,
-        status: "Booked",
-      })
-      .then(function (response) {
-        console.log(response);
-        setMessageModal(true);
-        setShowBookingModal(false);
-        setMessageTitle("Success");
-        setMessageBody("Vehicle Successfully Booked");
-      })
-      .catch(function (error) {
-        console.log(error);
-        setMessageModal(true);
-        setShowBookingModal(false);
-        setMessageTitle("Error");
-        setMessageBody("An error occured");
-      });
+    if (currentUser == null) {
+      setShowBookingModal(false);
+      setMessageModal(true);
+      setMessageTitle("Login Error");
+      setMessageBody("Login to book a vehicle");
+    }
+    else {
+      axios
+        .post("http://localhost:5000/api/bookings/create", {
+          vehicleID: viewVehicleID,
+          userID: currentUser.id,
+          pickUpTime: pickUpDate,
+          dropOffTime: dropOffDate,
+          satNav: selectSatNav,
+          babySeats: selectBabySeats,
+          wineChiller: selectWineChiller,
+          bookCost: bookCost,
+          status: "Booked",
+        })
+        .then(function (response) {
+          console.log(response);
+          setMessageModal(true);
+          setShowBookingModal(false);
+          setMessageTitle("Success");
+          setMessageBody("Vehicle Successfully Booked");
+        })
+        .catch(function (error) {
+          console.log(error);
+          setMessageModal(true);
+          setShowBookingModal(false);
+          setMessageTitle("Error");
+          setMessageBody("An error occured");
+        });
+    }
   };
 
   const handleBookModal = (id) => {
@@ -162,6 +170,8 @@ const SearchedVehicles = (props) => {
   const handleMessageClose = () => {
     setMessageModal(false);
   };
+
+  
 
   // Extras States
   const onChangeSatNav = () => {
@@ -199,7 +209,6 @@ const SearchedVehicles = (props) => {
       <h2 style={{ textAlign: "center" }}>Car Listing</h2>
       <h1>{vehicleType}</h1>
       <Row>
-        {/* {vehicles.forEach()} */}
 
         {vehicles.map((vehicle) => (
           <Col lg={4} md={6} sm={12}>
@@ -214,7 +223,6 @@ const SearchedVehicles = (props) => {
                   {vehicle.manufacturer} {vehicle.model}
                 </Card.Title>
                 <Card.Text>{vehicle.type}</Card.Text>
-                {/* <Card.Text>Fuel Type: {vehicle.fuelType}</Card.Text> */}
                 <Card.Text>
                   <Row>
                     <Col style={{ textAlign: "center" }}>
@@ -251,9 +259,6 @@ const SearchedVehicles = (props) => {
                     </Button>
                   </Row>
                 </Card.Text>
-                {/* <Card.Text>Transmission: {vehicle.transmission}</Card.Text>
-              <Card.Text>Seat No: {vehicle.seatNumber}</Card.Text>
-              <Card.Text>Daily Cost: Rs {vehicle.dailyCost}</Card.Text> */}
               </Card.Body>
             </Card>
           </Col>
@@ -311,7 +316,6 @@ const SearchedVehicles = (props) => {
               <ButtonGroup vertical>
                 <Button
                   active={selectSatNav}
-                  fovus
                   onClick={() => onChangeSatNav()}
                   variant="light"
                   className="extra-card-button"
@@ -373,6 +377,14 @@ const SearchedVehicles = (props) => {
           <Modal.Title>{messageTitle}</Modal.Title>
         </Modal.Header>
         <Modal.Body>{messageBody}</Modal.Body>
+        {(messageTitle=="Login Error") &&
+          <Modal.Footer display>
+            <NavLink to="/register" className="btn btn-success" >
+              Login
+          </NavLink>
+          </Modal.Footer>
+        }
+
       </Modal>
     </Container>
   );

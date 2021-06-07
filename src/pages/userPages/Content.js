@@ -11,12 +11,10 @@ const Content = () => {
   return (
     <Container fluid className={classNames("content", { "is-open": toggled })}>
       <Switch>
-      <Route path="/user/bookings">
+      <Route path="/user">
           <Bookings />
         </Route>
-        <Route path="/user">
-          <Dasboard />
-        </Route>
+        
       </Switch>
     </Container>
   );

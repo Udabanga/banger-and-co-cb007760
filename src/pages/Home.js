@@ -177,21 +177,12 @@ const Home = (props) => {
     console.log(pickUpDate);
     console.log(dropOffDate);
 
-    // setVehicleSearch("Any")
-    // props.history.push({
-    //   pathname: "/booking",
-    //   data: vehicleType
-    // });
 
     props.history.push({
       pathname: "/booking",
       state: { vehicleType, pickUpDate, dropOffDate },
     });
 
-    // const result = await axios.get("http://localhost:5000/api/vehicles");
-    // // const result = await UserService.getVehicleList();
-    // console.log(result);
-    // setVehicleSearch(result.data);
   };
 
   const getScrapeDate = async () => {
@@ -246,8 +237,6 @@ const Home = (props) => {
                     startDate={pickUpDate}
                     endDate={dropOffDate}
                     onChange={(date) => {
-                      // setPickUpDate(date);
-                      // checkDropOffDayBehind(date);
                       onChangePickUp(date);
                     }}
                   />
@@ -255,7 +244,6 @@ const Home = (props) => {
                   <DatePicker
                     selected={pickUpDate}
                     onChange={(date) => {
-                      // setPickUpDate(date);
                       onChangePickUp(date);
                     }}
                     showTimeSelect
@@ -279,8 +267,6 @@ const Home = (props) => {
                     minDate={pickUpDate}
                     maxDate={addDays(pickUpDate, 14)}
                     onChange={(date) => {
-                      // setDropOffDate(date);
-                      // checkIfOneDayDropoff(date);
                       onChangeDropOff(date);
                     }}
                   />
@@ -288,7 +274,6 @@ const Home = (props) => {
                   <DatePicker
                     selected={dropOffDate}
                     onChange={(date) => {
-                      // setDropOffDate(date);
                       onChangeDropOff(date);
                     }}
                     showTimeSelect

@@ -17,15 +17,10 @@ const Sidebar = () => {
       </div>
 
       <Nav className="flex-column pt-2">
+
         <Nav.Item>
           <NavLink className="nav-link" to={"/user"}>
           <FontAwesomeIcon icon={faUsers} />
-            Profile
-          </NavLink>
-        </Nav.Item>
-
-        <Nav.Item>
-          <NavLink className="nav-link" to={"/user/bookings"}>
             Bookings
           </NavLink>
         </Nav.Item>

@@ -32,7 +32,7 @@ const AdminPage = () => {
 
   let style = toggled ? "isOpen" : "";
 
-  if (content === "Admin Content." || "Employee Content.") {
+  if (content == "Admin Content." || content =="Employee Content.") {
     return (
       <body class="admin-page">
         <Router>

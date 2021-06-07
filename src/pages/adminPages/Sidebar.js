@@ -57,12 +57,14 @@ const Sidebar = () => {
           </NavLink>
         </Nav.Item>
 
-        <Nav.Item>
-          <NavLink className="nav-link" to={"/admin/vehicles"}>
-            <FontAwesomeIcon icon={faCar} />
+        {showAdmin &&
+          <Nav.Item>
+            <NavLink className="nav-link" to={"/admin/vehicles"}>
+              <FontAwesomeIcon icon={faCar} />
             Vehicles
           </NavLink>
-        </Nav.Item>
+          </Nav.Item>
+        }
 
         <Nav.Item>
           <NavLink className="nav-link" to={"/admin/bookings"}>

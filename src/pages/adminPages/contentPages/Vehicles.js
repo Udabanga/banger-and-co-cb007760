@@ -10,6 +10,7 @@ import CheckButton from "react-validation/build/button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 
+
 import UserService from "../../../services/user.service";
 
 const Vehicles = () => {
@@ -182,57 +183,72 @@ const Vehicles = () => {
       });
   };
 
-  // const handleUpdate = () => {
-  //   console.log(i);
-  //   // setI(i+1)
-  //   i=i+1
-  //   console.log(i);
-
-  // };
 
   const handleUpdate = async () => {
     // setEditSeatNumber("");
-    let formData = new FormData();
-    formData.append("file", image);
-    console.log(image.name);
-    await axios
-      .post("http://localhost:5000/upload", formData)
-      .then(function (response) {
-        console.log(response.data.file);
-        editImageName = response.data.file;
-        // setEditImageName(response.data.file);
-        // imagething=response.data.file;
-        // setEditImageName(imagething);
-        console.log(editImageName);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-
-    console.log(editSeatNumber);
-    console.log(editImageName);
-    console.log(editSeatNumber);
-    if (checkBtn.current.context._errors.length === 0) {
-      axios
-        .put("http://localhost:5000/api/vehicles/update", {
-          id: editID,
-          type: editType,
-          manufacturer: editManufacturer,
-          model: editModel,
-          transmission: editTransmission,
-          fuelType: editFuelType,
-          dailyCost: editDailyCost,
-          seatNumber: editSeatNumber,
-          imageName: editImageName,
-        })
+    if (image == null) {
+      if (checkBtn.current.context._errors.length === 0) {
+        axios
+          .put("http://localhost:5000/api/vehicles/update", {
+            id: editID,
+            type: editType,
+            manufacturer: editManufacturer,
+            model: editModel,
+            transmission: editTransmission,
+            fuelType: editFuelType,
+            dailyCost: editDailyCost,
+            seatNumber: editSeatNumber,
+          })
+          .then(function (response) {
+            console.log(response);
+            getVehicleList();
+            handleClose();
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      }
+    }
+    else {
+      let formData = new FormData();
+      formData.append("file", image);
+      console.log(image.name);
+      await axios
+        .post("http://localhost:5000/upload", formData)
         .then(function (response) {
-          console.log(response);
-          getVehicleList();
-          handleClose();
+          console.log(response.data.file);
+          editImageName = response.data.file;
+          console.log(editImageName);
         })
         .catch(function (error) {
           console.log(error);
         });
+
+      console.log(editSeatNumber);
+      console.log(editImageName);
+      console.log(editSeatNumber);
+      if (checkBtn.current.context._errors.length === 0) {
+        axios
+          .put("http://localhost:5000/api/vehicles/update", {
+            id: editID,
+            type: editType,
+            manufacturer: editManufacturer,
+            model: editModel,
+            transmission: editTransmission,
+            fuelType: editFuelType,
+            dailyCost: editDailyCost,
+            seatNumber: editSeatNumber,
+            imageName: editImageName,
+          })
+          .then(function (response) {
+            console.log(response);
+            getVehicleList();
+            handleClose();
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      }
     }
   };
 
@@ -275,7 +291,6 @@ const Vehicles = () => {
     console.log("image: ", image);
     setPreviewImage(URL.createObjectURL(e.target.files[0]));
     setImage(e.target.files[0]);
-    // setImageName(e.target.files[0].name);
   };
 
   return (
@@ -313,9 +328,6 @@ const Vehicles = () => {
           Deleted
         </Button>
       </ButtonGroup>
-      <Button variant="primary" onClick={handleUpdate}>
-        Save Changes
-      </Button>
 
       <ToolkitProvider
         keyField="id"
@@ -333,13 +345,6 @@ const Vehicles = () => {
         )}
       </ToolkitProvider>
       <Modal show={show} onHide={handleClose}>
-        {/* <FormValidate
-          onSubmit={
-            (modalTitle === "Edit Vehicle" && { handleUpdate }) ||
-            (modalTitle === "Add Vehicle" && { handleAdd })
-          }
-          ref={form}
-        > */}
         <FormValidate ref={form}>
           <Modal.Header closeButton>
             <Modal.Title>{modalTitle}</Modal.Title>

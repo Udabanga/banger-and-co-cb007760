@@ -58,7 +58,12 @@ const Register = (props) => {
       })
       .catch(function (error) {
         console.log(error);
-        setMessage(error.message);
+        if(error.message == 'Request failed with status code 400'){
+          setMessage("Failed! Email is already in use!");
+        }
+        else{
+          setMessage(error.message);
+        }
         setSuccessful(false);
       });
   };
